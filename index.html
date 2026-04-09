@@ -269,8 +269,8 @@ function Tab3() {
             <tr>
               <th>Ressource</th>
               <th>Typ</th>
-              <th style={{textAlign:'center'}}>Leser</th>
               <th style={{textAlign:'center'}}>Schreiber</th>
+              <th style={{textAlign:'center'}}>Leser</th>
               <th style={{textAlign:'center'}}>Gesamt</th>
               <th>Zugriffe</th>
             </tr>
@@ -284,45 +284,41 @@ function Tab3() {
                 </td>
                 <td><span style={{fontSize:10, fontWeight:600, color: typeColor[r.type]}}>{r.type}</span></td>
                 <td style={{textAlign:'center'}}>
-                  {r.readCount > 0 ? <span className="pill pill-r">{r.readCount}</span> : <span style={{color:'#e2e8f0'}}>—</span>}
+                  {r.writeCount > 0 ? <span className="pill pill-w">{r.writeCount}</span> : <span style={{color:'#e2e8f0'}}>—</span>}
                 </td>
                 <td style={{textAlign:'center'}}>
-                  {r.writeCount > 0 ? <span className="pill pill-w">{r.writeCount}</span> : <span style={{color:'#e2e8f0'}}>—</span>}
+                  {r.readCount > 0 ? <span className="pill pill-r">{r.readCount}</span> : <span style={{color:'#e2e8f0'}}>—</span>}
                 </td>
                 <td style={{textAlign:'center'}}>
                   <span className="pill pill-rw">{r.total}</span>
                 </td>
                 <td style={{minWidth:120}}>
                   <div style={{display:'flex', alignItems:'center', gap:4}}>
-                    <div style={{width: Math.round((r.readCount / maxTotal) * 80), height:8, borderRadius:4, background:'#dbeafe', display:'inline-block'}}></div>
                     <div style={{width: Math.round((r.writeCount / maxTotal) * 80), height:8, borderRadius:4, background:'#dcfce7', display:'inline-block'}}></div>
+                    <div style={{width: Math.round((r.readCount / maxTotal) * 80), height:8, borderRadius:4, background:'#dbeafe', display:'inline-block'}}></div>
                   </div>
                 </td>
               </tr>,
               expanded === r.name && (
                 <tr key={r.name + '-detail'}>
-                  <td colSpan={6} style={{padding:'8px 16px 12px 28px', background:'#f8fafc'}}>
-                    <div style={{display:'flex', gap:24, flexWrap:'wrap'}}>
-                      <div>
-                        <div style={{fontSize:11, fontWeight:600, color:'#1e40af', marginBottom:4}}>Leser ({r.readCount})</div>
-                        {r.read_by.length === 0 ? <div style={{fontSize:11, color:'#94a3b8'}}>—</div> :
-                          r.read_by.map(sid => {
-                            const s = skillById[sid];
-                            return <div key={sid} style={{fontSize:11, padding:'1px 0'}}><span style={{color:'#64748b'}}>{sid}</span> {s ? s.name : ''}</div>;
-                          })
-                        }
-                      </div>
-                      <div>
-                        <div style={{fontSize:11, fontWeight:600, color:'#166534', marginBottom:4}}>Schreiber ({r.writeCount})</div>
-                        {r.written_by.length === 0 ? <div style={{fontSize:11, color:'#94a3b8'}}>—</div> :
-                          r.written_by.map(sid => {
-                            const s = skillById[sid];
-                            return <div key={sid} style={{fontSize:11, padding:'1px 0'}}><span style={{color:'#64748b'}}>{sid}</span> {s ? s.name : ''}</div>;
-                          })
-                        }
-                      </div>
-                    </div>
+                  <td colSpan={2} style={{background:'#f8fafc'}}></td>
+                  <td style={{padding:'8px 10px', background:'#f8fafc', verticalAlign:'top'}}>
+                    {r.written_by.length === 0 ? <div style={{fontSize:11, color:'#94a3b8'}}>—</div> :
+                      r.written_by.map(sid => {
+                        const s = skillById[sid];
+                        return <div key={sid} style={{fontSize:11, padding:'1px 0'}}><span style={{color:'#64748b', marginRight:4}}>{sid}</span>{s ? s.name : ''}</div>;
+                      })
+                    }
                   </td>
+                  <td style={{padding:'8px 10px', background:'#f8fafc', verticalAlign:'top'}}>
+                    {r.read_by.length === 0 ? <div style={{fontSize:11, color:'#94a3b8'}}>—</div> :
+                      r.read_by.map(sid => {
+                        const s = skillById[sid];
+                        return <div key={sid} style={{fontSize:11, padding:'1px 0'}}><span style={{color:'#64748b', marginRight:4}}>{sid}</span>{s ? s.name : ''}</div>;
+                      })
+                    }
+                  </td>
+                  <td colSpan={2} style={{background:'#f8fafc'}}></td>
                 </tr>
               )
             ])}
@@ -330,8 +326,8 @@ function Tab3() {
         </table>
       </div>
       <div style={{marginTop:12, fontSize:11, color:'#64748b', display:'flex', gap:16}}>
-        <span><span className="pill pill-r">n</span> Lesende Skills</span>
         <span><span className="pill pill-w">n</span> Schreibende Skills</span>
+        <span><span className="pill pill-r">n</span> Lesende Skills</span>
         <span><span className="pill pill-rw">n</span> Gesamt-Zugriffe</span>
         <span style={{marginLeft:8}}>Klick auf Zeile für Details</span>
       </div>
