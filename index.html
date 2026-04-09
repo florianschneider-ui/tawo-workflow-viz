@@ -346,6 +346,20 @@ function Tab4() {
     });
   });
 
+  // Helper: is skillA before skillB in workflow order?
+  const blockOrder = D.blocks.map(b => b.id);
+  function isBefore(aId, bId) {
+    const a = skillById[aId], b = skillById[bId];
+    if (!a || !b) return false;
+    const aBlock = blockOrder.indexOf(a.block);
+    const bBlock = blockOrder.indexOf(b.block);
+    if (aBlock < bBlock) return true;
+    if (aBlock > bBlock) return false;
+    // Same block: compare position in block.skills array
+    const blockSkills = (blockById[a.block] || {}).skills || [];
+    return blockSkills.indexOf(aId) < blockSkills.indexOf(bId);
+  }
+
   return (
     <div>
       {D.blocks.map(block => (
@@ -354,10 +368,10 @@ function Tab4() {
           {block.skills.map(sid => {
             const skill = skillById[sid];
             if (!skill) return null;
-            // Build deps: read resource → written by which skills
+            // Build deps: only from skills that come BEFORE this one
             const deps = {};
             skill.reads.forEach(res => {
-              const producers = (writtenBy[res] || []).filter(p => p !== sid);
+              const producers = (writtenBy[res] || []).filter(p => p !== sid && isBefore(p, sid));
               if (producers.length > 0) {
                 producers.forEach(p => {
                   if (!deps[p]) deps[p] = [];
@@ -365,8 +379,11 @@ function Tab4() {
                 });
               }
             });
-            // External resources (not produced by any skill)
-            const extResources = skill.reads.filter(res => !writtenBy[res] || writtenBy[res].length === 0);
+            // External resources (not produced by any earlier skill)
+            const extResources = skill.reads.filter(res => {
+              const producers = (writtenBy[res] || []).filter(p => p !== sid && isBefore(p, sid));
+              return producers.length === 0;
+            });
 
             return (
               <div key={sid} style={{marginBottom:14, paddingBottom:10, borderBottom:'1px solid #f1f5f9'}}>
