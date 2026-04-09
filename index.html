@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAWO Workflow-Analyse</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; font-size: 14px; }
+  #root { max-width: 1100px; margin: 0 auto; padding: 20px; }
+  h1 { font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+  .subtitle { color: #64748b; font-size: 13px; margin-bottom: 16px; }
+  .banner { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; }
+  .banner-ok { background: #f0fdf4; border-color: #bbf7d0; }
+  .tab-bar { display: flex; gap: 0; border-bottom: 1px solid #e5e7eb; margin-bottom: 20px; }
+  .tab-btn { padding: 8px 16px; background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; font-size: 13px; color: #64748b; font-family: inherit; transition: color 0.15s; }
+  .tab-btn:hover { color: #1e293b; }
+  .tab-btn.active { color: #1e293b; font-weight: 600; border-bottom-color: #1e293b; }
+  .panel { border-radius: 10px; border: 1px solid #e2e8f0; background: #f8fafc; padding: 16px; margin-bottom: 16px; }
+  .panel-title { font-weight: 600; font-size: 13px; margin-bottom: 12px; color: #1e293b; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: #f1f5f9; color: #64748b; font-weight: 600; padding: 6px 10px; text-align: left; position: sticky; top: 0; z-index: 1; }
+  td { padding: 5px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+  tr:hover td { background: #f8fafc; }
+  .pill { display: inline-block; border-radius: 12px; padding: 2px 8px; font-size: 10px; font-weight: 600; line-height: 1.6; white-space: nowrap; }
+  .pill-r { background: #dbeafe; color: #1e40af; }
+  .pill-w { background: #dcfce7; color: #166534; }
+  .pill-rw { background: #fef3c7; color: #92400e; }
+  .pill-none { background: #f1f5f9; color: #94a3b8; }
+  .pill-miss { background: #fef2f2; color: #991b1b; }
+  .pill-ext { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+  .pill-status-live { background: #dcfce7; color: #166534; }
+  .pill-status-beta { background: #fef3c7; color: #92400e; }
+  .pill-status-inarbeit { background: #fef2f2; color: #991b1b; }
+  .block-header { background: #e2e8f0; font-weight: 700; font-size: 11px; color: #475569; }
+  .block-header td { padding: 4px 10px; }
+  .sticky-col { position: sticky; left: 0; background: #fff; z-index: 2; min-width: 160px; border-right: 1px solid #e2e8f0; }
+  .overflow-x { overflow-x: auto; }
+  .res-group-header { background: #f8fafc; font-weight: 600; font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+  .res-group-header td { padding: 3px 10px; }
+  .skill-row td:first-child { font-weight: 600; }
+  .tag { display: inline-block; border-radius: 6px; padding: 1px 6px; font-size: 10px; font-weight: 600; margin: 1px; }
+  .tag-r { background: #dbeafe; color: #1e40af; }
+  .tag-w { background: #dcfce7; color: #166534; }
+  .tag-miss { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+  .tag-ext { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+  .dep-block { margin-bottom: 10px; }
+  .dep-title { font-weight: 600; font-size: 12px; margin-bottom: 4px; }
+  .dep-item { font-size: 12px; color: #475569; padding: 2px 0; padding-left: 12px; }
+  .dep-item::before { content: '→ '; color: #94a3b8; }
+  .reuse-bar { height: 8px; border-radius: 4px; background: #dbeafe; display: inline-block; vertical-align: middle; margin-right: 6px; }
+  .entry-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; margin-bottom: 16px; }
+  .entry-btn { padding: 8px 12px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; cursor: pointer; font-size: 12px; font-family: inherit; text-align: left; transition: all 0.15s; }
+  .entry-btn:hover { border-color: #94a3b8; background: #f1f5f9; }
+  .entry-btn.selected { border-color: #1e293b; background: #f1f5f9; font-weight: 600; }
+  .entry-btn-id { font-size: 10px; color: #94a3b8; margin-bottom: 2px; }
+  .missing-list { margin-top: 12px; }
+  .missing-item { display: flex; align-items: flex-start; gap: 8px; padding: 8px 12px; border-radius: 8px; background: #fef2f2; border: 1px solid #fecaca; margin-bottom: 6px; }
+  .missing-ok { background: #f0fdf4; border-color: #bbf7d0; color: #166534; padding: 10px 12px; border-radius: 8px; }
+  .spur-filter { display: flex; gap: 8px; margin-bottom: 16px; }
+  .spur-btn { padding: 5px 14px; border-radius: 20px; border: 1px solid #e2e8f0; background: #fff; cursor: pointer; font-size: 12px; font-family: inherit; transition: all 0.15s; }
+  .spur-btn.active { background: #1e293b; color: #fff; border-color: #1e293b; }
+  .skill-name { font-size: 11px; color: #475569; }
+  .skill-cmd { font-family: monospace; font-size: 11px; }
+  .info-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+  .info-item { font-size: 12px; color: #64748b; }
+  .info-item strong { color: #1e293b; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+window.WORKFLOW_DATA = {"generated_at":"2026-04-06T19:44:21Z","generated_by":"workflow-validation","validation_status":"pending","issues_count":0,"blocks":[{"id":"A","name":"Block A: Projekt-Erfassung","order":1,"spuren":["A","B","C"],"skills":["A-01","A-02"],"notion_page_id":"3259da66-ff7a-815e-a50b-fa32856808f9"},{"id":"B","name":"Block B: Vorab-Kalkulation","order":2,"spuren":["A","B","C"],"skills":["B-01","B-02","B-03","B-01->03"],"notion_page_id":"3259da66-ff7a-81cf-a314-cb2608b5e0b9"},{"id":"C","name":"Block C: Beschaffung","order":3,"spuren":["A"],"skills":["C-01","C-02","C-03","C-04"],"notion_page_id":"3259da66-ff7a-814f-8718-eb3ada6b5771"},{"id":"D","name":"Block D: Analyse & Abgabe","order":4,"spuren":["A","B","C"],"skills":["D-01","D-02"],"notion_page_id":"3259da66-ff7a-8185-8ddd-c49f906f0dd9"},{"id":"E","name":"Block E: Projekt-Verhandlung","order":5,"spuren":["A"],"skills":["E-01","E-02"],"notion_page_id":"3259da66-ff7a-815e-ab79-d48e52b7e3fb"}],"skills":[{"id":"A-01","name":"projekt-erfassung","slash_command":"/projekt-erfassung","skill_path":".claude/skills/projekt-erfassung/","key_files":["SKILL.md","dokumenten-db.md","notion-felder.md","projekt-ordner.md","referenz-matching.md"],"block":"A","status":"live","spuren":["A","B","C"],"reads":["GDrive Projektordner","GAEB-Quelldateien (X83/D83)","Notion DB Snapshots","Projekt-DB","Referenz-LV"],"writes":["workflow_state.md","Projekt-DB","Notion Dokumenten-DB (Inline)","GDrive Projektordner"],"predecessors":[],"successors":["B-01","B-01->03"],"validation":"pending","summary":"Neues Projekt vom unsortiertem Projektordner bis zum fertigen Notion-Eintrag, Dokumenten-DB und bereinigter Ordnerstruktur.","notion_page_id":"3259da66-ff7a-81cd-b212-ddf05086ab48"},{"id":"A-02","name":"nachreichung","slash_command":"/nachreichung","skill_path":".claude/skills/nachreichung/","key_files":["SKILL.md"],"block":"A","status":"beta","spuren":[],"reads":["GDrive Projektordner","workflow_state.md"],"writes":["Notion Dokumenten-DB (Inline)","workflow_state.md"],"predecessors":[],"successors":[],"validation":"pending","summary":"Neue Dokumente im Projektordner erkennen und in der Notion Dokumenten-DB erfassen.","notion_page_id":"3369da66-ff7a-815f-ad9e-e4c756ef218e"},{"id":"B-01","name":"template-anwendung","slash_command":"/template-anwendung","skill_path":".claude/skills/template-anwendung/","key_files":["SKILL.md"],"block":"B","status":"live","spuren":["A","B","C"],"reads":["GAEB-Quelldateien (X83/D83)","workflow_state.md","GSheet Kalkulation"],"writes":["GSheet Kalkulation","workflow_state.md"],"predecessors":["A-01"],"successors":["B-02"],"validation":"pending","summary":"Liest die GAEB-Excel und erstellt eine Kopie des GSheet-Templates mit allen LV-Daten.","notion_page_id":"3259da66-ff7a-81bd-9a0c-f6dfaa983a12"},{"id":"B-02","name":"hinweis-extraktion","slash_command":"/hinweis-extraktion","skill_path":".claude/skills/hinweis-extraktion/","key_files":["SKILL.md"],"block":"B","status":"live","spuren":["A","B","C"],"reads":["GSheet Kalkulation","workflow_state.md"],"writes":["GSheet Kalkulation","hinweise.json","workflow_state.md"],"predecessors":["B-01"],"successors":["B-03"],"validation":"pending","summary":"Mechanische Fakten-Extraktion per Python-Script. Regex auf GSheet, Ergebnis in Tabs + JSON.","notion_page_id":"3259da66-ff7a-8128-8ee3-e5b0b8265f84"},{"id":"B-03","name":"vorab-kalkulation","slash_command":"/vorab-kalkulation","skill_path":".claude/skills/vorab-kalkulation/","key_files":["SKILL.md"],"block":"B","status":"live","spuren":["A","B","C"],"reads":["GSheet Kalkulation","hinweise.json","Referenz-LV","KFE-Katalog","Datanorm-Preise","TAWO-Stundensaetze"],"writes":["GSheet Kalkulation","matching.json","workflow_state.md"],"predecessors":["B-02"],"successors":["C-01","C-03","D-01"],"validation":"pending","summary":"Vorab-Schaetzung aller LV-Positionen: L3, Kalk-Typ, Lohn, Material, Sub. Subagent-Architektur.","notion_page_id":"3259da66-ff7a-8122-94c0-d624bc69a0cb"},{"id":"B-01->03","name":"vorab-kalkulation-komplett","slash_command":"/vorab-kalkulation-komplett","skill_path":".claude/skills/vorab-kalkulation-komplett/","key_files":["SKILL.md"],"block":"B","status":"live","spuren":["A","B","C"],"reads":["GAEB-Quelldateien (X83/D83)","workflow_state.md","GSheet Kalkulation","Referenz-LV","KFE-Katalog","Datanorm-Preise","TAWO-Stundensaetze","hinweise.json"],"writes":["GSheet Kalkulation","workflow_state.md","hinweise.json","matching.json"],"predecessors":["A-01"],"successors":[],"validation":"pending","summary":"Block B komplett: B-01, B-02, B-03 ohne Unterbrechung.","notion_page_id":"3269da66-ff7a-8061-ad4a-f3acf87d9076"},{"id":"C-01","name":"material-anfragen","slash_command":"/material-anfragen","skill_path":".claude/skills/material-anfragen/","key_files":["SKILL.md","anfragen-spalten.md","anfragen-mail-guidelines.md"],"block":"C","status":"live","spuren":["A"],"reads":["workflow_state.md","matching.json","Notion DB Snapshots","MaterialAnfragen-DB","hinweise.json","GSheet Kalkulation"],"writes":["Gmail (Inbox/Drafts)","Anfragen-GSheet (Material)","MaterialAnfragen-DB","workflow_state.md"],"predecessors":["B-03"],"successors":["C-02"],"validation":"pending","summary":"Lieferanten-Zuordnung + Gmail-Drafts. 2 Phasen: Kanal-Bestimmung, Kontakte + Briefings.","notion_page_id":"3259da66-ff7a-8191-813b-d83aacf9404b"},{"id":"C-02","name":"inbox-scan","slash_command":"/inbox-scan","skill_path":".claude/skills/inbox-scan/","key_files":["SKILL.md"],"block":"C","status":"beta","spuren":["A","C"],"reads":["Gmail (Inbox/Drafts)","MaterialAnfragen-DB","Notion DB Snapshots"],"writes":["GDrive Projektordner","MaterialAnfragen-DB","Gmail (Inbox/Drafts)","workflow_state.md"],"predecessors":["C-01"],"successors":[],"validation":"pending","summary":"Scannt Gmail nach Materialangeboten, legt in Drive ab, updated Notion.","notion_page_id":"3339da66-ff7a-8177-acbf-d87c68d1245d"},{"id":"C-03","name":"angebots-auswertung","slash_command":"/angebots-auswertung","skill_path":".claude/skills/angebots-auswertung/","key_files":["SKILL.md"],"block":"C","status":"beta","spuren":["A"],"reads":["GDrive Projektordner","GSheet Kalkulation","MaterialAnfragen-DB","Anfragen-GSheet (Material)","hinweise.json"],"writes":["GSheet Kalkulation","Anfragen-GSheet (Material)","MaterialAnfragen-DB","workflow_state.md","matching.json"],"predecessors":["B-03"],"successors":["C-04","E-02"],"validation":"pending","summary":"Eingehendes Angebot aufbereiten: Parse, Match, QS als Einkaeufer, Lieferanten-Tab schreiben.","notion_page_id":"3259da66-ff7a-81d7-b0f6-e49ca8777b72"},{"id":"C-04","name":"material-konsolidierung","slash_command":"/material-konsolidierung","skill_path":".claude/skills/material-konsolidierung/","key_files":["SKILL.md"],"block":"C","status":"beta","spuren":["A"],"reads":["Anfragen-GSheet (Material)","workflow_state.md","hinweise.json","MaterialAnfragen-DB","GSheet Kalkulation"],"writes":["GSheet Kalkulation","Anfragen-GSheet (Material)","workflow_state.md"],"predecessors":["C-03"],"successors":[],"validation":"pending","summary":"Alle Angebote konsolidieren, Scope pruefen, besten Preis pro Position bestimmen.","notion_page_id":"32e9da66-ff7a-8166-bd26-ce854d131cb1"},{"id":"D-01","name":"kalkulations-analyse","slash_command":"/kalkulations-analyse","skill_path":".claude/skills/kalkulations-analyse/","key_files":["SKILL.md"],"block":"D","status":"beta","spuren":["A","B","C"],"reads":["GSheet Kalkulation","workflow_state.md","Referenz-LV","TAWO-Stundensaetze","KFE-Katalog","Datanorm-Preise"],"writes":["GSheet Kalkulation","workflow_state.md"],"predecessors":["B-03"],"successors":[],"validation":"pending","summary":"Analyse des fertig kalkulierten LVs. Script rechnet, Claude bewertet als Oberbauleiter.","notion_page_id":"32e9da66-ff7a-81eb-aa75-ecfe10e6a067"},{"id":"D-02","name":"angebotserstellung","slash_command":"/angebotserstellung","skill_path":".claude/skills/angebotserstellung/","key_files":["SKILL.md"],"block":"D","status":"live","spuren":["A","B","C"],"reads":["GSheet Kalkulation","GAEB-Quelldateien (X83/D83)","Projekt-DB","workflow_state.md"],"writes":["Angebots-Abgabe (X84/PDF)","workflow_state.md","Projekt-DB"],"predecessors":[],"successors":["E-01"],"validation":"pending","summary":"Erzeugt GAEB X84 + PDF-Angebot aus kalkuliertem GSheet und Original-X83.","notion_page_id":"3279da66-ff7a-81d8-9872-e0789613225d"},{"id":"E-01","name":"bieterbrief-verarbeitung","slash_command":"/bieterbrief-verarbeitung","skill_path":".claude/skills/bieterbrief-verarbeitung/","key_files":["SKILL.md"],"block":"E","status":"in Arbeit","spuren":[],"reads":["GDrive Projektordner","GSheet Kalkulation","hinweise.json","Referenz-LV","KFE-Katalog","Datanorm-Preise"],"writes":["GSheet Kalkulation","GDrive Projektordner","workflow_state.md"],"predecessors":["D-02"],"successors":[],"validation":"pending","summary":"Bieterbrief-Excel vom AG verarbeiten: Parsen, Matching, EK-Untergrenzen, neues Kalkulations-GSheet.","notion_page_id":"3339da66-ff7a-81e3-8cb2-d087424af3af"},{"id":"E-02","name":"gh-verhandlung","slash_command":"/gh-verhandlung","skill_path":".claude/skills/gh-verhandlung/","key_files":["SKILL.md"],"block":"E","status":"beta","spuren":["A"],"reads":["Anfragen-GSheet (Material)","GSheet Kalkulation"],"writes":["Anfragen-GSheet (Material)","Gmail (Inbox/Drafts)","workflow_state.md"],"predecessors":["C-03"],"successors":[],"validation":"pending","summary":"GH-Preisverhandlung vorbereiten: Potenzial-Positionen + Bauzeitenplan + Gespraechsleitfaden.","notion_page_id":"3359da66-ff7a-819c-a0a8-d998b06fc72d"}],"resources":[{"name":"Anfragen-GSheet (Material)","type":"Google Sheet","notion_page_id":"3399da66-ff7a-8199-8ef0-cb95dca785c0","read_by":["C-03","C-04","E-02"],"written_by":["C-01","C-03","C-04","E-02"]},{"name":"Angebots-Abgabe (X84/PDF)","type":"Datei","notion_page_id":"3399da66-ff7a-81de-ac12-c1c5014d4c15","read_by":[],"written_by":["D-02"]},{"name":"Datanorm-Preise","type":"Referenz-Daten","notion_page_id":"3359da66-ff7a-8172-9cb1-c73e0873afe1","read_by":["B-03","B-01->03","D-01","E-01"],"written_by":[]},{"name":"GAEB-Quelldateien (X83/D83)","type":"Datei","notion_page_id":"3399da66-ff7a-81fe-b49f-d615f04248fb","read_by":["A-01","B-01","B-01->03","D-02"],"written_by":[]},{"name":"GDrive Projektordner","type":"Dateisystem","notion_page_id":"3399da66-ff7a-814b-9892-db0a07382a46","read_by":["A-01","A-02","C-03","E-01"],"written_by":["A-01","C-02","E-01"]},{"name":"GSheet Kalkulation","type":"Google Sheet","notion_page_id":"3359da66-ff7a-81b6-b995-e2cbd1fc1a16","read_by":["B-01","B-02","B-03","B-01->03","C-01","C-03","C-04","D-01","D-02","E-01","E-02"],"written_by":["B-01","B-02","B-03","B-01->03","C-03","C-04","D-01","E-01"]},{"name":"Gmail (Inbox/Drafts)","type":"Externer Service","notion_page_id":"3399da66-ff7a-817d-ad71-d1dcec4b34d7","read_by":["C-02"],"written_by":["C-01","C-02","E-02"]},{"name":"KFE-Katalog","type":"Referenz-Daten","notion_page_id":"3359da66-ff7a-81bf-bc45-ddc0b5d12bb6","read_by":["B-03","B-01->03","D-01","E-01"],"written_by":[]},{"name":"MaterialAnfragen-DB","type":"Datenbank Prozess","notion_page_id":"3359da66-ff7a-80e9-9c32-e2264b952b8b","read_by":["C-01","C-02","C-03","C-04"],"written_by":["C-01","C-02","C-03"]},{"name":"Notion DB Snapshots","type":"Referenz-Daten","notion_page_id":"3359da66-ff7a-8147-b1d2-ee1e5388929b","read_by":["A-01","C-01","C-02"],"written_by":[]},{"name":"Notion Dokumenten-DB (Inline)","type":"Datenbank Prozess","notion_page_id":"3399da66-ff7a-8197-82cc-cb28966f709e","read_by":[],"written_by":["A-01","A-02"]},{"name":"Projekt-DB","type":"Datenbank Prozess","notion_page_id":"3359da66-ff7a-8120-b477-f781b7d3dd4e","read_by":["A-01","D-02"],"written_by":["A-01","D-02"]},{"name":"Referenz-LV","type":"Referenz-Daten","notion_page_id":"3359da66-ff7a-8160-a083-f422c9d44bb4","read_by":["A-01","B-03","B-01->03","D-01","E-01"],"written_by":[]},{"name":"TAWO-Stundensaetze","type":"Referenz-Daten","notion_page_id":"3359da66-ff7a-8163-b4e4-fdd310871365","read_by":["B-03","B-01->03","D-01"],"written_by":[]},{"name":"hinweise.json","type":"Datei","notion_page_id":"3399da66-ff7a-818c-8617-c887f3229ee6","read_by":["B-03","B-01->03","C-01","C-03","C-04","E-01"],"written_by":["B-02","B-01->03"]},{"name":"matching.json","type":"Datei","notion_page_id":"3399da66-ff7a-81be-a3d6-c8a14f9af814","read_by":["C-01"],"written_by":["B-03","B-01->03","C-03"]},{"name":"workflow_state.md","type":"Datei","notion_page_id":"3399da66-ff7a-8155-b006-d63353dc4456","read_by":["A-02","B-01","B-02","B-01->03","C-01","C-04","D-01","D-02"],"written_by":["A-01","A-02","B-01","B-02","B-03","B-01->03","C-01","C-02","C-03","C-04","D-01","D-02","E-01","E-02"]}],"validation_issues":[]};
+</script>
+
+<script type="text/babel">
+const { useState, useMemo } = React;
+
+const D = window.WORKFLOW_DATA;
+
+// Build lookup maps
+const skillById = {};
+D.skills.forEach(s => { skillById[s.id] = s; });
+const blockById = {};
+D.blocks.forEach(b => { blockById[b.id] = b; });
+const resourceByName = {};
+D.resources.forEach(r => { resourceByName[r.name] = r; });
+
+// Resource type groups (ordered)
+const TYPE_ORDER = ['Google Sheet','Datei','Datenbank Prozess','Externer Service','Referenz-Daten','Dateisystem'];
+const typeColor = {
+  'Google Sheet': '#166534',
+  'Datei': '#1e40af',
+  'Datenbank Prozess': '#6b21a8',
+  'Externer Service': '#be185d',
+  'Referenz-Daten': '#92400e',
+  'Dateisystem': '#0e7490',
+};
+
+function groupResourcesByType(resources) {
+  const groups = {};
+  TYPE_ORDER.forEach(t => { groups[t] = []; });
+  resources.forEach(r => {
+    if (!groups[r.type]) groups[r.type] = [];
+    groups[r.type].push(r);
+  });
+  return groups;
+}
+
+function getAccessType(skill, resourceName) {
+  const reads = skill.reads.includes(resourceName);
+  const writes = skill.writes.includes(resourceName);
+  if (reads && writes) return 'rw';
+  if (reads) return 'r';
+  if (writes) return 'w';
+  return null;
+}
+
+function StatusPill({ status }) {
+  const cls = status === 'live' ? 'pill-status-live' : status === 'beta' ? 'pill-status-beta' : 'pill-status-inarbeit';
+  return <span className={`pill ${cls}`}>{status}</span>;
+}
+
+// ---- TAB 1: Ressource-Matrix ----
+function Tab1() {
+  const resGroups = groupResourcesByType(D.resources);
+  const orderedResources = TYPE_ORDER.flatMap(t => resGroups[t] || []);
+
+  return (
+    <div>
+      <div className="info-row" style={{marginBottom: 12}}>
+        <span className="info-item"><strong>{D.skills.length}</strong> Skills</span>
+        <span className="info-item"><strong>{D.resources.length}</strong> Ressourcen</span>
+        <span className="info-item"><strong>{D.blocks.length}</strong> Blöcke</span>
+        <span className="info-item">
+          <span className="pill pill-r" style={{marginRight:4}}>R</span>Lesen&nbsp;
+          <span className="pill pill-w" style={{marginRight:4}}>W</span>Schreiben&nbsp;
+          <span className="pill pill-rw" style={{marginRight:4}}>R/W</span>Beides
+        </span>
+      </div>
+      <div className="overflow-x">
+        <table>
+          <thead>
+            <tr>
+              <th className="sticky-col" style={{minWidth:180}}>Skill</th>
+              <th style={{minWidth:60, textAlign:'center'}}>Block</th>
+              {orderedResources.map(r => (
+                <th key={r.name} style={{minWidth:70, maxWidth:90, fontSize:10, fontWeight:600, color: typeColor[r.type] || '#64748b', writingMode:'horizontal-tb', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', maxWidth:80}} title={r.name}>
+                  <span style={{display:'inline-block', maxWidth:80, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}}>{r.name}</span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {D.blocks.map(block => [
+              <tr key={`block-${block.id}`} className="block-header">
+                <td className="sticky-col" colSpan={2} style={{fontWeight:700, fontSize:11, color:'#475569', background:'#e2e8f0'}}>{block.name}</td>
+                {orderedResources.map(r => (
+                  <td key={r.name} style={{background:'#e2e8f0'}}></td>
+                ))}
+              </tr>,
+              ...block.skills.map(sid => {
+                const skill = skillById[sid];
+                if (!skill) return null;
+                return (
+                  <tr key={sid} className="skill-row">
+                    <td className="sticky-col">
+                      <div style={{fontWeight:600, fontSize:12}}>{skill.name}</div>
+                      <div className="skill-cmd">{skill.slash_command}</div>
+                    </td>
+                    <td style={{textAlign:'center'}}><StatusPill status={skill.status}/></td>
+                    {orderedResources.map(r => {
+                      const t = getAccessType(skill, r.name);
+                      if (!t) return <td key={r.name} style={{textAlign:'center'}}><span style={{color:'#e2e8f0', fontSize:12}}>·</span></td>;
+                      const cls = t === 'rw' ? 'pill-rw' : t === 'r' ? 'pill-r' : 'pill-w';
+                      const label = t === 'rw' ? 'R/W' : t.toUpperCase();
+                      return <td key={r.name} style={{textAlign:'center'}}><span className={`pill ${cls}`}>{label}</span></td>;
+                    })}
+                  </tr>
+                );
+              }).filter(Boolean)
+            ])}
+          </tbody>
+        </table>
+      </div>
+      <div style={{marginTop:12, display:'flex', flexWrap:'wrap', gap:12}}>
+        {TYPE_ORDER.map(t => resGroups[t]?.length > 0 && (
+          <span key={t} style={{fontSize:11, color: typeColor[t], fontWeight:600}}>■ {t} ({resGroups[t].length})</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ---- TAB 2: State-Requirements ----
+function Tab2() {
+  // Collect all "written" resources and which skill first creates them
+  const producedBy = {};
+  D.skills.forEach(skill => {
+    skill.writes.forEach(w => {
+      if (!producedBy[w]) producedBy[w] = [];
+      producedBy[w].push(skill.id);
+    });
+  });
+
+  return (
+    <div>
+      {D.blocks.map(block => (
+        <div key={block.id} className="panel">
+          <div className="panel-title">{block.name}</div>
+          {block.skills.map(sid => {
+            const skill = skillById[sid];
+            if (!skill) return null;
+            const neededReads = skill.reads;
+            const produced = skill.writes;
+            return (
+              <div key={sid} style={{marginBottom:16, paddingBottom:12, borderBottom:'1px solid #e2e8f0'}}>
+                <div style={{display:'flex', alignItems:'center', gap:8, marginBottom:6}}>
+                  <strong style={{fontSize:13}}>{skill.name}</strong>
+                  <span className="skill-cmd" style={{fontSize:11, color:'#64748b'}}>{skill.slash_command}</span>
+                  <StatusPill status={skill.status}/>
+                </div>
+                <div style={{marginBottom:4}}>
+                  <span style={{fontSize:11, fontWeight:600, color:'#64748b', marginRight:6}}>Benötigt (reads):</span>
+                  {neededReads.map(r => {
+                    const isProduced = producedBy[r] && producedBy[r].some(pid => pid !== sid);
+                    const isExternal = !producedBy[r] || producedBy[r].length === 0;
+                    const cls = isExternal ? 'tag-ext' : 'tag-r';
+                    return <span key={r} className={`tag ${cls}`} title={isExternal ? 'Extern / Vorbedingung' : ''}>{r}{isExternal ? ' ⚡' : ''}</span>;
+                  })}
+                </div>
+                <div>
+                  <span style={{fontSize:11, fontWeight:600, color:'#64748b', marginRight:6}}>Erzeugt (writes):</span>
+                  {produced.map(r => <span key={r} className="tag tag-w">{r}</span>)}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ))}
+      <div style={{fontSize:11, color:'#64748b', marginTop:4}}>
+        <span className="tag tag-ext">⚡</span> = Extern / nicht von einem Workflow-Skill erzeugt (Vorbedingung)
+      </div>
+    </div>
+  );
+}
+
+// ---- TAB 3: Reuse-Analyse ----
+function Tab3() {
+  const reuse = D.resources.map(r => ({
+    ...r,
+    readCount: r.read_by.length,
+    writeCount: r.written_by.length,
+    total: r.read_by.length + r.written_by.length,
+  })).sort((a, b) => b.total - a.total);
+
+  const maxTotal = reuse[0]?.total || 1;
+
+  return (
+    <div>
+      <div className="overflow-x">
+        <table>
+          <thead>
+            <tr>
+              <th>Ressource</th>
+              <th>Typ</th>
+              <th style={{textAlign:'center'}}>Leser</th>
+              <th style={{textAlign:'center'}}>Schreiber</th>
+              <th style={{textAlign:'center'}}>Gesamt</th>
+              <th>Zugriffe</th>
+            </tr>
+          </thead>
+          <tbody>
+            {reuse.map(r => (
+              <tr key={r.name}>
+                <td style={{fontWeight:600, fontSize:12}}>{r.name}</td>
+                <td><span style={{fontSize:10, fontWeight:600, color: typeColor[r.type]}}>{r.type}</span></td>
+                <td style={{textAlign:'center'}}>
+                  {r.readCount > 0 ? <span className="pill pill-r">{r.readCount}</span> : <span style={{color:'#e2e8f0'}}>—</span>}
+                </td>
+                <td style={{textAlign:'center'}}>
+                  {r.writeCount > 0 ? <span className="pill pill-w">{r.writeCount}</span> : <span style={{color:'#e2e8f0'}}>—</span>}
+                </td>
+                <td style={{textAlign:'center'}}>
+                  <span className="pill pill-rw">{r.total}</span>
+                </td>
+                <td style={{minWidth:120}}>
+                  <div style={{display:'flex', alignItems:'center', gap:4}}>
+                    <div style={{width: Math.round((r.readCount / maxTotal) * 80), height:8, borderRadius:4, background:'#dbeafe', display:'inline-block'}}></div>
+                    <div style={{width: Math.round((r.writeCount / maxTotal) * 80), height:8, borderRadius:4, background:'#dcfce7', display:'inline-block'}}></div>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div style={{marginTop:12, fontSize:11, color:'#64748b', display:'flex', gap:16}}>
+        <span><span className="pill pill-r">n</span> Lesende Skills</span>
+        <span><span className="pill pill-w">n</span> Schreibende Skills</span>
+        <span><span className="pill pill-rw">n</span> Gesamt-Zugriffe</span>
+      </div>
+    </div>
+  );
+}
+
+// ---- TAB 4: Dependencies ----
+function Tab4() {
+  // For each skill: what does it need (reads) and which skills write those resources?
+  const writtenBy = {};
+  D.skills.forEach(skill => {
+    skill.writes.forEach(w => {
+      if (!writtenBy[w]) writtenBy[w] = [];
+      if (!writtenBy[w].includes(skill.id)) writtenBy[w].push(skill.id);
+    });
+  });
+
+  return (
+    <div>
+      {D.blocks.map(block => (
+        <div key={block.id} className="panel">
+          <div className="panel-title">{block.name}</div>
+          {block.skills.map(sid => {
+            const skill = skillById[sid];
+            if (!skill) return null;
+            // Build deps: read resource → written by which skills
+            const deps = {};
+            skill.reads.forEach(res => {
+              const producers = (writtenBy[res] || []).filter(p => p !== sid);
+              if (producers.length > 0) {
+                producers.forEach(p => {
+                  if (!deps[p]) deps[p] = [];
+                  deps[p].push(res);
+                });
+              }
+            });
+            // External resources (not produced by any skill)
+            const extResources = skill.reads.filter(res => !writtenBy[res] || writtenBy[res].length === 0);
+
+            return (
+              <div key={sid} style={{marginBottom:14, paddingBottom:10, borderBottom:'1px solid #f1f5f9'}}>
+                <div style={{display:'flex', alignItems:'center', gap:8, marginBottom:6}}>
+                  <strong style={{fontSize:13}}>{skill.name}</strong>
+                  <span className="skill-cmd" style={{fontSize:11, color:'#64748b'}}>{skill.slash_command}</span>
+                </div>
+                {Object.keys(deps).length === 0 && extResources.length === 0 && (
+                  <div style={{fontSize:12, color:'#94a3b8'}}>Keine internen Skill-Abhängigkeiten</div>
+                )}
+                {Object.keys(deps).map(depId => {
+                  const depSkill = skillById[depId];
+                  return (
+                    <div key={depId} className="dep-item">
+                      <strong style={{color:'#1e293b'}}>{depSkill ? depSkill.name : depId}</strong>
+                      {' '}wegen:{' '}
+                      {deps[depId].map(r => <span key={r} className="tag tag-r">{r}</span>)}
+                    </div>
+                  );
+                })}
+                {extResources.length > 0 && (
+                  <div className="dep-item">
+                    <strong style={{color:'#92400e'}}>Externe Vorbedingungen:</strong>{' '}
+                    {extResources.map(r => <span key={r} className="tag tag-ext">{r}</span>)}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ---- TAB 5: Entry-Point Simulator ----
+function Tab5() {
+  const [selected, setSelected] = useState(null);
+  const [spurFilter, setSpurFilter] = useState('all');
+
+  // Build: for each resource, which skills write it?
+  const writtenBy = {};
+  D.skills.forEach(skill => {
+    skill.writes.forEach(w => {
+      if (!writtenBy[w]) writtenBy[w] = [];
+      if (!writtenBy[w].includes(skill.id)) writtenBy[w].push(skill.id);
+    });
+  });
+
+  // Get all skills that run BEFORE a given skill in normal flow
+  // (simplified: predecessors chain + all skills in earlier blocks)
+  function getSkillsBefore(skillId) {
+    const skill = skillById[skillId];
+    if (!skill) return new Set();
+    const blockOrder = D.blocks.map(b => b.id);
+    const myBlockIdx = blockOrder.indexOf(skill.block);
+    const before = new Set();
+    D.skills.forEach(s => {
+      const sBlockIdx = blockOrder.indexOf(s.block);
+      if (sBlockIdx < myBlockIdx) before.add(s.id);
+      // Same block, earlier in block.skills list
+      if (sBlockIdx === myBlockIdx) {
+        const blockSkills = blockById[skill.block]?.skills || [];
+        const myIdx = blockSkills.indexOf(skillId);
+        const sIdx = blockSkills.indexOf(s.id);
+        if (sIdx < myIdx) before.add(s.id);
+      }
+    });
+    return before;
+  }
+
+  const missingAnalysis = useMemo(() => {
+    if (!selected) return null;
+    const skill = skillById[selected];
+    const before = getSkillsBefore(selected);
+    const missing = [];
+    skill.reads.forEach(res => {
+      const producers = writtenBy[res] || [];
+      const availableProducers = producers.filter(p => before.has(p));
+      const isExternal = producers.length === 0;
+      if (!isExternal && availableProducers.length === 0) {
+        missing.push({ resource: res, wouldBeProducedBy: producers });
+      }
+    });
+    return missing;
+  }, [selected]);
+
+  const filteredSkills = D.skills.filter(s => {
+    if (spurFilter === 'all') return true;
+    return s.spuren.includes(spurFilter);
+  });
+
+  return (
+    <div>
+      <div style={{marginBottom:16}}>
+        <div style={{fontSize:13, fontWeight:600, marginBottom:8}}>Spur-Filter</div>
+        <div className="spur-filter">
+          {['all','A','B','C'].map(spur => (
+            <button key={spur} className={`spur-btn ${spurFilter === spur ? 'active' : ''}`} onClick={() => setSpurFilter(spur)}>
+              {spur === 'all' ? 'Alle Spuren' : `Spur ${spur}`}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div style={{fontSize:13, fontWeight:600, marginBottom:8}}>Skill als Einstiegspunkt wählen:</div>
+      <div className="entry-grid">
+        {filteredSkills.map(skill => (
+          <button key={skill.id} className={`entry-btn ${selected === skill.id ? 'selected' : ''}`} onClick={() => setSelected(skill.id === selected ? null : skill.id)}>
+            <div className="entry-btn-id">{skill.id} · <StatusPill status={skill.status}/></div>
+            <div style={{fontWeight:600, fontSize:12}}>{skill.name}</div>
+            <div style={{fontSize:10, color:'#64748b', marginTop:2}}>{skill.slash_command}</div>
+          </button>
+        ))}
+      </div>
+      {selected && (
+        <div className="panel" style={{marginTop:8}}>
+          <div className="panel-title">
+            Analyse: Einstieg bei <strong>{skillById[selected]?.name}</strong> ({selected})
+          </div>
+          <div style={{fontSize:12, color:'#64748b', marginBottom:12}}>
+            Wenn alle vorherigen Skills übersprungen werden — welcher State fehlt?
+          </div>
+          {missingAnalysis?.length === 0 ? (
+            <div className="missing-ok">Kein fehlender State — alle Reads sind extern oder werden durch frühere Steps bereitgestellt.</div>
+          ) : (
+            <div className="missing-list">
+              {missingAnalysis?.map(m => (
+                <div key={m.resource} className="missing-item">
+                  <span className="pill pill-miss">FEHLT</span>
+                  <div>
+                    <strong style={{fontSize:12}}>{m.resource}</strong>
+                    <div style={{fontSize:11, color:'#64748b', marginTop:2}}>
+                      Würde erzeugt von: {m.wouldBeProducedBy.map(p => {
+                        const sk = skillById[p];
+                        return <span key={p} className="tag tag-r" style={{marginLeft:2}}>{sk ? sk.name : p}</span>;
+                      })}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          <div style={{marginTop:12, fontSize:11, color:'#94a3b8'}}>
+            Normale Vorgänger laut Daten: {skillById[selected]?.predecessors?.length > 0 ? skillById[selected].predecessors.join(', ') : '—'}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ---- Main App ----
+function App() {
+  const [tab, setTab] = useState(0);
+  const tabs = [
+    { label: 'Ressource-Matrix', comp: Tab1 },
+    { label: 'State-Requirements', comp: Tab2 },
+    { label: 'Reuse-Analyse', comp: Tab3 },
+    { label: 'Dependencies', comp: Tab4 },
+    { label: 'Entry-Point Simulator', comp: Tab5 },
+  ];
+  const ActiveComp = tabs[tab].comp;
+  const issues = D.validation_issues || [];
+
+  return (
+    <div>
+      <h1>TAWO Workflow-Analyse</h1>
+      <div className="subtitle">
+        Generiert: {D.generated_at} · {D.skills.length} Skills · {D.resources.length} Ressourcen · {D.blocks.length} Blöcke
+      </div>
+      {issues.length > 0 ? (
+        <div className="banner">
+          <strong>Validation-Issues: {issues.length}</strong>
+          {issues.map((issue, i) => (
+            <div key={i} style={{marginTop:4, fontSize:12}}>
+              <span className={`pill ${issue.severity === 'error' ? 'pill-miss' : 'pill-rw'}`}>{issue.severity}</span>
+              {' '}{issue.message}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className={`banner banner-ok`} style={{fontSize:12, color:'#166534'}}>
+          Keine Validation-Issues — Workflow-Daten konsistent.
+        </div>
+      )}
+      <div className="tab-bar">
+        {tabs.map((t, i) => (
+          <button key={i} className={`tab-btn ${tab === i ? 'active' : ''}`} onClick={() => setTab(i)}>{t.label}</button>
+        ))}
+      </div>
+      <ActiveComp />
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
