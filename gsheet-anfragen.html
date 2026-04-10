@@ -291,7 +291,7 @@ window.GSHEET_DATA = {
     },
     {
       "id": "lieferant",
-      "name": "Lieferanten-Tabs (dynamisch)",
+      "name": "02-05_Lieferant",
       "type": "dynamisch",
       "header_rows": 3,
       "first_data_row": 4,
@@ -421,8 +421,8 @@ window.GSHEET_DATA = {
     },
     {
       "id": "vergleich",
-      "name": "SG-Vergleiche (dynamisch)",
-      "type": "dynamisch",
+      "name": "Vergleich",
+      "type": "fix",
       "header_rows": 2,
       "first_data_row": 3,
       "purpose": "Pro Summengruppe ein Vergleichs-Tab — mehrere Lieferanten nebeneinander, Scope-Bewertung, EP-Ausreißer.",
@@ -565,7 +565,7 @@ window.GSHEET_DATA = {
       "tabs": {
         "Anfragen": "U",
         "Positionen": "U",
-        "Lieferanten-Tabs (dynamisch)": "C"
+        "02-05_Lieferant": "C"
       },
       "desc": "Erstellt Lieferanten-Tabs, befüllt Anfragen G-O"
     },
@@ -573,8 +573,8 @@ window.GSHEET_DATA = {
       "id": "sg-vergleich",
       "cmd": "/sg-vergleich",
       "tabs": {
-        "SG-Vergleiche (dynamisch)": "C",
-        "Lieferanten-Tabs (dynamisch)": "R"
+        "Vergleich": "C",
+        "02-05_Lieferant": "R"
       },
       "desc": "Erstellt SG-Vergleichs-Tabs"
     },
@@ -584,8 +584,8 @@ window.GSHEET_DATA = {
       "tabs": {
         "Anfragen": "R",
         "Positionen": "R",
-        "Lieferanten-Tabs (dynamisch)": "R",
-        "SG-Vergleiche (dynamisch)": "U"
+        "02-05_Lieferant": "R",
+        "Vergleich": "U"
       },
       "desc": "Master-Tabs, bester Preis → Kalk-GSheet"
     },
@@ -593,8 +593,8 @@ window.GSHEET_DATA = {
       "id": "gh-verhandlung",
       "cmd": "/gh-verhandlung",
       "tabs": {
-        "Lieferanten-Tabs (dynamisch)": "R",
-        "SG-Vergleiche (dynamisch)": "R"
+        "02-05_Lieferant": "R",
+        "Vergleich": "R"
       },
       "desc": "Liest für Potenzial-Analyse"
     }
