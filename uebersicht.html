@@ -3,364 +3,239 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TAWO Kalkulations-Workflow — TBA-Uebersicht</title>
+<title>TAWO Workflow — TBA-Uebersicht</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; color: #1a1a1a; font-size: 13px; overflow-x: auto; }
-.page { min-width: 1100px; max-width: 1300px; margin: 0 auto; padding: 20px 24px 60px; }
-h1 { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
-.subtitle { color: #666; font-size: 12px; margin-bottom: 16px; }
-.legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; padding: 10px 14px; background: #fff; border: 1px solid #ddd; border-radius: 8px; font-size: 11px; align-items: center; }
-.legend-item { display: flex; align-items: center; gap: 5px; }
-.legend-swatch { width: 16px; height: 16px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.15); flex-shrink: 0; }
-
-/* Swim lanes */
-.lane { display: flex; margin-bottom: 2px; min-height: 100px; position: relative; }
-.lane-label { width: 160px; flex-shrink: 0; padding: 12px 10px; font-weight: 700; font-size: 12px; display: flex; align-items: flex-start; justify-content: flex-start; border-radius: 6px 0 0 6px; line-height: 1.3; }
-.lane-content { flex: 1; padding: 14px 16px; display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-start; align-content: flex-start; border-radius: 0 6px 6px 0; position: relative; }
-
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;color:#1a1a1a;font-size:13px}
+#root{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
+h1{font-size:20px;font-weight:700;margin-bottom:2px}
+.sub{color:#666;font-size:12px;margin-bottom:16px}
+/* Toggle */
+.toggle{display:flex;gap:0;margin-bottom:20px;border-radius:8px;overflow:hidden;border:1px solid #d1d5db;width:fit-content}
+.toggle button{padding:8px 20px;border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;background:#fff;color:#64748b;transition:all .15s}
+.toggle button:hover:not(.on){background:#f1f5f9}
+.toggle .on-a{background:#1e40af;color:#fff}
+.toggle .on-b{background:#7c3aed;color:#fff}
+/* Legend */
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px;font-size:11px;align-items:center;color:#555}
+.legend b{color:#333}
+.lsw{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:middle;margin-right:3px;border:1px solid rgba(0,0,0,.12)}
+/* Lane */
+.lane{display:flex;margin-bottom:3px;transition:opacity .25s}
+.lane.dim{opacity:.22;pointer-events:none}
+.lane-l{width:150px;flex-shrink:0;padding:12px 10px;font-weight:700;font-size:11px;line-height:1.35;display:flex;flex-direction:column;justify-content:center;border-radius:6px 0 0 6px}
+.lane-l small{font-weight:400;color:inherit;opacity:.7;font-size:10px;margin-top:2px}
+.lane-r{flex:1;padding:14px 16px;border-radius:0 6px 6px 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center;align-content:center;min-height:70px;position:relative}
 /* Lane colors */
-.lane-gray .lane-label { background: #e8e8e4; color: #555; }
-.lane-gray .lane-content { background: #f0f0ec; }
-.lane-yellow .lane-label { background: #f5e6a3; color: #6b5900; }
-.lane-yellow .lane-content { background: #fdf6d8; }
-.lane-blue .lane-label { background: #b8d4f0; color: #1a3a5c; }
-.lane-blue .lane-content { background: #deeaf6; }
-.lane-lightblue .lane-label { background: #c8ddf0; color: #2a4a6c; }
-.lane-lightblue .lane-content { background: #e4eef6; }
-.lane-green .lane-label { background: #b8e0c8; color: #1a4a2c; }
-.lane-green .lane-content { background: #daf0e4; }
-
-/* Process boxes */
-.box { padding: 8px 12px; border-radius: 6px; font-size: 11px; line-height: 1.35; text-align: center; min-width: 120px; max-width: 200px; position: relative; }
-.box-claude { background: #4a90d9; color: #fff; border: 2px solid #2b6cb0; font-weight: 600; }
-.box-manual { background: #fff; border: 1px solid #ccc; color: #333; }
-.box-auto { background: #e8f4e8; border: 1px solid #8bc48b; color: #1a4a2c; }
-.box-critical { background: #fff; border: 2px solid #d9534f; color: #333; }
-.box-output { background: #f0f0f0; border: 1px dashed #999; color: #555; font-style: italic; }
-.box-decision { background: #fff8e1; border: 2px solid #f0c040; color: #6b5900; font-weight: 600; transform: rotate(0deg); padding: 6px 14px; }
-.box-disabled { background: #f5f5f5; border: 1px solid #ddd; color: #999; }
-
-/* Badge */
-.badge { position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; border-radius: 50%; font-size: 9px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
-.badge-f { background: #f0c040; color: #6b5900; border: 1px solid #d4a017; }
-.badge-claude { background: #4a90d9; color: #fff; border: 1px solid #2b6cb0; }
-.badge-skill { font-size: 9px; color: #888; display: block; margin-top: 2px; font-weight: 400; }
-
-/* Flow arrows */
-.arrow { color: #999; font-size: 16px; display: flex; align-items: center; align-self: center; flex-shrink: 0; }
-.arrow-down-lane { display: flex; justify-content: center; padding: 0; margin: -4px 0; color: #bbb; font-size: 14px; padding-left: 160px; }
-
-/* Spur labels */
-.spur-label { position: absolute; top: 4px; right: 10px; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
-.spur-a { background: #2b6cb0; color: #fff; }
-.spur-b { background: #7c3aed; color: #fff; }
-.spur-ab { background: #64748b; color: #fff; }
-
-/* Row within lane */
-.lane-row { display: flex; gap: 10px; align-items: center; width: 100%; }
-.lane-rows { display: flex; flex-direction: column; gap: 10px; width: 100%; }
-
-/* Connector line */
-.connector { border-top: 2px solid #bbb; flex: 1; min-width: 20px; max-width: 40px; }
-.connector-long { min-width: 40px; max-width: 80px; }
-
-/* Section divider */
-.section-gap { height: 6px; }
-
-/* Tooltip */
-.box[title] { cursor: help; }
-.box:hover { filter: brightness(0.95); }
-
-/* Branch container */
-.branch { display: flex; flex-direction: column; gap: 6px; align-items: center; }
-.branch-label { font-size: 10px; color: #888; font-weight: 600; }
+.la .lane-l{background:#e8dcc8;color:#5c4a2a} .la .lane-r{background:#f6f0e4}
+.lb .lane-l{background:#b8d4f0;color:#1a3a5c} .lb .lane-r{background:#e0edf8}
+.lc .lane-l{background:#f5e1a3;color:#6b5900} .lc .lane-r{background:#fdf6d8}
+.ld .lane-l{background:#b8d4f0;color:#1a3a5c} .ld .lane-r{background:#e0edf8}
+.le .lane-l{background:#c8e6c8;color:#1a4a2c} .le .lane-r{background:#e4f4e4}
+.lf .lane-l{background:#ddd;color:#555} .lf .lane-r{background:#ececec}
+.lg .lane-l{background:#d4c8f0;color:#3a1a6c} .lg .lane-r{background:#ede8f8}
+/* Arrow between lanes */
+.arr{display:flex;justify-content:center;padding:0;margin:-1px 0;color:#aaa;font-size:14px;padding-left:150px;transition:opacity .25s}
+.arr.dim{opacity:.18}
+/* Skill card */
+.sk{background:#fff;border:1px solid #ccc;border-radius:7px;padding:9px 12px;min-width:130px;max-width:210px;cursor:pointer;transition:all .15s;position:relative}
+.sk:hover{border-color:#888;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.sk.exp{border-color:#2563eb;box-shadow:0 0 0 1px #2563eb}
+.sk.sdim{opacity:.25;pointer-events:none}
+.sk-icon{font-size:16px;margin-right:5px}
+.sk-name{font-weight:600;font-size:12px}
+.sk-cmd{font-size:10px;color:#888;font-family:'SF Mono',Consolas,monospace;display:block;margin-top:1px}
+.sk-desc{font-size:11px;color:#555;margin-top:4px;line-height:1.35}
+.sk-detail{font-size:11px;color:#475569;margin-top:8px;padding-top:7px;border-top:1px solid #eee;line-height:1.4}
+.sk-detail b{color:#1e293b}
+/* Status badge */
+.st{position:absolute;top:6px;right:8px;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600}
+.st-live{background:#dcfce7;color:#166534}
+.st-beta{background:#dbeafe;color:#1e40af}
+.st-wip{background:#fef3c7;color:#92400e}
+/* Spur tag on lane */
+.spur-tag{position:absolute;top:5px;right:8px;font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px}
+.spur-a{background:#1e40af;color:#fff}
+.spur-b{background:#7c3aed;color:#fff}
+.spur-ab{background:#475569;color:#fff}
+.spur-all{background:#94a3b8;color:#fff}
+/* Connector arrow between cards */
+.ca{color:#aaa;font-size:16px;flex-shrink:0;display:flex;align-items:center}
+/* Repeat badge */
+.rep{font-size:9px;background:#ede9fe;color:#5b21b6;padding:1px 5px;border-radius:5px;font-weight:600;margin-left:4px}
+/* Note */
+.note{margin-top:16px;padding:10px 14px;background:#fff;border:1px solid #ddd;border-radius:8px;font-size:11px;color:#666;line-height:1.5}
+.note b{color:#333}
 </style>
 </head>
 <body>
-<div class="page">
-  <h1>TAWO Kalkulations-Workflow</h1>
-  <div class="subtitle">Tatigkeitsbereichs-Ablauf (TBA) — Vom Lead bis zur Uebergabe</div>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useMemo} = React;
 
-  <div class="legend">
-    <span style="font-weight:600">Legende:</span>
-    <div class="legend-item"><div class="legend-swatch" style="background:#4a90d9"></div> Claude Code Skill</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:#fff;border-color:#ccc"></div> Manueller Schritt</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:#e8f4e8;border-color:#8bc48b"></div> Automatisiert</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:#fff;border-color:#d9534f;border-width:2px"></div> Pruefung / Entscheidung</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:#f0f0f0;border:1px dashed #999"></div> Output / Ergebnis</div>
-    <div class="legend-item"><div style="width:18px;height:18px;border-radius:50%;background:#f0c040;border:1px solid #d4a017;font-size:8px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#6b5900">F</div> Florian / GF</div>
-  </div>
+const BLOCKS = [
+  {id:"A",name:"Projekt-Erfassung",css:"la",order:1,spuren:["A","B"]},
+  {id:"B",name:"Vorab-Kalkulation",css:"lb",order:2,spuren:["A","B"]},
+  {id:"C",name:"Beschaffung",css:"lc",order:3,spuren:["A"]},
+  {id:"D",name:"Analyse & Abgabe",css:"ld",order:4,spuren:["A","B"]},
+  {id:"E",name:"Projekt-Verhandlung",css:"le",order:5,spuren:["A"],sub:"nach Einladung Bietergespraech"},
+  {id:"F",name:"Projekt-Abschluss",css:"lf",order:6,spuren:[],sub:"optional"},
+  {id:"G",name:"Uebergabe",css:"lg",order:7,spuren:["A","B"],sub:"nach Zuschlag"},
+];
 
-  <!-- Phase 0: Acquise -->
-  <div class="lane lane-gray">
-    <div class="lane-label">0 — Projekt<br>Acquise</div>
-    <div class="lane-content">
-      <div class="lane-rows">
-        <div class="lane-row">
-          <div class="box box-auto" title="Lead wird gefunden ueber Portale, Netzwerk oder Direktanfrage">Lead wird gefunden</div>
-          <div class="arrow">&#8594;</div>
-          <div class="box box-manual" title="Pruefen ob Portal-Zugang vorhanden ist">Portal-Zugang<br>vorhanden?</div>
-          <div class="arrow">&#8594;</div>
-          <div class="box box-manual" title="Cosuno, DTVP, Deutsche eVergabe etc.">Projektanfrage<br>Supplier Portal</div>
-          <div class="box box-manual">Projektanfrage<br>Cosuno</div>
-          <div class="box box-manual">Projektanfrage<br>per Mail</div>
-        </div>
+const SKILLS = [
+  {id:"A-01",block:"A",icon:"\uD83D\uDCC1",name:"Projekt-Erfassung",cmd:"/projekt-erfassung",status:"live",spuren:["A","B"],
+   desc:"Projektordner sichten, LV analysieren, Notion-Eintrag anlegen, Spur empfehlen.",
+   detail:"Dateien klassifizieren, LV-Schnellanalyse, Steckbrief, Referenz-Matching, Ordnerstruktur, Dokumenten-DB."},
+  {id:"A-02",block:"A",icon:"\uD83D\uDCCE",name:"Nachreichung",cmd:"/nachreichung",status:"beta",spuren:[],
+   desc:"Neue Dokumente erkennen und in Dokumenten-DB eintragen.",
+   detail:"Scan, Diff gegen bestehende DB, Klassifizierung, Quick-Scan, Notion-Update mit GDrive-Links."},
+  {id:"B-01",block:"B",icon:"\uD83D\uDCCB",name:"Template-Anwendung",cmd:"/template-anwendung",status:"live",spuren:["A","B"],
+   desc:"GAEB-Excel ins GSheet-Template importieren.",
+   detail:"Kopiert GSheet-Template, importiert LV-Daten mit Formeln und Formatierung."},
+  {id:"B-02",block:"B",icon:"\uD83D\uDD0D",name:"Hinweis-Extraktion",cmd:"/hinweis-extraktion",status:"live",spuren:["A","B"],
+   desc:"Demontage, Herstellerbindung, Kabel, Risiken per Regex extrahieren.",
+   detail:"Python-Script scannt GSheet. Ergebnis: Spalten in 1.0/1.1/1.2 + hinweise.json."},
+  {id:"B-03",block:"B",icon:"\uD83E\uDDEE",name:"Vorab-Kalkulation",cmd:"/vorab-kalkulation",status:"live",spuren:["A","B"],
+   desc:"Alle Positionen vorab kalkulieren: Lohn, Material, Sub.",
+   detail:"L3-Zuordnung, Kalk-Typ, Referenz-Matching, Vorab-Preise. Subagent-Architektur."},
+  {id:"B-01->03",block:"B",icon:"\u26A1",name:"Vorab-Kalk Komplett",cmd:"/vorab-kalkulation-komplett",status:"live",spuren:["A","B"],
+   desc:"Block B komplett in einem Durchlauf (B-01 + B-02 + B-03).",
+   detail:"Fuehrt Template, Hinweise und Vorab-Kalkulation ohne Unterbrechung durch. Idempotent."},
+  {id:"C-01",block:"C",icon:"\uD83D\uDCE8",name:"Material-Anfragen",cmd:"/material-anfragen",status:"live",spuren:["A"],
+   desc:"Lieferanten zuordnen und Anfragen per Gmail versenden.",
+   detail:"Kanal-Bestimmung, Kontakte laden, Briefings, Gmail-Drafts, Notion-Tracking."},
+  {id:"C-02",block:"C",icon:"\uD83D\uDCE5",name:"Inbox-Scan",cmd:"/inbox-scan",status:"beta",spuren:["A"],repeat:true,
+   desc:"Gmail nach eingegangenen Angeboten scannen.",
+   detail:"Erkennt Lieferant + Projekt, legt Anhaenge in Drive ab, setzt Label, updated Notion."},
+  {id:"C-03",block:"C",icon:"\uD83D\uDCCA",name:"Angebots-Auswertung",cmd:"/angebots-auswertung",status:"beta",spuren:["A"],repeat:true,
+   desc:"Angebot parsen, mit LV matchen, als Einkaeufer pruefen.",
+   detail:"Parse, Matching, QS als Einkaufsexperte, Lieferanten-Tab im GSheet schreiben."},
+  {id:"C-05",block:"C",icon:"\uD83D\uDD00",name:"SG-Vergleich",cmd:"/sg-vergleich",status:"beta",spuren:["A"],
+   desc:"Sub/Hersteller-Angebote einer SG positionsweise vergleichen.",
+   detail:"Scope-Bewertung, Fabrikat-Pruefung, EP-Ausreisser, Nachverhandlungspunkte."},
+  {id:"C-06",block:"C",icon:"\u2696\uFE0F",name:"Material-Konsolidierung",cmd:"/material-konsolidierung",status:"beta",spuren:["A"],
+   desc:"Alle Angebote zusammenfuehren, besten Preis bestimmen.",
+   detail:"GH-Vergleich, SG-Vergleiche, Scope-Pruefung, EK-Entscheidung in 1.2 und 1.0."},
+  {id:"D-01",block:"D",icon:"\u2705",name:"Kalkulations-Analyse",cmd:"/kalkulations-analyse",status:"beta",spuren:["A","B"],
+   desc:"Fertiges LV analysieren: Fehler, Margen, Risiken.",
+   detail:"Script rechnet (Fehler-Scan, Kennzahlen), Claude bewertet als Oberbauleiter."},
+  {id:"D-02",block:"D",icon:"\uD83D\uDCE4",name:"Angebotserstellung",cmd:"/angebotserstellung",status:"live",spuren:["A","B"],
+   desc:"GAEB X84 + PDF-Angebot erzeugen.",
+   detail:"Liest GSheet + Original-X83, generiert Abgabedateien. Pflicht-Pause fuer Bestaetigung."},
+  {id:"E-01",block:"E",icon:"\uD83D\uDCC4",name:"Bieterbrief-Verarbeitung",cmd:"/bieterbrief-verarbeitung",status:"wip",spuren:["A"],
+   desc:"Bieterbrief vom AG parsen, EK-Untergrenzen berechnen.",
+   detail:"Bieterbrief-Excel parsen, gegen Kalkulation matchen, neues GSheet mit Untergrenzen."},
+  {id:"E-02",block:"E",icon:"\uD83E\uDD1D",name:"GH-Verhandlung",cmd:"/gh-verhandlung",status:"beta",spuren:["A"],
+   desc:"Grosshandels-Preisverhandlung vorbereiten.",
+   detail:"Potenzial-Positionen, Bauzeitenplan, Gespraechsleitfaden erstellen."},
+  {id:"F-01",block:"F",icon:"\u274C",name:"Lieferanten-Absage",cmd:"/lieferanten-absage",status:"beta",spuren:[],
+   desc:"Lieferanten bei Projektverlust per Gmail informieren.",
+   detail:"Reply-Drafts an angefragte Lieferanten, Notion-Status aktualisieren."},
+  {id:"G-01",block:"G",icon:"\uD83D\uDCDD",name:"Projekt-Zusammenfassung",cmd:"/projekt-zusammenfassung",status:"live",spuren:["A","B"],
+   desc:"Zusammenfassung fuer Bauleiter/Projektleiter erstellen.",
+   detail:"Alle Dokumente auslesen, Notion-Seite mit Toggle-Headings. Idempotent."},
+  {id:"G-02",block:"G",icon:"\uD83D\uDCE6",name:"Uebergabe",cmd:"/uebergabe",status:"live",spuren:["A","B"],
+   desc:"Dokumente in den Ops-Ordner kopieren.",
+   detail:"Uebergabe-Checkbox aus Dokumenten-DB, Dateien nach N_03_Projekte, sortiert nach Kategorie."},
+];
+
+function spurTag(spuren) {
+  if (!spuren || spuren.length === 0) return <span className="spur-tag spur-all">alle</span>;
+  if (spuren.length === 2) return <span className="spur-tag spur-ab">A + B</span>;
+  if (spuren[0] === "A") return <span className="spur-tag spur-a">nur A</span>;
+  return <span className="spur-tag spur-b">nur B</span>;
+}
+
+function statusCls(s) { return s === "live" ? "st-live" : s === "beta" ? "st-beta" : "st-wip"; }
+function statusLabel(s) { return s === "live" ? "live" : s === "beta" ? "beta" : "in Arbeit"; }
+
+function isActive(spuren, spur) { return spuren.length === 0 || spuren.includes(spur); }
+
+function App() {
+  const [spur, setSpur] = useState("A");
+  const [exp, setExp] = useState(null);
+
+  return (
+    <div>
+      <h1>TAWO Kalkulations-Workflow</h1>
+      <div className="sub">TBA-Uebersicht — Vom Projekteingang bis zur Uebergabe</div>
+
+      <div className="toggle">
+        <button className={spur==="A"?"on-a":""} onClick={()=>setSpur("A")}>Spur A — mit Anfragen</button>
+        <button className={spur==="B"?"on-b":""} onClick={()=>setSpur("B")}>Spur B — ohne Anfragen</button>
       </div>
-    </div>
-  </div>
 
-  <div class="arrow-down-lane">&#8595;</div>
+      <div className="legend">
+        <b>Legende:</b>
+        <span><span className="lsw" style={{background:"#fff",borderColor:"#ccc"}}></span> Skill-Karte (klickbar)</span>
+        <span><span className="lsw" style={{background:"#dcfce7"}}></span> live</span>
+        <span><span className="lsw" style={{background:"#dbeafe"}}></span> beta</span>
+        <span><span className="lsw" style={{background:"#fef3c7"}}></span> in Arbeit</span>
+        <span><span className="rep">n&times;</span> wiederholbar</span>
+      </div>
 
-  <!-- Phase 0.1: Klassifizierung -->
-  <div class="lane lane-yellow">
-    <div class="lane-label">0.1 — Klassifizierung<br>& Aufbereitung</div>
-    <div class="lane-content">
-      <div class="lane-rows">
-        <div class="lane-row">
-          <div class="box box-decision" title="Was fuer ein LV liegt vor?">LV-Typ?</div>
-          <div class="arrow">&#8594;</div>
-          <div class="branch">
-            <div class="branch-label">Klassisches LV</div>
-            <div class="box box-claude" title="/projekt-erfassung: Dateien sichten, LV analysieren, Notion-Eintrag, Spur empfehlen">
-              Claude Workflow inkl.<br>Vorabkalkulation
-              <span class="badge badge-claude">C</span>
-              <span class="badge-skill">/projekt-erfassung<br>/vorab-kalkulation-komplett</span>
+      {BLOCKS.map((block, bi) => {
+        const bActive = isActive(block.spuren, spur);
+        const skills = SKILLS.filter(s => s.block === block.id);
+
+        return (
+          <React.Fragment key={block.id}>
+            {bi > 0 && <div className={"arr" + (!bActive ? " dim" : "")}>{"\u2193"}</div>}
+            <div className={"lane " + block.css + (!bActive ? " dim" : "")}>
+              <div className="lane-l">
+                Block {block.id}<br/>{block.name}
+                {block.sub && <small>{block.sub}</small>}
+              </div>
+              <div className="lane-r">
+                {spurTag(block.spuren)}
+                {skills.map((sk, si) => {
+                  const skActive = isActive(sk.spuren, spur);
+                  const isExp = exp === sk.id;
+                  return (
+                    <React.Fragment key={sk.id}>
+                      {si > 0 && <span className="ca">{"\u2192"}</span>}
+                      <div
+                        className={"sk" + (isExp ? " exp" : "") + (!skActive && bActive ? " sdim" : "")}
+                        onClick={() => setExp(isExp ? null : sk.id)}
+                      >
+                        <span className={"st " + statusCls(sk.status)}>{statusLabel(sk.status)}</span>
+                        <div>
+                          <span className="sk-icon">{sk.icon}</span>
+                          <span className="sk-name">{sk.name}</span>
+                          {sk.repeat && <span className="rep">n&times;</span>}
+                        </div>
+                        <span className="sk-cmd">{sk.cmd}</span>
+                        <div className="sk-desc">{sk.desc}</div>
+                        {isExp && (
+                          <div className="sk-detail">
+                            <b>Details:</b> {sk.detail}
+                          </div>
+                        )}
+                      </div>
+                    </React.Fragment>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-          <div class="branch">
-            <div class="branch-label">Funktionales LV</div>
-            <div class="box box-critical" title="Funktionale Leistungsbeschreibung muss erst in ein Positions-LV umgewandelt werden">
-              Aufbereitung<br>Funktionales LV
-              <span class="badge badge-f">F</span>
-            </div>
-          </div>
-          <div class="branch">
-            <div class="branch-label">Kleinstauftrag</div>
-            <div class="box box-disabled">Small / Random<br>(nicht kalkulieren)</div>
-          </div>
-        </div>
-        <div class="lane-row" style="margin-top:4px">
-          <div class="box box-manual" style="max-width:160px" title="Workflow-Parameter und Regeln anpassen falls noetig">Workflow Anpassungen<br>& Regeln</div>
-        </div>
+          </React.Fragment>
+        );
+      })}
+
+      <div className="note">
+        <b>Spur A</b> (mit Anfragen) durchlaeuft alle Blocks inkl. Block C (Beschaffung).
+        <b> Spur B</b> (ohne Anfragen) ueberspringt Block C und geht direkt von Vorab-Kalkulation zur Analyse.
+        <b> Funktionales LV:</b> Muss vor /template-anwendung erst aufbereitet werden (kein eigener Track).
+        <b> Block G</b> (Uebergabe) kann ab Block A flexibel ausgefuehrt werden — /projekt-zusammenfassung ist idempotent.
       </div>
     </div>
-  </div>
+  );
+}
 
-  <div class="arrow-down-lane">&#8595;</div>
-
-  <!-- Phase 0.2: Priorisierung -->
-  <div class="lane lane-yellow">
-    <div class="lane-label">0.2 — Priorisierung</div>
-    <div class="lane-content">
-      <div class="lane-row">
-        <div class="box box-decision" title="Spur A: Mit Lieferantenanfragen (Standard). Spur B: Ohne Anfragen (schnell, referenz-basiert).">
-          Spur A oder B?
-          <span class="badge badge-f">F</span>
-        </div>
-        <div class="arrow">&#8594;</div>
-        <div class="branch">
-          <div class="branch-label" style="color:#2b6cb0">Spur A — mit Anfragen</div>
-          <div class="box box-manual" style="background:#dbeafe;border-color:#93c5fd;min-width:160px">Material & Sub Anfragen<br>(Claude) + Notion-DB
-            <span class="badge-skill">/material-anfragen</span>
-          </div>
-        </div>
-        <div class="branch">
-          <div class="branch-label" style="color:#7c3aed">Spur B — ohne Anfragen</div>
-          <div class="box box-manual" style="background:#ede9fe;border-color:#c4b5fd;min-width:140px">Rahmenvertraege &amp;<br>Material Verfuegbarkeit</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="arrow-down-lane">&#8595;</div>
-
-  <!-- Phase 1: Kalkulation -->
-  <div class="lane lane-blue">
-    <div class="lane-label">1 — Projekt<br>Kalkulation</div>
-    <div class="lane-content">
-      <span class="spur-label spur-ab">A + B</span>
-      <div class="lane-rows">
-        <div class="lane-row">
-          <div class="box box-claude" title="Spur A: Angebote auswerten, konsolidieren, dann Claude-Kalkulation. Spur B: Direkt Claude-Kalkulation.">
-            Claude Kalkulation
-            <span class="badge badge-claude">C</span>
-            <span class="badge-skill">/angebots-auswertung<br>/material-konsolidierung</span>
-          </div>
-          <div class="arrow">&#8594;</div>
-          <div class="box box-manual" title="AG stellt Rueckfragen zum LV oder aendert Positionen">AG Rueckfragen</div>
-          <div class="arrow">&#8594;</div>
-          <div class="box box-claude" title="Claude kalkuliert weiter / passt an">Claude Kalkulation<br>Fortsetzung
-            <span class="badge badge-claude">C</span>
-          </div>
-        </div>
-        <div class="lane-row">
-          <div class="box box-critical" style="max-width:180px" title="AG aendert das LV waehrend der Kalkulation — Impact auf bestehende Kalkulation pruefen">
-            LV Update durch AG<br>&#8594; Impact Analyse
-            <span class="badge badge-f">F</span>
-          </div>
-          <div class="box box-manual" style="max-width:180px" title="Anfragen nachbessern mit technischem Support / Fachplaner">Anfragen nachbessern<br>mit techn. Support</div>
-          <div class="box box-claude" style="max-width:160px" title="Baustellenbesuch-LV fuer funktionale Projekte">Baustellenbesuch<br>(funktionales LV)
-            <span class="badge badge-claude">C</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="arrow-down-lane">&#8595;</div>
-
-  <!-- Phase 1.1: Pruefung -->
-  <div class="lane lane-lightblue">
-    <div class="lane-label">1.1 — Projekt<br>Pruefung</div>
-    <div class="lane-content">
-      <div class="lane-rows">
-        <div class="lane-row">
-          <div class="box box-claude" title="/kalkulations-analyse: Fehler, Margen, Risiken pruefen">
-            Financial Analyse<br>Kalkulation
-            <span class="badge badge-claude">C</span>
-            <span class="badge-skill">/kalkulations-analyse</span>
-          </div>
-          <div class="arrow">&#8594;</div>
-          <div class="box box-decision" title="Projekte ueber 100k EUR benoetigen kaufmaennische + technische Pruefung">&gt; 100k?</div>
-          <div class="arrow">&#8594;</div>
-          <div class="branch">
-            <div class="branch-label">Ja</div>
-            <div class="box box-critical" title="Kaufmaennische und technische Pruefung durch GF / Technik">
-              Kaufmaennisch &amp;<br>Technisch Pruefung
-              <span class="badge badge-f">F</span>
-            </div>
-          </div>
-          <div class="branch">
-            <div class="branch-label">Nein</div>
-            <div class="box box-auto">Financial Analyse<br>Kalkulation<br><span style="font-size:10px">(direkt weiter)</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="arrow-down-lane">&#8595;</div>
-
-  <!-- Phase 1.2: Abgabe -->
-  <div class="lane lane-blue">
-    <div class="lane-label">1.2 — Projekt<br>Abgabe</div>
-    <div class="lane-content">
-      <div class="lane-rows">
-        <div class="lane-row">
-          <div class="box box-claude" title="Kalkulations-Daten sauber aufbereiten und in die Referenz-Datenbank einspeisen">
-            Kalk-Daten aufbereiten<br>fuer Referenz-DB
-            <span class="badge badge-claude">C</span>
-          </div>
-          <div class="arrow">&#8594;</div>
-          <div class="box box-claude" title="/angebotserstellung: GAEB X84 + PDF Angebot generieren">
-            Angebots X84 &amp; PDF
-            <span class="badge badge-claude">C</span>
-            <span class="badge-skill">/angebotserstellung</span>
-          </div>
-          <div class="arrow">&#8594;</div>
-          <div class="box box-output">Referenz-Datenbank<br>Qualitaet B</div>
-        </div>
-        <div class="lane-row">
-          <div style="min-width:280px"></div>
-          <div class="box box-manual" title="Angebot im Portal oder per Mail abschicken" style="background:#dcfce7;border-color:#86efac">
-            Angebot abschicken
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="arrow-down-lane">&#8595;</div>
-
-  <!-- Phase 2: AG Kommunikation -->
-  <div class="lane lane-green">
-    <div class="lane-label">2 — AG<br>Kommunikation</div>
-    <div class="lane-content">
-      <div class="lane-rows">
-        <div class="lane-row">
-          <div class="box box-manual" title="Follow-Up beim AG nach Angebotsabgabe">Follow Up</div>
-          <div class="arrow">&#8594;</div>
-          <div class="box box-manual" title="Feedback vom AG einholen und Qualitaet des Angebots pruefen">Feedback &amp;<br>Qualitaetspruefung</div>
-          <div class="arrow">&#8594;</div>
-          <div class="box box-decision" title="Wurden wir zum Preisgespraech eingeladen?">Einladung<br>Preisgespraech?</div>
-          <div class="arrow">&#8594;</div>
-          <div class="branch">
-            <div class="branch-label">Ja</div>
-            <div class="box box-auto" style="background:#dcfce7;border-color:#86efac">&#8594; Bietergespach</div>
-          </div>
-          <div class="branch">
-            <div class="branch-label">Nein</div>
-            <div class="box box-output">Kalkulation ins Mapping,<br>Referenz-DB speichern
-              <span class="badge-skill">/lieferanten-absage</span>
-            </div>
-          </div>
-        </div>
-        <div class="lane-row">
-          <div class="box box-auto" title="Claude Code Angebot als Basis nutzen fuer Verhandlung">Ja — Claude Code<br>Angebot &#8594;</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="arrow-down-lane">&#8595;</div>
-
-  <!-- Phase 2.1: Bietergespraech -->
-  <div class="lane lane-green">
-    <div class="lane-label">2.1 — Bietergespraech<br>&amp; Nachverhandlung</div>
-    <div class="lane-content">
-      <div class="lane-rows">
-        <div class="lane-row">
-          <div class="box box-claude" title="Material und Sub-Anfragen fuer Nachverhandlung stellen">
-            Material &amp; Sub<br>Anfragen stellen
-            <span class="badge badge-claude">C</span>
-            <span class="badge-skill">/gh-verhandlung</span>
-          </div>
-          <div class="arrow">&#8594;</div>
-          <div class="box box-critical" title="Bieterbrief vom AG verarbeiten, EK-Untergrenzen berechnen">
-            Bietergespraech
-            <span class="badge badge-f">F</span>
-            <span class="badge-skill">/bieterbrief-verarbeitung</span>
-          </div>
-          <div class="arrow">&#8594;</div>
-          <div class="box box-output" title="Ergebnisse in Referenz-Datenbank speichern">
-            Kalkulation ins Mapping<br>Referenz-DB speichern
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="arrow-down-lane">&#8595;</div>
-
-  <!-- Phase 3: Uebergabe -->
-  <div class="lane lane-gray">
-    <div class="lane-label">3 — Uebergabe<br>Sales &#8594; Ops</div>
-    <div class="lane-content">
-      <div class="lane-row">
-        <div class="box box-claude" title="/projekt-zusammenfassung: Kompakte Zusammenfassung fuer Bauleiter">
-          Projekt-Zusammenfassung
-          <span class="badge badge-claude">C</span>
-          <span class="badge-skill">/projekt-zusammenfassung</span>
-        </div>
-        <div class="arrow">&#8594;</div>
-        <div class="box box-claude" title="/uebergabe: Dokumente in Ops-Ordner kopieren">
-          Dokumenten-Uebergabe
-          <span class="badge badge-claude">C</span>
-          <span class="badge-skill">/uebergabe</span>
-        </div>
-        <div class="arrow">&#8594;</div>
-        <div class="box box-output">Ops-Ordner<br>vollstaendig</div>
-      </div>
-    </div>
-  </div>
-
-  <div style="margin-top: 20px; padding: 12px 16px; background: #fff; border: 1px solid #ddd; border-radius: 8px; font-size: 11px; color: #666; line-height: 1.5;">
-    <strong style="color:#333">Hinweise:</strong>
-    Spur A (mit Anfragen) durchlaeuft Block C komplett. Spur B (ohne Anfragen) ueberspringt Block C und geht direkt von Vorab-Kalkulation zur Analyse.
-    Funktionale LVs werden in Phase 0.1 aufbereitet bevor der Claude-Workflow startet.
-    <span style="display:inline-flex;align-items:center;gap:3px;margin-left:8px"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#f0c040;border:1px solid #d4a017;font-size:7px;text-align:center;line-height:14px;font-weight:800;color:#6b5900">F</span> = Manuelle Pruefung / Entscheidung durch GF</span>
-  </div>
-</div>
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
 </body>
 </html>
