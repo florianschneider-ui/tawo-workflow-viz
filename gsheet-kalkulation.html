@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>GSheet Kalkulation — Struktur-Referenz</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1e293b; background: #fff; padding: 0 24px 40px; }
+  h1 { font-size: 22px; padding: 20px 0 4px; }
+  h1 span { font-weight: 400; color: #64748b; font-size: 14px; margin-left: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: #f1f5f9; color: #64748b; font-weight: 600; padding: 6px 10px; text-align: left; position: sticky; top: 0; z-index: 1; }
+  td { padding: 5px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+  tr:hover td { background: #f8fafc; }
+  .pill { display: inline-block; border-radius: 12px; padding: 2px 8px; font-size: 10px; font-weight: 600; line-height: 1.6; white-space: nowrap; }
+  .pill-c { background: #dcfce7; color: #166534; }
+  .pill-r { background: #dbeafe; color: #1e40af; }
+  .pill-u { background: #fef3c7; color: #92400e; }
+  .pill-f { background: #f3e8ff; color: #6b21a8; }
+  .pill-lohn { background: #dbeafe; color: #1e40af; }
+  .pill-mat { background: #ffedd5; color: #9a3412; }
+  .pill-sub { background: #dcfce7; color: #166534; }
+  .pill-neutral { background: #f1f5f9; color: #64748b; }
+  .tab-bar { display: flex; gap: 0; border-bottom: 1px solid #e5e7eb; margin-bottom: 16px; margin-top: 16px; overflow-x: auto; }
+  .tab-btn { padding: 10px 18px; font-size: 13px; font-weight: 500; color: #64748b; cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; font-family: inherit; white-space: nowrap; }
+  .tab-btn.active { color: #1e293b; border-bottom-color: #1e293b; font-weight: 600; }
+  .tab-desc { font-size: 12px; color: #64748b; line-height: 1.5; margin-bottom: 14px; padding: 10px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; }
+  .panel { border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-bottom: 12px; background: #f8fafc; }
+  .panel-title { font-weight: 700; font-size: 13px; margin-bottom: 8px; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  .card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; background: #fff; cursor: pointer; transition: all 0.15s; }
+  .card:hover { border-color: #94a3b8; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  .card.selected { border-color: #1e293b; background: #f8fafc; }
+  .card-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .card-meta { font-size: 11px; color: #64748b; }
+  .overflow-x { overflow-x: auto; }
+  .block-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 1px 6px; border-radius: 4px; display: inline-block; margin-right: 4px; }
+  .col-letter { font-family: monospace; font-weight: 700; font-size: 11px; color: #475569; min-width: 24px; display: inline-block; }
+  .formula-ref { font-family: monospace; font-size: 11px; background: #f3e8ff; color: #6b21a8; padding: 1px 6px; border-radius: 4px; }
+  .skill-tag { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 6px; display: inline-block; margin: 1px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+window.GSHEET_DATA = {
+  name: "GSheet Kalkulation",
+  template: "TAWO_Kalkulation_Template.gsheet",
+  description: "Zentrale Kalkulationsdatei pro Projekt. Wird von /template-anwendung aus Template kopiert und durch den gesamten Workflow befüllt.",
+  tabs: [
+    {
+      id: "uebersicht", name: "Übersicht", header_rows: 2, first_data_row: 3,
+      purpose: "Projekt-Steckbrief mit Kennzahlen + Hinweistexte-Block für den Kalkulateur",
+      color: "#64748b",
+      columns: [
+        { col: "A-E", name: "Projekt-Steckbrief", type: "Formeln + Text", source: "template-anwendung", block: "neutral", desc: "Projektname, ID, AG, Abgabefrist, Spur, EK-Stundensatz" },
+        { col: "G-M", name: "Hinweistexte-Block", type: "Text", source: "hinweis-extraktion", block: "neutral", desc: "7 Spalten: Zeile, SG, Kurztext, Langtext, Gelesen, Berücksichtigt, Kommentar" }
+      ],
+      skills_write: ["template-anwendung", "hinweis-extraktion"],
+      skills_read: ["kalkulations-analyse"]
+    },
+    {
+      id: "kalk", name: "1.0_Kalkulation", header_rows: 3, first_data_row: 4,
+      purpose: "Haupttab — alle LV-Positionen mit Lohn/Material/Sub EK+VK. 38 Spalten, Formeln ziehen aus 1.1 und 1.2.",
+      color: "#1e293b",
+      columns: [
+        { col: "A", name: "Typ", type: "Text", source: "LV-Import", block: "neutral", desc: "Gruppe, Position, Summe Gruppe, Hinweistext" },
+        { col: "B", name: "OZ", type: "Text", source: "LV-Import", block: "neutral", desc: "Ordnungszahl (Apostroph-Prefix)" },
+        { col: "C", name: "Kurztext", type: "Text", source: "LV-Import", block: "neutral", desc: "Positionskurztext aus GAEB" },
+        { col: "D", name: "Langtext", type: "Text", source: "LV-Import", block: "neutral", desc: "Langtext (bei Hinweistext-Zeilen)" },
+        { col: "E", name: "Menge", type: "Zahl", source: "LV-Import", block: "neutral", desc: "Mengenangabe aus GAEB" },
+        { col: "F", name: "Einheit", type: "Text", source: "LV-Import", block: "neutral", desc: "St, m, psch, etc." },
+        { col: "G", name: "EP Gesamt", type: "Formel", source: "Formel", block: "neutral", desc: "=Lohn EP + Mat EP + Sub EP (aus T+AA+AH)" },
+        { col: "H", name: "GP", type: "Formel", source: "Formel", block: "neutral", desc: "=IF(E=\"\";\";\";E*G) — Menge × EP" },
+        { col: "L", name: "Kalk-Typ Lohn Montage", type: "Text", source: "vorab-kalkulation", block: "lohn", desc: "TAWO, Sub, oder leer (entfällt)" },
+        { col: "M", name: "Kalk-Typ IBN", type: "Text", source: "vorab-kalkulation", block: "lohn", desc: "TAWO, Sub, oder leer" },
+        { col: "N", name: "Kalk-Typ Material", type: "Text", source: "vorab-kalkulation", block: "mat", desc: "Standard, Projekt, Sub_liefert, Miete, oder leer" },
+        { col: "O", name: "Lohn Min Vorab", type: "Formel", source: "Formel", block: "lohn", desc: "=1.1!K — Vorab-Fallback aus Lohn-Tab" },
+        { col: "P", name: "Lohn Min Final", type: "Zahl", source: "User / Analyse", block: "lohn", desc: "Manuelle Korrektur oder aus Analyse" },
+        { col: "R", name: "Lohn EK EP", type: "Formel", source: "Formel", block: "lohn", desc: "=IF(P=\"\";O;P)/60*Stundensatz" },
+        { col: "T", name: "Lohn VK EP", type: "Formel", source: "Formel", block: "lohn", desc: "Lohn VK = EK × Marge" },
+        { col: "U", name: "Lohn VK Summe", type: "Formel", source: "Formel", block: "lohn", desc: "=Menge × Lohn VK EP" },
+        { col: "V", name: "Mat EK Vorab", type: "Formel", source: "Formel", block: "mat", desc: "=1.2!L — Vorab-Fallback aus Mat-Tab" },
+        { col: "W", name: "Mat EK Final", type: "Zahl", source: "angebots-auswertung / Konsolidierung", block: "mat", desc: "Finaler EP nach Angebotsvergleich" },
+        { col: "AA", name: "Mat VK EP", type: "Formel", source: "Formel", block: "mat", desc: "Mat VK = EK × Marge" },
+        { col: "AB", name: "Mat VK Summe", type: "Formel", source: "Formel", block: "mat", desc: "=Menge × Mat VK EP" },
+        { col: "AD", name: "Sub EK Vorab", type: "Formel", source: "Formel", block: "sub", desc: "=1.2!W — Vorab-Fallback aus Sub-Block" },
+        { col: "AE", name: "Sub EK Final", type: "Zahl", source: "angebots-auswertung / Konsolidierung", block: "sub", desc: "Finaler Sub-EP nach Angebotsvergleich" },
+        { col: "AH", name: "Sub VK EP", type: "Formel", source: "Formel", block: "sub", desc: "Sub VK = EK × Marge" },
+        { col: "AI", name: "Sub VK Summe", type: "Formel", source: "Formel", block: "sub", desc: "=Menge × Sub VK EP" }
+      ],
+      skills_write: ["template-anwendung", "vorab-kalkulation", "angebots-auswertung", "material-konsolidierung", "kalkulations-analyse"],
+      skills_read: ["hinweis-extraktion", "vorab-kalkulation", "material-anfragen", "angebots-auswertung", "sg-vergleich", "material-konsolidierung", "kalkulations-analyse", "angebotserstellung", "bieterbrief-verarbeitung", "gh-verhandlung"]
+    },
+    {
+      id: "lohn", name: "1.1_Kalkulation_Lohn", header_rows: 2, first_data_row: 3,
+      purpose: "Lohn-Detailtab — L3-Zuordnung, Vorab-Minutenwerte, Quellen, Konfidenz. 1.0 zieht Spalte K als Vorab-Fallback.",
+      color: "#1e40af",
+      columns: [
+        { col: "A-F", name: "LV-Referenz", type: "Formel", source: "Formel → 1.0", block: "neutral", desc: "OZ, Kurztext, Menge, Einheit (Referenz auf 1.0)" },
+        { col: "G", name: "L3", type: "Text", source: "vorab-kalkulation", block: "lohn", desc: "Leistungsgruppe — \"Name — ID\" (Apostroph-Prefix)" },
+        { col: "H-I", name: "Kalk-Typ Lohn/IBN", type: "Formel", source: "Formel → 1.0!L,M", block: "lohn", desc: "Referenz auf Kalk-Typen aus 1.0" },
+        { col: "J", name: "Lohn-Hinweis", type: "Text", source: "hinweis-extraktion", block: "lohn", desc: "Demontage aufwändig, UP-Installation, etc." },
+        { col: "K", name: "Lohn Min Vorab", type: "Zahl", source: "vorab-kalkulation", block: "lohn", desc: "Minutenwert-Schätzung (1 dp, z.B. 45.0)" },
+        { col: "L", name: "Lohn Vorab Quelle", type: "Text", source: "vorab-kalkulation", block: "lohn", desc: "Ref: kl-bit_26-0027 Pos 02.508 (Score 0.72)" },
+        { col: "M", name: "Lohn Konfidenz", type: "Text", source: "vorab-kalkulation", block: "lohn", desc: "Prozent-Wert, z.B. 85%" },
+        { col: "N", name: "Lohn Min Final", type: "Zahl", source: "User", block: "lohn", desc: "Manuelle Korrektur nach Angebotsphase" },
+        { col: "O", name: "Lohn Quelle Final", type: "Text", source: "User", block: "lohn", desc: "Herkunft des Final-Werts" },
+        { col: "P", name: "Kommentar", type: "Text", source: "User", block: "lohn", desc: "Optionaler Kommentar" },
+        { col: "Q", name: "Lohn VK Summe", type: "Formel", source: "Formel", block: "lohn", desc: "=(N oder K)/60*Stundensatz*Menge" }
+      ],
+      skills_write: ["vorab-kalkulation", "hinweis-extraktion"],
+      skills_read: ["vorab-kalkulation", "kalkulations-analyse"]
+    },
+    {
+      id: "matsub", name: "1.2_Kalkulation_Mat-Sub", header_rows: 2, first_data_row: 3,
+      purpose: "Material + Sub Detailtab — zwei Blöcke nebeneinander. L3, Hersteller, Vorab-EPs, Final-EPs.",
+      color: "#9a3412",
+      columns: [
+        { col: "A-F", name: "LV-Referenz", type: "Formel", source: "Formel → 1.0", block: "neutral", desc: "OZ, Kurztext, Menge, Einheit" },
+        { col: "G", name: "L3", type: "Text", source: "vorab-kalkulation", block: "mat", desc: "Leistungsgruppe — \"Name — ID\"" },
+        { col: "H", name: "Kalk-Typ Material", type: "Formel", source: "Formel → 1.0!N", block: "mat", desc: "Standard, Projekt, Sub_liefert, Miete" },
+        { col: "I", name: "Herstellerbindung", type: "Text", source: "hinweis-extraktion", block: "mat", desc: "Pflicht, Präferenz, oder leer" },
+        { col: "J", name: "Hersteller", type: "Text", source: "vorab-kalkulation", block: "mat", desc: "Busch-Jaeger, Hager, etc." },
+        { col: "K", name: "Material-Hinweis", type: "Text", source: "hinweis-extraktion", block: "mat", desc: "Kontakte, Kabel, Risiken" },
+        { col: "L", name: "Mat EK Vorab", type: "Zahl", source: "vorab-kalkulation", block: "mat", desc: "EUR (2 dp) — Vorab-Schätzung" },
+        { col: "M", name: "Mat Vorab Quelle", type: "Text", source: "vorab-kalkulation", block: "mat", desc: "Datanorm: Pramac DE-5543 (Score 0.88)" },
+        { col: "N", name: "Mat Konfidenz", type: "Text", source: "vorab-kalkulation", block: "mat", desc: "Prozent-Wert" },
+        { col: "O", name: "Mat EK Final", type: "Zahl", source: "angebots-auswertung / User", block: "mat", desc: "EUR (2 dp) — nach Angebotsvergleich" },
+        { col: "P", name: "Mat Quelle Final", type: "Text", source: "angebots-auswertung / User", block: "mat", desc: "Herkunft des Final-Werts" },
+        { col: "S", name: "Kalk-Typ Lohn (Sub)", type: "Formel", source: "Formel → 1.0!L", block: "sub", desc: "TAWO, Sub" },
+        { col: "T", name: "Kalk-Typ IBN (Sub)", type: "Formel", source: "Formel → 1.0!M", block: "sub", desc: "TAWO, Sub" },
+        { col: "U", name: "Kalk-Typ Material (Sub)", type: "Formel", source: "Formel → 1.0!N", block: "sub", desc: "Standard, Projekt, Sub_liefert" },
+        { col: "V", name: "Sub-Hinweis", type: "Text", source: "hinweis-extraktion", block: "sub", desc: "Schnittstellen, Risiken" },
+        { col: "W", name: "Sub EK Vorab", type: "Zahl", source: "vorab-kalkulation", block: "sub", desc: "EUR (2 dp) — Vorab-Schätzung" },
+        { col: "X", name: "Sub Vorab Quelle", type: "Text", source: "vorab-kalkulation", block: "sub", desc: "Ref-Sub: Firma XY (Score 0.80)" },
+        { col: "Y", name: "Sub Konfidenz", type: "Text", source: "vorab-kalkulation", block: "sub", desc: "Prozent-Wert" },
+        { col: "Z", name: "Sub EK Final", type: "Zahl", source: "angebots-auswertung / User", block: "sub", desc: "EUR (2 dp) — nach Angebotsvergleich" },
+        { col: "AA", name: "Sub Quelle Final", type: "Text", source: "angebots-auswertung / User", block: "sub", desc: "Herkunft des Final-Werts" }
+      ],
+      skills_write: ["vorab-kalkulation", "hinweis-extraktion", "angebots-auswertung", "material-konsolidierung"],
+      skills_read: ["vorab-kalkulation", "angebots-auswertung", "material-konsolidierung", "kalkulations-analyse", "bieterbrief-verarbeitung"]
+    },
+    {
+      id: "sg", name: "2.0_SG-Pricing", header_rows: 2, first_data_row: 3,
+      purpose: "Summengruppen-Übersicht — pro SG eine Zeile mit EK/VK, Quellen-Mix, Margen. Aggregiert aus 1.0/1.1/1.2.",
+      color: "#475569",
+      columns: [
+        { col: "A-D", name: "SG-Referenz", type: "Formel", source: "Formel", block: "neutral", desc: "OZ, Kurztext, Anzahl Positionen, Herstellerbindung" },
+        { col: "E", name: "Lohn Quellen-Mix", type: "Text", source: "kalkulations-analyse", block: "lohn", desc: "Ref-DB 70%, KFE 30%" },
+        { col: "F", name: "Lohn EK", type: "Formel", source: "SUMPRODUCT", block: "lohn", desc: "Aggregiert aus 1.0" },
+        { col: "G", name: "Lohn Marge %", type: "Zahl", source: "User", block: "lohn", desc: "Marge-Prozentsatz" },
+        { col: "H", name: "Lohn VK", type: "Formel", source: "SUMIFS", block: "lohn", desc: "Aggregiert aus 1.0" },
+        { col: "I", name: "Material Lieferanten", type: "Text", source: "kalkulations-analyse", block: "mat", desc: "Obeta, IFE, etc." },
+        { col: "J", name: "Mat EK", type: "Formel", source: "SUMPRODUCT", block: "mat", desc: "Vorab-Fallback wenn Final leer" },
+        { col: "K", name: "Mat Marge %", type: "Zahl", source: "User", block: "mat", desc: "Marge-Prozentsatz" },
+        { col: "L", name: "Mat VK", type: "Formel", source: "SUMIFS", block: "mat", desc: "Aggregiert" },
+        { col: "M", name: "Sub Firmen", type: "Text", source: "kalkulations-analyse", block: "sub", desc: "CWS, TNA, etc." },
+        { col: "N", name: "Sub EK", type: "Formel", source: "SUMPRODUCT", block: "sub", desc: "Aggregiert" },
+        { col: "O", name: "Sub Marge %", type: "Zahl", source: "User", block: "sub", desc: "Marge-Prozentsatz" },
+        { col: "P", name: "Sub VK", type: "Formel", source: "SUMIFS", block: "sub", desc: "Aggregiert" },
+        { col: "Q", name: "Risiko-Indikator", type: "Text", source: "kalkulations-analyse", block: "neutral", desc: "BS ca. 4.500 EUR etc." }
+      ],
+      skills_write: ["vorab-kalkulation", "kalkulations-analyse"],
+      skills_read: ["kalkulations-analyse", "angebotserstellung"]
+    },
+    {
+      id: "hinweise", name: "3.0_SG-Hinweise", header_rows: 2, first_data_row: 3,
+      purpose: "SG-Level Kontext — Kalk-Typ-Verteilung, Herstellerbindung, Zusammenfassung, Konfidenz, Risiko-Flags.",
+      color: "#64748b",
+      columns: [
+        { col: "A-D", name: "SG-Referenz", type: "Formel", source: "Formel", block: "neutral", desc: "OZ, Kurztext (Index/Match zu 2.0)" },
+        { col: "E", name: "Kalk-Typ Lohn Verteilung", type: "Text", source: "vorab-kalkulation", block: "lohn", desc: "TAWO: 5, Sub: 2" },
+        { col: "F", name: "Kalk-Typ IBN Verteilung", type: "Text", source: "vorab-kalkulation", block: "lohn", desc: "TAWO: 1, Sub: 3" },
+        { col: "G", name: "Kalk-Typ Material Verteilung", type: "Text", source: "vorab-kalkulation", block: "mat", desc: "Standard: 4, Projekt: 2" },
+        { col: "H", name: "Herstellerbindung", type: "Text", source: "vorab-kalkulation", block: "mat", desc: "Busch-Jaeger (8 Pos), Hager (2 Pos)" },
+        { col: "I", name: "Relevante Hinweistexte", type: "Text", source: "vorab-kalkulation", block: "neutral", desc: "Fachliche Beschreibung" },
+        { col: "J", name: "Zusammenfassung", type: "Text", source: "vorab-kalkulation", block: "neutral", desc: "Exec-Summary der SG" },
+        { col: "K-M", name: "Lohn: EK GP / Konfidenz / Quelle", type: "Zahl + Text", source: "vorab-kalkulation", block: "lohn", desc: "Aggregiert aus 1.1" },
+        { col: "N-P", name: "Mat: EK GP / Konfidenz / Quelle", type: "Zahl + Text", source: "vorab-kalkulation", block: "mat", desc: "Aggregiert aus 1.2" },
+        { col: "Q-S", name: "Sub: EK GP / Konfidenz / Quelle", type: "Zahl + Text", source: "vorab-kalkulation", block: "sub", desc: "Aggregiert aus 1.2" },
+        { col: "T", name: "Vorab-EK Gesamt", type: "Formel", source: "Formel", block: "neutral", desc: "=K+N+Q" },
+        { col: "U", name: "Risiko-Flags", type: "Text", source: "kalkulations-analyse", block: "neutral", desc: "Handlungsorientiert: BMA, Lieferzeit etc." },
+        { col: "V", name: "Anfrage-Empfehlung", type: "Text", source: "vorab-kalkulation", block: "neutral", desc: "Keine Anfrage oder Anfrage notwendig — Grund" }
+      ],
+      skills_write: ["vorab-kalkulation", "kalkulations-analyse"],
+      skills_read: ["kalkulations-analyse", "material-anfragen"]
+    },
+    {
+      id: "dd_final", name: "2.1_Deep-Dive Final", header_rows: 2, first_data_row: 3,
+      purpose: "Top 20 nach GP (Final) + Top 20 größter Delta Vorab vs Final. Automatisch via LARGE()/INDEX/MATCH.",
+      color: "#94a3b8",
+      columns: [
+        { col: "A-Z", name: "Automatische Top-Listen", type: "Formel", source: "Formel → 1.0", block: "neutral", desc: "Block 1 (Z3-22): Top 20 GP Final. Block 2 (Z26-45): Top 20 Delta. NICHT manuell befüllen." }
+      ],
+      skills_write: [],
+      skills_read: ["kalkulations-analyse"]
+    },
+    {
+      id: "dd_hinw", name: "3.1_Deep-Dive Hinweise", header_rows: 2, first_data_row: 3,
+      purpose: "Top 20 nach GP + Top 20 größte Unsicherheit (Experten-Auswahl durch Claude).",
+      color: "#94a3b8",
+      columns: [
+        { col: "A-U", name: "Block 1: Top 20 GP (Auto)", type: "Formel", source: "Formel → 1.0", block: "neutral", desc: "Automatisch, wie 2.1" },
+        { col: "B", name: "Block 2: OZ (Experten-Auswahl)", type: "Text", source: "vorab-kalkulation", block: "neutral", desc: "Hand-ausgewählt nach Cu-Risiko, fehlende Ref, HB-Pflicht etc." },
+        { col: "V", name: "Unsicherheit EUR", type: "Zahl", source: "vorab-kalkulation", block: "neutral", desc: "Experten-Schätzung des Risiko-Betrags" },
+        { col: "W", name: "Kommentar", type: "Text", source: "vorab-kalkulation", block: "neutral", desc: "Fachliche Begründung" }
+      ],
+      skills_write: ["vorab-kalkulation"],
+      skills_read: ["kalkulations-analyse"]
+    }
+  ],
+  cross_refs: [
+    { from: "1.0!O", to: "1.1!K", desc: "Lohn Min Vorab — Fallback wenn Final (P) leer" },
+    { from: "1.0!V", to: "1.2!L", desc: "Mat EK Vorab — Fallback wenn Final (W) leer" },
+    { from: "1.0!AD", to: "1.2!W", desc: "Sub EK Vorab — Fallback wenn Final (AE) leer" },
+    { from: "1.0!L,M,N", to: "1.1!H,I + 1.2!H,S,T,U", desc: "Kalk-Typen werden in Detail-Tabs referenziert" },
+    { from: "2.0!F,J,N", to: "1.0 (SUMPRODUCT)", desc: "SG-EK aggregiert aus Positions-Level" },
+    { from: "2.0!H,L,P", to: "1.0 (SUMIFS)", desc: "SG-VK aggregiert aus Positions-Level" },
+    { from: "3.0!K-S", to: "1.1 + 1.2 (Aggregation)", desc: "SG-Hinweise aggregiert aus Vorab-Werten" },
+    { from: "3.0!T", to: "3.0!K+N+Q", desc: "Vorab-EK Gesamt = Lohn + Mat + Sub" },
+    { from: "2.1 + 3.1", to: "1.0!H (LARGE/INDEX)", desc: "Deep-Dives ziehen Top-Positionen aus 1.0" }
+  ],
+  skills: [
+    { id: "template-anwendung", cmd: "/template-anwendung", tabs: { "1.0_Kalkulation": "C", "Übersicht": "C" }, desc: "Kopiert Template, importiert LV-Struktur" },
+    { id: "hinweis-extraktion", cmd: "/hinweis-extraktion", tabs: { "Übersicht": "U", "1.0_Kalkulation": "R", "1.1_Kalkulation_Lohn": "U", "1.2_Kalkulation_Mat-Sub": "U" }, desc: "Regex-Extraktion: Hinweistexte, HB, Kabel" },
+    { id: "vorab-kalkulation", cmd: "/vorab-kalkulation", tabs: { "1.0_Kalkulation": "U", "1.1_Kalkulation_Lohn": "U", "1.2_Kalkulation_Mat-Sub": "U", "2.0_SG-Pricing": "U", "3.0_SG-Hinweise": "U", "3.1_Deep-Dive Hinweise": "U" }, desc: "L3, Kalk-Typ, Lohn/Mat/Sub Vorab-Werte + SG-Aggregation" },
+    { id: "material-anfragen", cmd: "/material-anfragen", tabs: { "1.0_Kalkulation": "R", "3.0_SG-Hinweise": "R" }, desc: "Liest LV + Hinweise für Lieferanten-Zuordnung" },
+    { id: "angebots-auswertung", cmd: "/angebots-auswertung", tabs: { "1.0_Kalkulation": "R", "1.2_Kalkulation_Mat-Sub": "U" }, desc: "Schreibt Final-EPs nach Angebotsvergleich" },
+    { id: "material-konsolidierung", cmd: "/material-konsolidierung", tabs: { "1.0_Kalkulation": "U", "1.2_Kalkulation_Mat-Sub": "U" }, desc: "Bester Preis pro Position → Final-Spalten" },
+    { id: "kalkulations-analyse", cmd: "/kalkulations-analyse", tabs: { "1.0_Kalkulation": "R", "2.0_SG-Pricing": "U", "3.0_SG-Hinweise": "U", "2.1_Deep-Dive Final": "R", "3.1_Deep-Dive Hinweise": "R" }, desc: "Script rechnet, Claude bewertet als Oberbauleiter" },
+    { id: "angebotserstellung", cmd: "/angebotserstellung", tabs: { "1.0_Kalkulation": "R", "2.0_SG-Pricing": "R" }, desc: "Liest finale Werte für GAEB-Export" },
+    { id: "bieterbrief-verarbeitung", cmd: "/bieterbrief-verarbeitung", tabs: { "1.0_Kalkulation": "R", "1.2_Kalkulation_Mat-Sub": "R" }, desc: "Liest Kalkulation für EK-Untergrenzen" },
+    { id: "gh-verhandlung", cmd: "/gh-verhandlung", tabs: { "1.0_Kalkulation": "R" }, desc: "Liest Kalkulation für Potenzial-Analyse" }
+  ],
+  offset_warning: "KRITISCH: 1.0 hat 3 Header-Zeilen (Daten ab Zeile 4), 1.1/1.2/2.0/3.0 haben nur 2 (Daten ab Zeile 3)!"
+};
+</script>
+
+<script type="text/babel">
+const { useState, useMemo } = React;
+const D = window.GSHEET_DATA;
+
+const blockColor = { lohn: '#1e40af', mat: '#9a3412', sub: '#166534', neutral: '#64748b' };
+const blockLabel = { lohn: 'Lohn', mat: 'Material', sub: 'Sub', neutral: '' };
+const crudColor = { C: '#166534', R: '#1e40af', U: '#92400e' };
+const crudBg = { C: '#dcfce7', R: '#dbeafe', U: '#fef3c7' };
+
+// ---- TAB 1: Tab-Übersicht ----
+function TabOverview() {
+  const [sel, setSel] = useState(null);
+  const tab = sel ? D.tabs.find(t => t.id === sel) : null;
+
+  return (
+    <div>
+      <div className="tab-desc">
+        8 Tabs im Kalkulations-GSheet. Klick auf einen Tab für Details. Die Tabs bauen aufeinander auf: 1.0 ist der Haupttab, 1.1/1.2 liefern Detail-Daten, 2.0/3.0 aggregieren auf SG-Ebene.
+      </div>
+      <div className="card-grid">
+        {D.tabs.map(t => (
+          <div key={t.id} className={`card ${sel === t.id ? 'selected' : ''}`} onClick={() => setSel(sel === t.id ? null : t.id)}>
+            <div className="card-title" style={{color: t.color}}>{t.name}</div>
+            <div className="card-meta">{t.columns.length} Spalten-Gruppen · Header: {t.header_rows} Zeilen · Daten ab Zeile {t.first_data_row}</div>
+            <div style={{fontSize:11, color:'#475569', marginTop:6}}>{t.purpose}</div>
+            <div style={{marginTop:6}}>
+              {D.skills.filter(s => s.tabs[t.name]).map(s => {
+                const a = s.tabs[t.name];
+                return <span key={s.id} className="skill-tag" style={{background: crudBg[a], color: crudColor[a]}}>{a} {s.cmd}</span>;
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+      {tab && (
+        <div className="panel" style={{marginTop:16}}>
+          <div className="panel-title">{tab.name} — Spalten-Details</div>
+          <div style={{fontSize:11, color:'#64748b', marginBottom:8}}>Header-Zeilen: {tab.header_rows} | Erste Datenzeile: {tab.first_data_row}</div>
+          <div className="overflow-x">
+            <table>
+              <thead><tr><th style={{width:50}}>Spalte</th><th>Name</th><th>Typ</th><th>Quelle</th><th>Block</th><th>Beschreibung</th></tr></thead>
+              <tbody>
+                {tab.columns.map(c => (
+                  <tr key={c.col}>
+                    <td><span className="col-letter">{c.col}</span></td>
+                    <td style={{fontWeight:600}}>{c.name}</td>
+                    <td>{c.type === 'Formel' ? <span className="formula-ref">Formel</span> : c.type}</td>
+                    <td style={{fontSize:11}}>{c.source}</td>
+                    <td>{c.block !== 'neutral' && <span className="block-label" style={{background: crudBg[c.block === 'lohn' ? 'R' : c.block === 'mat' ? 'U' : 'C'], color: blockColor[c.block]}}>{blockLabel[c.block]}</span>}</td>
+                    <td style={{fontSize:11, color:'#64748b'}}>{c.desc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ---- TAB 2: Skill-Zuordnung ----
+function TabSkills() {
+  const tabNames = D.tabs.map(t => t.name);
+
+  return (
+    <div>
+      <div className="tab-desc">
+        Welcher Skill greift auf welchen Tab zu. <span className="pill pill-c">C</span> = erstellt den Tab (Create), <span className="pill pill-r">R</span> = liest (Read), <span className="pill pill-u">U</span> = aktualisiert (Update).
+      </div>
+      <div className="overflow-x">
+        <table>
+          <thead>
+            <tr>
+              <th style={{minWidth:200}}>Skill</th>
+              {D.tabs.map(t => <th key={t.id} style={{minWidth:60, fontSize:10, textAlign:'center', color: t.color, whiteSpace:'normal', lineHeight:1.3}}>{t.name}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {D.skills.map(s => (
+              <tr key={s.id}>
+                <td style={{fontWeight:600, fontSize:12}}>{s.cmd}</td>
+                {D.tabs.map(t => {
+                  const access = s.tabs[t.name];
+                  if (!access) return <td key={t.id} style={{textAlign:'center'}}><span style={{color:'#e2e8f0'}}>·</span></td>;
+                  return <td key={t.id} style={{textAlign:'center'}}><span className="pill" style={{background: crudBg[access], color: crudColor[access]}}>{access}</span></td>;
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// ---- TAB 3: Formelnetz ----
+function TabFormulas() {
+  return (
+    <div>
+      <div className="tab-desc">
+        Wie die Tabs untereinander verknüpft sind. Formeln in einem Tab referenzieren Daten aus anderen Tabs. Die wichtigste Kette: 1.1/1.2 → 1.0 → 2.0/3.0 → Deep-Dives.
+      </div>
+      <div className="panel" style={{marginBottom:16}}>
+        <div className="panel-title">Offset-Warnung</div>
+        <div style={{fontSize:12, color:'#991b1b', background:'#fef2f2', padding:'8px 12px', borderRadius:6}}>{D.offset_warning}</div>
+      </div>
+      <div className="overflow-x">
+        <table>
+          <thead><tr><th style={{minWidth:160}}>Ziel (liest)</th><th style={{textAlign:'center', width:40}}>←</th><th style={{minWidth:200}}>Quelle (liefert)</th><th>Beschreibung</th></tr></thead>
+          <tbody>
+            {D.cross_refs.map((ref, i) => (
+              <tr key={i}>
+                <td><span className="formula-ref">{ref.from}</span></td>
+                <td style={{textAlign:'center', color:'#94a3b8', fontSize:16}}>←</td>
+                <td><span className="formula-ref">{ref.to}</span></td>
+                <td style={{fontSize:11, color:'#475569'}}>{ref.desc}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="panel" style={{marginTop:16}}>
+        <div className="panel-title">Datenfluss-Kette</div>
+        <div style={{fontSize:12, color:'#475569', lineHeight:2}}>
+          <span style={{fontWeight:600}}>LV-Import</span> → <span className="formula-ref">1.0 (A-H)</span> →
+          <span className="formula-ref">1.1 + 1.2 (Referenz)</span> →
+          <span style={{fontWeight:600}}>Vorab-Kalk befüllt 1.1 + 1.2</span> →
+          <span className="formula-ref">1.0 (O,V,AD Fallback)</span> →
+          <span className="formula-ref">2.0 + 3.0 (SUMPRODUCT/SUMIFS)</span> →
+          <span className="formula-ref">2.1 + 3.1 (LARGE/INDEX)</span> →
+          <span style={{fontWeight:600}}>Analyse + Export</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---- TAB 4: Lebenszyklus ----
+function TabLifecycle() {
+  const phases = [
+    { skill: "/template-anwendung", block: "B-01", what: "Kopiert Template, importiert LV-Positionen in 1.0 (A-H). Alle Formeln + leere Vorab-Spalten stehen bereit.", tabs: ["1.0_Kalkulation", "Übersicht"], color: "#dcfce7" },
+    { skill: "/hinweis-extraktion", block: "B-02", what: "Befüllt Hinweis-Spalten: 1.1!J (Lohn-Hinweis), 1.2!I (HB), 1.2!K (Mat-Hinweis), 1.2!V (Sub-Hinweis). Schreibt Übersicht-Hinweistexte.", tabs: ["1.1_Kalkulation_Lohn", "1.2_Kalkulation_Mat-Sub", "Übersicht"], color: "#dbeafe" },
+    { skill: "/vorab-kalkulation", block: "B-03", what: "Hauptbefüllung: L3, Kalk-Typ, Lohn/Mat/Sub Vorab-Werte + Quellen + Konfidenz in 1.1 + 1.2. Aggregation nach 2.0, 3.0, 3.1.", tabs: ["1.0_Kalkulation", "1.1_Kalkulation_Lohn", "1.2_Kalkulation_Mat-Sub", "2.0_SG-Pricing", "3.0_SG-Hinweise", "3.1_Deep-Dive Hinweise"], color: "#fef3c7" },
+    { skill: "/angebots-auswertung", block: "C-03", what: "Schreibt Final-EPs in 1.2 (O: Mat EK Final, Z: Sub EK Final) nach jedem ausgewerteten Angebot.", tabs: ["1.2_Kalkulation_Mat-Sub"], color: "#ffedd5" },
+    { skill: "/material-konsolidierung", block: "C-06", what: "Bester Preis pro Position → Final-Spalten in 1.0 + 1.2. Formeln in 1.0 ziehen automatisch.", tabs: ["1.0_Kalkulation", "1.2_Kalkulation_Mat-Sub"], color: "#dcfce7" },
+    { skill: "/kalkulations-analyse", block: "D-01", what: "Schreibt Quellen-Mix + Lieferanten + Risiken in 2.0/3.0. Liest alle Tabs für Fehlercheck + Kennzahlen.", tabs: ["2.0_SG-Pricing", "3.0_SG-Hinweise"], color: "#ede9fe" },
+    { skill: "/angebotserstellung", block: "D-02", what: "Liest finale Werte aus 1.0 + 2.0 für GAEB-Export. Kein Schreibzugriff.", tabs: ["1.0_Kalkulation", "2.0_SG-Pricing"], color: "#f1f5f9" }
+  ];
+
+  return (
+    <div>
+      <div className="tab-desc">
+        Chronologischer Ablauf: Wie das GSheet Schritt für Schritt befüllt wird. Jeder Skill fügt eine Schicht hinzu — vom leeren Template bis zur fertigen Kalkulation.
+      </div>
+      {phases.map((p, i) => (
+        <div key={i} style={{display:'flex', gap:12, marginBottom:8}}>
+          <div style={{minWidth:4, background: p.color, borderRadius:4}}></div>
+          <div style={{flex:1, padding:'10px 14px', background: p.color, borderRadius:8, border:'1px solid #e2e8f0'}}>
+            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:4}}>
+              <strong style={{fontSize:13}}>{p.skill}</strong>
+              <span style={{fontSize:10, color:'#64748b'}}>{p.block}</span>
+            </div>
+            <div style={{fontSize:12, color:'#475569', marginBottom:6}}>{p.what}</div>
+            <div>{p.tabs.map(t => <span key={t} className="skill-tag" style={{background:'rgba(255,255,255,0.7)', color:'#1e293b', border:'1px solid #e2e8f0'}}>{t}</span>)}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ---- Main App ----
+function App() {
+  const [activeTab, setActiveTab] = useState(0);
+  const tabs = [
+    { label: 'Tab-Übersicht', comp: TabOverview },
+    { label: 'Skill-Zuordnung', comp: TabSkills },
+    { label: 'Formelnetz', comp: TabFormulas },
+    { label: 'Lebenszyklus', comp: TabLifecycle },
+  ];
+  const Comp = tabs[activeTab].comp;
+
+  return (
+    <div>
+      <h1>GSheet Kalkulation <span>Struktur-Referenz</span></h1>
+      <div style={{fontSize:12, color:'#64748b', marginBottom:4}}>{D.description}</div>
+      <div className="tab-bar">
+        {tabs.map((t, i) => (
+          <button key={i} className={`tab-btn ${activeTab === i ? 'active' : ''}`} onClick={() => setActiveTab(i)}>{t.label}</button>
+        ))}
+      </div>
+      <Comp />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

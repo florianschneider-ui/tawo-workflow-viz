@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>GSheet Anfragen & Angebote — Struktur-Referenz</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1e293b; background: #fff; padding: 0 24px 40px; }
+  h1 { font-size: 22px; padding: 20px 0 4px; }
+  h1 span { font-weight: 400; color: #64748b; font-size: 14px; margin-left: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: #f1f5f9; color: #64748b; font-weight: 600; padding: 6px 10px; text-align: left; position: sticky; top: 0; z-index: 1; }
+  td { padding: 5px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+  tr:hover td { background: #f8fafc; }
+  .pill { display: inline-block; border-radius: 12px; padding: 2px 8px; font-size: 10px; font-weight: 600; line-height: 1.6; white-space: nowrap; }
+  .pill-c { background: #dcfce7; color: #166534; }
+  .pill-r { background: #dbeafe; color: #1e40af; }
+  .pill-u { background: #fef3c7; color: #92400e; }
+  .pill-f { background: #f3e8ff; color: #6b21a8; }
+  .pill-gh { background: #dbeafe; color: #1e40af; }
+  .pill-hersteller { background: #f3e8ff; color: #6b21a8; }
+  .pill-sub { background: #dcfce7; color: #166534; }
+  .pill-sonstiger { background: #fef3c7; color: #92400e; }
+  .tab-bar { display: flex; gap: 0; border-bottom: 1px solid #e5e7eb; margin-bottom: 16px; margin-top: 16px; overflow-x: auto; }
+  .tab-btn { padding: 10px 18px; font-size: 13px; font-weight: 500; color: #64748b; cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; font-family: inherit; white-space: nowrap; }
+  .tab-btn.active { color: #1e293b; border-bottom-color: #1e293b; font-weight: 600; }
+  .tab-desc { font-size: 12px; color: #64748b; line-height: 1.5; margin-bottom: 14px; padding: 10px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; }
+  .panel { border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-bottom: 12px; background: #f8fafc; }
+  .panel-title { font-weight: 700; font-size: 13px; margin-bottom: 8px; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+  .card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; background: #fff; cursor: pointer; transition: all 0.15s; }
+  .card:hover { border-color: #94a3b8; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  .card.selected { border-color: #1e293b; background: #f8fafc; }
+  .card-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .card-meta { font-size: 11px; color: #64748b; }
+  .overflow-x { overflow-x: auto; }
+  .col-letter { font-family: monospace; font-weight: 700; font-size: 11px; color: #475569; min-width: 24px; display: inline-block; }
+  .skill-tag { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 6px; display: inline-block; margin: 1px; }
+  .prefix-tag { font-family: monospace; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px; display: inline-block; margin-right: 6px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+window.GSHEET_DATA = {
+  name: "Anfragen & Angebote GSheet",
+  description: "Separates GSheet pro Projekt (nur Spur A). Verwaltet Lieferanten-Anfragen, eingehende Angebote und den Angebotsvergleich. Wird von /material-anfragen erstellt.",
+  tabs: [
+    {
+      id: "anfragen", name: "Anfragen", type: "fix", header_rows: 1, first_data_row: 2,
+      purpose: "Übersicht aller angefragten Lieferanten — eine Zeile pro Lieferant mit Anfrage-Details und Angebots-Bewertung.",
+      columns: [
+        { col: "A", name: "lieferant", type: "Text", phase: "anfrage", source: "material-anfragen", desc: "Firma-Name" },
+        { col: "B", name: "kategorie", type: "Text", phase: "anfrage", source: "material-anfragen", desc: "GH-VS, Hersteller, Sub, Sonstiger" },
+        { col: "C", name: "anfrage_einheit", type: "Text", phase: "anfrage", source: "material-anfragen", desc: "OZ-Range oder Komplettes LV" },
+        { col: "D", name: "scope", type: "Text", phase: "anfrage", source: "material-anfragen", desc: "Material, M+L, M+L inkl. IBN, Leistung" },
+        { col: "E", name: "anfrage_kanal", type: "Text", phase: "anfrage", source: "material-anfragen", desc: "E-Mail, LV-Anfrage, Projektanfrage, Portal" },
+        { col: "F", name: "anfrage_volumen", type: "EUR", phase: "anfrage", source: "material-anfragen", desc: "Geschätztes Volumen in EUR" },
+        { col: "G", name: "angebotsvolumen", type: "EUR", phase: "angebot", source: "angebots-auswertung", desc: "Tatsächliches Volumen nach Auswertung" },
+        { col: "I", name: "preis_bewertung", type: "Text", phase: "angebot", source: "angebots-auswertung", desc: "günstiger, konkurrenzfähig, teuer" },
+        { col: "J", name: "qualitaet_angebot", type: "Text", phase: "angebot", source: "angebots-auswertung", desc: "vollständig, lückenhaft, unklar" },
+        { col: "K", name: "zahlungsbedingungen", type: "Text", phase: "angebot", source: "angebots-auswertung", desc: "30 Tage netto, etc." },
+        { col: "L", name: "lieferbedingungen", type: "Text", phase: "angebot", source: "angebots-auswertung", desc: "FOB, CIF, etc." },
+        { col: "M", name: "laengste_lieferzeit", type: "Text", phase: "angebot", source: "angebots-auswertung", desc: "4 Wochen, 6-8 Wochen, etc." },
+        { col: "N", name: "preis_kommentar", type: "Text", phase: "angebot", source: "angebots-auswertung", desc: "Cu-Zuschlag, Rabatt-Info etc." },
+        { col: "O", name: "angebot_link", type: "URL", phase: "angebot", source: "angebots-auswertung", desc: "Drive-Link oder Dateipfad" },
+        { col: "P", name: "notion_page_id", type: "Text", phase: "anfrage", source: "material-anfragen", desc: "Notion MaterialAnfragen-DB Referenz" }
+      ],
+      skills_write: ["material-anfragen", "angebots-auswertung"],
+      skills_read: ["angebots-auswertung", "material-konsolidierung", "inbox-scan"]
+    },
+    {
+      id: "positionen", name: "Positionen", type: "fix", header_rows: 1, first_data_row: 2,
+      purpose: "Detaillierte Positionsebene — jede Zeile = eine LV-Position mit geparstem Angebots-EP pro Lieferant.",
+      columns: [
+        { col: "A", name: "oz", type: "Text", phase: "anfrage", source: "material-anfragen", desc: "Ordnungszahl aus LV" },
+        { col: "B", name: "kurztext", type: "Text", phase: "anfrage", source: "material-anfragen", desc: "Positionstext" },
+        { col: "C", name: "menge", type: "Zahl", phase: "anfrage", source: "material-anfragen", desc: "LV-Menge" },
+        { col: "D", name: "einheit", type: "Text", phase: "anfrage", source: "material-anfragen", desc: "St, m, psch" },
+        { col: "E", name: "lv_ep", type: "EUR", phase: "anfrage", source: "material-anfragen", desc: "EP aus Vorab-Kalkulation" },
+        { col: "F", name: "lv_gp", type: "EUR", phase: "anfrage", source: "material-anfragen", desc: "GP = Menge × EP" }
+      ],
+      skills_write: ["material-anfragen", "angebots-auswertung"],
+      skills_read: ["angebots-auswertung", "sg-vergleich", "material-konsolidierung"]
+    },
+    {
+      id: "meta", name: "Meta", type: "fix", header_rows: 0, first_data_row: 1,
+      purpose: "Projekt-Metadaten — Key-Value-Paare zur Identifikation und Verknüpfung.",
+      columns: [
+        { col: "A", name: "Key", type: "Text", phase: "anfrage", source: "material-anfragen", desc: "projekt_id, projekt_name, spur, kalk_gsheet_id, erstellt_am, angebotsfrist" },
+        { col: "B", name: "Value", type: "Text", phase: "anfrage", source: "material-anfragen", desc: "Entsprechende Werte" }
+      ],
+      skills_write: ["material-anfragen"],
+      skills_read: ["angebots-auswertung", "material-konsolidierung"]
+    },
+    {
+      id: "lieferant", name: "Lieferanten-Tabs (dynamisch)", type: "dynamisch", header_rows: 3, first_data_row: 4,
+      purpose: "Pro Lieferant ein Tab — enthält die geparsten Angebots-Positionen mit EP, Fabrikat, Scope-Bewertung.",
+      columns: [
+        { col: "A", name: "oz", type: "Text", phase: "angebot", source: "angebots-auswertung", desc: "Ordnungszahl (Matching zum LV)" },
+        { col: "B", name: "kurztext", type: "Text", phase: "angebot", source: "angebots-auswertung", desc: "Positionstext" },
+        { col: "C", name: "menge", type: "Zahl", phase: "angebot", source: "angebots-auswertung", desc: "Angebotene Menge" },
+        { col: "D", name: "einheit", type: "Text", phase: "angebot", source: "angebots-auswertung", desc: "Einheit" },
+        { col: "E", name: "netto_ep", type: "EUR", phase: "angebot", source: "angebots-auswertung", desc: "Netto-Einzelpreis" },
+        { col: "F", name: "netto_gp", type: "Formel", phase: "angebot", source: "Formel", desc: "=C*E" },
+        { col: "G", name: "fabrikat", type: "Text", phase: "angebot", source: "angebots-auswertung", desc: "Hersteller / Artikelbezeichnung" },
+        { col: "H", name: "typ_nr", type: "Text", phase: "angebot", source: "angebots-auswertung", desc: "Artikelnummer / Bestellnummer" },
+        { col: "I", name: "scope_bewertung", type: "Text", phase: "angebot", source: "angebots-auswertung", desc: "voll, teil, nicht, unklar" },
+        { col: "J", name: "abweichung", type: "Text", phase: "angebot", source: "angebots-auswertung", desc: "Beschreibung der Abweichung zum LV" },
+        { col: "K", name: "kommentar", type: "Text", phase: "angebot", source: "angebots-auswertung", desc: "QS-Kommentar (Einkaufs-Perspektive)" },
+        { col: "M", name: "lv_ep_vorab", type: "EUR", phase: "angebot", source: "angebots-auswertung", desc: "Vorab-EP zum Vergleich" },
+        { col: "N", name: "delta_%", type: "Formel", phase: "angebot", source: "Formel", desc: "=(E-M)/M — Abweichung in %" },
+        { col: "O", name: "delta_gp", type: "Formel", phase: "angebot", source: "Formel", desc: "=(E-M)*C — Abweichung in EUR" }
+      ],
+      skills_write: ["angebots-auswertung"],
+      skills_read: ["sg-vergleich", "material-konsolidierung", "gh-verhandlung"]
+    },
+    {
+      id: "vergleich", name: "SG-Vergleiche (dynamisch)", type: "dynamisch", header_rows: 2, first_data_row: 3,
+      purpose: "Pro Summengruppe ein Vergleichs-Tab — mehrere Lieferanten nebeneinander, Scope-Bewertung, EP-Ausreißer.",
+      columns: [
+        { col: "A-E", name: "LV-Referenz", type: "Text", phase: "vergleich", source: "sg-vergleich", desc: "OZ, Kurztext, Menge, Einheit, LV-EP" },
+        { col: "pro Lieferant (5 Sp.)", name: "EP / GP / Fabrikat / Scope / Delta", type: "Gemischt", phase: "vergleich", source: "sg-vergleich", desc: "5 Spalten pro verglichenem Lieferant" },
+        { col: "Assessment", name: "Günstigster / Empfehlung", type: "Text", phase: "vergleich", source: "sg-vergleich / material-konsolidierung", desc: "Wer ist günstigster? Scope-Risiken? Nachverhandlung?" }
+      ],
+      skills_write: ["sg-vergleich", "material-konsolidierung"],
+      skills_read: ["material-konsolidierung", "gh-verhandlung"]
+    }
+  ],
+  tab_prefixes: [
+    { prefix: "02_", kategorie: "GH-VS", color: "#1e40af", bg: "#dbeafe", example: "02_Obeta, 02_UniElektro", desc: "Großhändler-Vollsortiment — breites Sortiment, schnelle Lieferung" },
+    { prefix: "03_", kategorie: "Hersteller", color: "#6b21a8", bg: "#f3e8ff", example: "03_ARSD, 03_IFE", desc: "Hersteller-Direkt — projektspezifische Produkte, oft günstiger ab Schwellenwert" },
+    { prefix: "04_", kategorie: "Sub", color: "#166534", bg: "#dcfce7", example: "04_CWS, 04_TNA", desc: "Subunternehmer — M+L-Pakete, eigene Montage" },
+    { prefix: "05_", kategorie: "Sonstiger", color: "#92400e", bg: "#fef3c7", example: "05_Lichtzentrale", desc: "Spezial-Lieferanten — Miete, Sonderware" }
+  ],
+  lifecycle: [
+    { skill: "/material-anfragen", block: "C-01", phase: "Erstellung", what: "Erstellt das GSheet aus Template. Befüllt Anfragen-Tab (A-F), Positionen-Tab (Grunddaten), Meta-Tab. Noch keine Lieferanten-Tabs.", color: "#dcfce7" },
+    { skill: "/inbox-scan", block: "C-02", phase: "Eingang", what: "Erkennt eingehende Angebote in Gmail, legt PDFs in Drive ab. Aktualisiert Anfragen-Tab (Angebots-Link).", color: "#dbeafe" },
+    { skill: "/angebots-auswertung", block: "C-03", phase: "Auswertung", what: "Pro eingehendem Angebot: Parsed PDF/Excel, erstellt Lieferanten-Tab (02_/03_/04_/05_), befüllt Anfragen-Tab (G-O), aktualisiert Positionen.", color: "#fef3c7" },
+    { skill: "/sg-vergleich", block: "C-05", phase: "Vergleich", what: "Erstellt SG-Vergleichs-Tabs: Mehrere Lieferanten einer Summengruppe nebeneinander. Scope-Bewertung, Fabrikat-Prüfung, EP-Ausreißer.", color: "#f3e8ff" },
+    { skill: "/material-konsolidierung", block: "C-06", phase: "Konsolidierung", what: "Erstellt Master-Tabs (LV-Übersicht, BOM, SG-Übersicht). Bester Preis pro Position. Schreibt Final-EPs zurück ins Kalkulations-GSheet.", color: "#ffedd5" },
+    { skill: "/gh-verhandlung", block: "E-02", phase: "Verhandlung", what: "Liest Lieferanten-Tabs + Vergleiche für Potenzial-Analyse. Erstellt Potenzial-Positionen + Bauzeitenplan-Tab.", color: "#ede9fe" }
+  ],
+  skills: [
+    { id: "material-anfragen", cmd: "/material-anfragen", tabs: { "Anfragen": "C", "Positionen": "C", "Meta": "C" }, desc: "Erstellt GSheet, befüllt Anfragen + Positionen + Meta" },
+    { id: "inbox-scan", cmd: "/inbox-scan", tabs: { "Anfragen": "U" }, desc: "Aktualisiert Anfragen-Tab (Angebots-Links)" },
+    { id: "angebots-auswertung", cmd: "/angebots-auswertung", tabs: { "Anfragen": "U", "Positionen": "U", "Lieferanten-Tabs (dynamisch)": "C" }, desc: "Erstellt Lieferanten-Tabs, befüllt Anfragen G-O" },
+    { id: "sg-vergleich", cmd: "/sg-vergleich", tabs: { "SG-Vergleiche (dynamisch)": "C", "Lieferanten-Tabs (dynamisch)": "R" }, desc: "Erstellt SG-Vergleichs-Tabs" },
+    { id: "material-konsolidierung", cmd: "/material-konsolidierung", tabs: { "Anfragen": "R", "Positionen": "R", "Lieferanten-Tabs (dynamisch)": "R", "SG-Vergleiche (dynamisch)": "U" }, desc: "Master-Tabs, bester Preis → Kalk-GSheet" },
+    { id: "gh-verhandlung", cmd: "/gh-verhandlung", tabs: { "Lieferanten-Tabs (dynamisch)": "R", "SG-Vergleiche (dynamisch)": "R" }, desc: "Liest für Potenzial-Analyse" }
+  ]
+};
+</script>
+
+<script type="text/babel">
+const { useState } = React;
+const D = window.GSHEET_DATA;
+
+const phaseColor = { anfrage: { bg: '#dcfce7', text: '#166534' }, angebot: { bg: '#fef3c7', text: '#92400e' }, vergleich: { bg: '#f3e8ff', text: '#6b21a8' } };
+
+// ---- TAB 1: Tab-Übersicht ----
+function TabOverview() {
+  const [sel, setSel] = useState(null);
+  const tab = sel ? D.tabs.find(t => t.id === sel) : null;
+
+  return (
+    <div>
+      <div className="tab-desc">
+        Das Anfragen-GSheet hat feste Tabs (Anfragen, Positionen, Meta) und dynamische Tabs die pro Lieferant/Vergleich erstellt werden. Klick auf einen Tab für Spalten-Details.
+      </div>
+      <div className="card-grid">
+        {D.tabs.map(t => (
+          <div key={t.id} className={`card ${sel === t.id ? 'selected' : ''}`} onClick={() => setSel(sel === t.id ? null : t.id)}>
+            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+              <div className="card-title">{t.name}</div>
+              <span className="pill" style={{background: t.type === 'fix' ? '#f1f5f9' : '#fef3c7', color: t.type === 'fix' ? '#64748b' : '#92400e'}}>{t.type}</span>
+            </div>
+            <div className="card-meta">Header: {t.header_rows} Zeilen · Daten ab Zeile {t.first_data_row}</div>
+            <div style={{fontSize:11, color:'#475569', marginTop:6}}>{t.purpose}</div>
+            <div style={{marginTop:6}}>
+              {D.skills.filter(s => s.tabs[t.name]).map(s => {
+                const a = s.tabs[t.name];
+                const colors = { C: {bg:'#dcfce7',c:'#166534'}, R: {bg:'#dbeafe',c:'#1e40af'}, U: {bg:'#fef3c7',c:'#92400e'} };
+                const col = colors[a] || colors.R;
+                return <span key={s.id} className="skill-tag" style={{background:col.bg, color:col.c}}>{a} {s.cmd}</span>;
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+      {tab && (
+        <div className="panel" style={{marginTop:16}}>
+          <div className="panel-title">{tab.name} — Spalten-Details</div>
+          <div className="overflow-x">
+            <table>
+              <thead><tr><th style={{width:50}}>Spalte</th><th>Name</th><th>Typ</th><th>Phase</th><th>Quelle</th><th>Beschreibung</th></tr></thead>
+              <tbody>
+                {tab.columns.map(c => (
+                  <tr key={c.col + c.name}>
+                    <td><span className="col-letter">{c.col}</span></td>
+                    <td style={{fontWeight:600}}>{c.name}</td>
+                    <td>{c.type}</td>
+                    <td>{c.phase && <span className="pill" style={{background: (phaseColor[c.phase]||{}).bg || '#f1f5f9', color: (phaseColor[c.phase]||{}).text || '#64748b'}}>{c.phase}</span>}</td>
+                    <td style={{fontSize:11}}>{c.source}</td>
+                    <td style={{fontSize:11, color:'#64748b'}}>{c.desc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ---- TAB 2: Lieferanten-Tabs ----
+function TabLieferanten() {
+  return (
+    <div>
+      <div className="tab-desc">
+        Pro Lieferant wird ein eigener Tab erstellt. Das Prefix bestimmt die Kategorie und damit die Sortierung im GSheet. Tabs werden von /angebots-auswertung erstellt wenn ein Angebot eingeht.
+      </div>
+      <div style={{marginBottom:20}}>
+        {D.tab_prefixes.map(p => (
+          <div key={p.prefix} style={{display:'flex', gap:12, marginBottom:10, padding:'12px 14px', borderRadius:8, border:'1px solid #e2e8f0', background:'#fff'}}>
+            <span className="prefix-tag" style={{background: p.bg, color: p.color, alignSelf:'flex-start', marginTop:2}}>{p.prefix}</span>
+            <div style={{flex:1}}>
+              <div style={{fontWeight:700, fontSize:13, color: p.color}}>{p.kategorie}</div>
+              <div style={{fontSize:11, color:'#64748b', marginTop:2}}>{p.desc}</div>
+              <div style={{fontSize:11, color:'#475569', marginTop:4}}>Beispiele: <span style={{fontFamily:'monospace'}}>{p.example}</span></div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="panel">
+        <div className="panel-title">Spalten pro Lieferanten-Tab (14 Spalten, 3 Header-Zeilen)</div>
+        <div style={{fontSize:11, color:'#64748b', marginBottom:8}}>Zeile 1: Block-Header (Material orange | Sub grün) · Zeile 2: Spalten-Header · Zeile 3: Beschreibungszeile (wird gelöscht) · Daten ab Zeile 4</div>
+        <div className="overflow-x">
+          <table>
+            <thead><tr><th style={{width:50}}>Spalte</th><th>Name</th><th>Typ</th><th>Beschreibung</th></tr></thead>
+            <tbody>
+              {D.tabs.find(t => t.id === 'lieferant').columns.map(c => (
+                <tr key={c.col}>
+                  <td><span className="col-letter">{c.col}</span></td>
+                  <td style={{fontWeight:600}}>{c.name}</td>
+                  <td>{c.type}</td>
+                  <td style={{fontSize:11, color:'#64748b'}}>{c.desc}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---- TAB 3: Skill-Zuordnung ----
+function TabSkills() {
+  const crudColor = { C: '#166534', R: '#1e40af', U: '#92400e' };
+  const crudBg = { C: '#dcfce7', R: '#dbeafe', U: '#fef3c7' };
+
+  return (
+    <div>
+      <div className="tab-desc">
+        Welcher Skill greift auf welchen Tab zu. <span className="pill pill-c">C</span> = erstellt (Create), <span className="pill pill-r">R</span> = liest (Read), <span className="pill pill-u">U</span> = aktualisiert (Update).
+      </div>
+      <div className="overflow-x">
+        <table>
+          <thead>
+            <tr>
+              <th style={{minWidth:200}}>Skill</th>
+              {D.tabs.map(t => <th key={t.id} style={{minWidth:60, fontSize:10, textAlign:'center', whiteSpace:'normal', lineHeight:1.3}}>{t.name}</th>)}
+              <th>Beschreibung</th>
+            </tr>
+          </thead>
+          <tbody>
+            {D.skills.map(s => (
+              <tr key={s.id}>
+                <td style={{fontWeight:600, fontSize:12}}>{s.cmd}</td>
+                {D.tabs.map(t => {
+                  const a = s.tabs[t.name];
+                  if (!a) return <td key={t.id} style={{textAlign:'center'}}><span style={{color:'#e2e8f0'}}>·</span></td>;
+                  return <td key={t.id} style={{textAlign:'center'}}><span className="pill" style={{background: crudBg[a], color: crudColor[a]}}>{a}</span></td>;
+                })}
+                <td style={{fontSize:11, color:'#475569'}}>{s.desc}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// ---- TAB 4: Lebenszyklus ----
+function TabLifecycle() {
+  return (
+    <div>
+      <div className="tab-desc">
+        Chronologischer Ablauf: Wie das Anfragen-GSheet Schritt für Schritt wächst. Von der leeren Anfragen-Liste über einzelne Lieferanten-Tabs bis zur konsolidierten Entscheidung.
+      </div>
+      {D.lifecycle.map((p, i) => (
+        <div key={i} style={{display:'flex', gap:12, marginBottom:8}}>
+          <div style={{minWidth:4, background: p.color, borderRadius:4}}></div>
+          <div style={{flex:1, padding:'10px 14px', background: p.color, borderRadius:8, border:'1px solid #e2e8f0'}}>
+            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:4}}>
+              <strong style={{fontSize:13}}>{p.skill}</strong>
+              <div>
+                <span style={{fontSize:10, color:'#64748b', marginRight:8}}>{p.block}</span>
+                <span className="pill" style={{background:'rgba(255,255,255,0.8)', color:'#1e293b', border:'1px solid #e2e8f0'}}>{p.phase}</span>
+              </div>
+            </div>
+            <div style={{fontSize:12, color:'#475569'}}>{p.what}</div>
+          </div>
+        </div>
+      ))}
+      <div className="panel" style={{marginTop:16}}>
+        <div className="panel-title">Tab-Wachstum über den Workflow</div>
+        <div style={{fontSize:12, color:'#475569', lineHeight:2}}>
+          <strong>Start:</strong> 3 Tabs (Anfragen, Positionen, Meta)<br/>
+          <strong>Nach Angeboten:</strong> 3 + N Lieferanten-Tabs (02_Obeta, 03_IFE, 04_CWS, ...)<br/>
+          <strong>Nach Vergleich:</strong> + M SG-Vergleichs-Tabs (SG_01.01, SG_02.03, ...)<br/>
+          <strong>Nach Konsolidierung:</strong> + 3 Master-Tabs (LV-Übersicht, BOM, SG-Übersicht)<br/>
+          <strong>Typisch:</strong> 15-25 Tabs am Ende des Beschaffungsprozesses
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---- Main App ----
+function App() {
+  const [activeTab, setActiveTab] = useState(0);
+  const tabs = [
+    { label: 'Tab-Übersicht', comp: TabOverview },
+    { label: 'Lieferanten-Tabs', comp: TabLieferanten },
+    { label: 'Skill-Zuordnung', comp: TabSkills },
+    { label: 'Lebenszyklus', comp: TabLifecycle },
+  ];
+  const Comp = tabs[activeTab].comp;
+
+  return (
+    <div>
+      <h1>Anfragen & Angebote <span>GSheet Struktur-Referenz</span></h1>
+      <div style={{fontSize:12, color:'#64748b', marginBottom:4}}>{D.description}</div>
+      <div className="tab-bar">
+        {tabs.map((t, i) => (
+          <button key={i} className={`tab-btn ${activeTab === i ? 'active' : ''}`} onClick={() => setActiveTab(i)}>{t.label}</button>
+        ))}
+      </div>
+      <Comp />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
