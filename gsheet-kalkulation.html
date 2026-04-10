@@ -48,196 +48,1026 @@
 
 <script>
 window.GSHEET_DATA = {
-  name: "GSheet Kalkulation",
-  template: "TAWO_Kalkulation_Template.gsheet",
-  description: "Zentrale Kalkulationsdatei pro Projekt. Wird von /template-anwendung aus Template kopiert und durch den gesamten Workflow befüllt.",
-  tabs: [
+  "name": "GSheet Kalkulation",
+  "template": "TAWO_Kalkulation_Template.gsheet",
+  "description": "Zentrale Kalkulationsdatei pro Projekt. Wird von /template-anwendung aus Template kopiert und durch den gesamten Workflow befüllt.",
+  "tabs": [
     {
-      id: "uebersicht", name: "Übersicht", header_rows: 2, first_data_row: 3,
-      purpose: "Projekt-Steckbrief mit Kennzahlen + Hinweistexte-Block für den Kalkulateur",
-      color: "#64748b",
-      columns: [
-        { col: "A-E", name: "Projekt-Steckbrief", type: "Formeln + Text", source: "template-anwendung", block: "neutral", desc: "Projektname, ID, AG, Abgabefrist, Spur, EK-Stundensatz" },
-        { col: "G-M", name: "Hinweistexte-Block", type: "Text", source: "hinweis-extraktion", block: "neutral", desc: "7 Spalten: Zeile, SG, Kurztext, Langtext, Gelesen, Berücksichtigt, Kommentar" }
+      "id": "uebersicht",
+      "name": "Übersicht",
+      "header_rows": 2,
+      "first_data_row": 3,
+      "purpose": "Projekt-Steckbrief mit Kennzahlen + Hinweistexte-Block für den Kalkulateur",
+      "color": "#64748b",
+      "columns": [
+        {
+          "col": "A-E",
+          "name": "Projekt-Steckbrief",
+          "type": "Formeln + Text",
+          "source": "template-anwendung",
+          "block": "neutral",
+          "desc": "Projektname, ID, AG, Abgabefrist, Spur, EK-Stundensatz"
+        },
+        {
+          "col": "G-M",
+          "name": "Hinweistexte-Block",
+          "type": "Text",
+          "source": "hinweis-extraktion",
+          "block": "neutral",
+          "desc": "7 Spalten: Zeile, SG, Kurztext, Langtext, Gelesen, Berücksichtigt, Kommentar"
+        }
       ],
-      skills_write: ["template-anwendung", "hinweis-extraktion"],
-      skills_read: ["kalkulations-analyse"]
+      "skills_write": [
+        "template-anwendung",
+        "hinweis-extraktion"
+      ],
+      "skills_read": [
+        "kalkulations-analyse"
+      ]
     },
     {
-      id: "kalk", name: "1.0_Kalkulation", header_rows: 3, first_data_row: 4,
-      purpose: "Haupttab — alle LV-Positionen mit Lohn/Material/Sub EK+VK. 38 Spalten, Formeln ziehen aus 1.1 und 1.2.",
-      color: "#1e293b",
-      columns: [
-        { col: "A", name: "Typ", type: "Text", source: "LV-Import", block: "neutral", desc: "Gruppe, Position, Summe Gruppe, Hinweistext" },
-        { col: "B", name: "OZ", type: "Text", source: "LV-Import", block: "neutral", desc: "Ordnungszahl (Apostroph-Prefix)" },
-        { col: "C", name: "Kurztext", type: "Text", source: "LV-Import", block: "neutral", desc: "Positionskurztext aus GAEB" },
-        { col: "D", name: "Langtext", type: "Text", source: "LV-Import", block: "neutral", desc: "Langtext (bei Hinweistext-Zeilen)" },
-        { col: "E", name: "Menge", type: "Zahl", source: "LV-Import", block: "neutral", desc: "Mengenangabe aus GAEB" },
-        { col: "F", name: "Einheit", type: "Text", source: "LV-Import", block: "neutral", desc: "St, m, psch, etc." },
-        { col: "G", name: "EP Gesamt", type: "Formel", source: "Formel", block: "neutral", desc: "=Lohn EP + Mat EP + Sub EP (aus T+AA+AH)" },
-        { col: "H", name: "GP", type: "Formel", source: "Formel", block: "neutral", desc: "=IF(E=\"\";\";\";E*G) — Menge × EP" },
-        { col: "L", name: "Kalk-Typ Lohn Montage", type: "Text", source: "vorab-kalkulation", block: "lohn", desc: "TAWO, Sub, oder leer (entfällt)" },
-        { col: "M", name: "Kalk-Typ IBN", type: "Text", source: "vorab-kalkulation", block: "lohn", desc: "TAWO, Sub, oder leer" },
-        { col: "N", name: "Kalk-Typ Material", type: "Text", source: "vorab-kalkulation", block: "mat", desc: "Standard, Projekt, Sub_liefert, Miete, oder leer" },
-        { col: "O", name: "Lohn Min Vorab", type: "Formel", source: "Formel", block: "lohn", desc: "=1.1!K — Vorab-Fallback aus Lohn-Tab" },
-        { col: "P", name: "Lohn Min Final", type: "Zahl", source: "User / Analyse", block: "lohn", desc: "Manuelle Korrektur oder aus Analyse" },
-        { col: "R", name: "Lohn EK EP", type: "Formel", source: "Formel", block: "lohn", desc: "=IF(P=\"\";O;P)/60*Stundensatz" },
-        { col: "T", name: "Lohn VK EP", type: "Formel", source: "Formel", block: "lohn", desc: "Lohn VK = EK × Marge" },
-        { col: "U", name: "Lohn VK Summe", type: "Formel", source: "Formel", block: "lohn", desc: "=Menge × Lohn VK EP" },
-        { col: "V", name: "Mat EK Vorab", type: "Formel", source: "Formel", block: "mat", desc: "=1.2!L — Vorab-Fallback aus Mat-Tab" },
-        { col: "W", name: "Mat EK Final", type: "Zahl", source: "angebots-auswertung / Konsolidierung", block: "mat", desc: "Finaler EP nach Angebotsvergleich" },
-        { col: "AA", name: "Mat VK EP", type: "Formel", source: "Formel", block: "mat", desc: "Mat VK = EK × Marge" },
-        { col: "AB", name: "Mat VK Summe", type: "Formel", source: "Formel", block: "mat", desc: "=Menge × Mat VK EP" },
-        { col: "AD", name: "Sub EK Vorab", type: "Formel", source: "Formel", block: "sub", desc: "=1.2!W — Vorab-Fallback aus Sub-Block" },
-        { col: "AE", name: "Sub EK Final", type: "Zahl", source: "angebots-auswertung / Konsolidierung", block: "sub", desc: "Finaler Sub-EP nach Angebotsvergleich" },
-        { col: "AH", name: "Sub VK EP", type: "Formel", source: "Formel", block: "sub", desc: "Sub VK = EK × Marge" },
-        { col: "AI", name: "Sub VK Summe", type: "Formel", source: "Formel", block: "sub", desc: "=Menge × Sub VK EP" }
+      "id": "kalk",
+      "name": "1.0_Kalkulation",
+      "header_rows": 3,
+      "first_data_row": 4,
+      "purpose": "Haupttab — alle LV-Positionen mit Lohn/Material/Sub EK+VK. 38 Spalten, Formeln ziehen aus 1.1 und 1.2.",
+      "color": "#1e293b",
+      "columns": [
+        {
+          "col": "A",
+          "name": "Typ",
+          "type": "Text",
+          "source": "LV-Import",
+          "block": "neutral",
+          "desc": "Gruppe, Position, Summe Gruppe, Hinweistext"
+        },
+        {
+          "col": "B",
+          "name": "OZ",
+          "type": "Text",
+          "source": "LV-Import",
+          "block": "neutral",
+          "desc": "Ordnungszahl (Apostroph-Prefix)"
+        },
+        {
+          "col": "C",
+          "name": "Kurztext",
+          "type": "Text",
+          "source": "LV-Import",
+          "block": "neutral",
+          "desc": "Positionskurztext aus GAEB"
+        },
+        {
+          "col": "D",
+          "name": "Langtext",
+          "type": "Text",
+          "source": "LV-Import",
+          "block": "neutral",
+          "desc": "Langtext (bei Hinweistext-Zeilen)"
+        },
+        {
+          "col": "E",
+          "name": "Menge",
+          "type": "Zahl",
+          "source": "LV-Import",
+          "block": "neutral",
+          "desc": "Mengenangabe aus GAEB"
+        },
+        {
+          "col": "F",
+          "name": "Einheit",
+          "type": "Text",
+          "source": "LV-Import",
+          "block": "neutral",
+          "desc": "St, m, psch, etc."
+        },
+        {
+          "col": "G",
+          "name": "EP Gesamt",
+          "type": "Formel",
+          "source": "Formel",
+          "block": "neutral",
+          "desc": "=Lohn EP + Mat EP + Sub EP (aus T+AA+AH)"
+        },
+        {
+          "col": "H",
+          "name": "GP",
+          "type": "Formel",
+          "source": "Formel",
+          "block": "neutral",
+          "desc": "=IF(E=\"\";\";\";E*G) — Menge × EP"
+        },
+        {
+          "col": "L",
+          "name": "Kalk-Typ Lohn Montage",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "lohn",
+          "desc": "TAWO, Sub, oder leer (entfällt)"
+        },
+        {
+          "col": "M",
+          "name": "Kalk-Typ IBN",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "lohn",
+          "desc": "TAWO, Sub, oder leer"
+        },
+        {
+          "col": "N",
+          "name": "Kalk-Typ Material",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "mat",
+          "desc": "Standard, Projekt, Sub_liefert, Miete, oder leer"
+        },
+        {
+          "col": "O",
+          "name": "Lohn Min Vorab",
+          "type": "Formel",
+          "source": "Formel",
+          "block": "lohn",
+          "desc": "=1.1!K — Vorab-Fallback aus Lohn-Tab"
+        },
+        {
+          "col": "P",
+          "name": "Lohn Min Final",
+          "type": "Zahl",
+          "source": "User / Analyse",
+          "block": "lohn",
+          "desc": "Manuelle Korrektur oder aus Analyse"
+        },
+        {
+          "col": "R",
+          "name": "Lohn EK EP",
+          "type": "Formel",
+          "source": "Formel",
+          "block": "lohn",
+          "desc": "=IF(P=\"\";O;P)/60*Stundensatz"
+        },
+        {
+          "col": "T",
+          "name": "Lohn VK EP",
+          "type": "Formel",
+          "source": "Formel",
+          "block": "lohn",
+          "desc": "Lohn VK = EK × Marge"
+        },
+        {
+          "col": "U",
+          "name": "Lohn VK Summe",
+          "type": "Formel",
+          "source": "Formel",
+          "block": "lohn",
+          "desc": "=Menge × Lohn VK EP"
+        },
+        {
+          "col": "V",
+          "name": "Mat EK Vorab",
+          "type": "Formel",
+          "source": "Formel",
+          "block": "mat",
+          "desc": "=1.2!L — Vorab-Fallback aus Mat-Tab"
+        },
+        {
+          "col": "W",
+          "name": "Mat EK Final",
+          "type": "Zahl",
+          "source": "angebots-auswertung / Konsolidierung",
+          "block": "mat",
+          "desc": "Finaler EP nach Angebotsvergleich"
+        },
+        {
+          "col": "AA",
+          "name": "Mat VK EP",
+          "type": "Formel",
+          "source": "Formel",
+          "block": "mat",
+          "desc": "Mat VK = EK × Marge"
+        },
+        {
+          "col": "AB",
+          "name": "Mat VK Summe",
+          "type": "Formel",
+          "source": "Formel",
+          "block": "mat",
+          "desc": "=Menge × Mat VK EP"
+        },
+        {
+          "col": "AD",
+          "name": "Sub EK Vorab",
+          "type": "Formel",
+          "source": "Formel",
+          "block": "sub",
+          "desc": "=1.2!W — Vorab-Fallback aus Sub-Block"
+        },
+        {
+          "col": "AE",
+          "name": "Sub EK Final",
+          "type": "Zahl",
+          "source": "angebots-auswertung / Konsolidierung",
+          "block": "sub",
+          "desc": "Finaler Sub-EP nach Angebotsvergleich"
+        },
+        {
+          "col": "AH",
+          "name": "Sub VK EP",
+          "type": "Formel",
+          "source": "Formel",
+          "block": "sub",
+          "desc": "Sub VK = EK × Marge"
+        },
+        {
+          "col": "AI",
+          "name": "Sub VK Summe",
+          "type": "Formel",
+          "source": "Formel",
+          "block": "sub",
+          "desc": "=Menge × Sub VK EP"
+        }
       ],
-      skills_write: ["template-anwendung", "vorab-kalkulation", "angebots-auswertung", "material-konsolidierung", "kalkulations-analyse"],
-      skills_read: ["hinweis-extraktion", "vorab-kalkulation", "material-anfragen", "angebots-auswertung", "sg-vergleich", "material-konsolidierung", "kalkulations-analyse", "angebotserstellung", "bieterbrief-verarbeitung", "gh-verhandlung"]
+      "skills_write": [
+        "template-anwendung",
+        "vorab-kalkulation",
+        "angebots-auswertung",
+        "material-konsolidierung",
+        "kalkulations-analyse"
+      ],
+      "skills_read": [
+        "hinweis-extraktion",
+        "vorab-kalkulation",
+        "material-anfragen",
+        "angebots-auswertung",
+        "sg-vergleich",
+        "material-konsolidierung",
+        "kalkulations-analyse",
+        "angebotserstellung",
+        "bieterbrief-verarbeitung",
+        "gh-verhandlung"
+      ]
     },
     {
-      id: "lohn", name: "1.1_Kalkulation_Lohn", header_rows: 2, first_data_row: 3,
-      purpose: "Lohn-Detailtab — L3-Zuordnung, Vorab-Minutenwerte, Quellen, Konfidenz. 1.0 zieht Spalte K als Vorab-Fallback.",
-      color: "#1e40af",
-      columns: [
-        { col: "A-F", name: "LV-Referenz", type: "Formel", source: "Formel → 1.0", block: "neutral", desc: "OZ, Kurztext, Menge, Einheit (Referenz auf 1.0)" },
-        { col: "G", name: "L3", type: "Text", source: "vorab-kalkulation", block: "lohn", desc: "Leistungsgruppe — \"Name — ID\" (Apostroph-Prefix)" },
-        { col: "H-I", name: "Kalk-Typ Lohn/IBN", type: "Formel", source: "Formel → 1.0!L,M", block: "lohn", desc: "Referenz auf Kalk-Typen aus 1.0" },
-        { col: "J", name: "Lohn-Hinweis", type: "Text", source: "hinweis-extraktion", block: "lohn", desc: "Demontage aufwändig, UP-Installation, etc." },
-        { col: "K", name: "Lohn Min Vorab", type: "Zahl", source: "vorab-kalkulation", block: "lohn", desc: "Minutenwert-Schätzung (1 dp, z.B. 45.0)" },
-        { col: "L", name: "Lohn Vorab Quelle", type: "Text", source: "vorab-kalkulation", block: "lohn", desc: "Ref: kl-bit_26-0027 Pos 02.508 (Score 0.72)" },
-        { col: "M", name: "Lohn Konfidenz", type: "Text", source: "vorab-kalkulation", block: "lohn", desc: "Prozent-Wert, z.B. 85%" },
-        { col: "N", name: "Lohn Min Final", type: "Zahl", source: "User", block: "lohn", desc: "Manuelle Korrektur nach Angebotsphase" },
-        { col: "O", name: "Lohn Quelle Final", type: "Text", source: "User", block: "lohn", desc: "Herkunft des Final-Werts" },
-        { col: "P", name: "Kommentar", type: "Text", source: "User", block: "lohn", desc: "Optionaler Kommentar" },
-        { col: "Q", name: "Lohn VK Summe", type: "Formel", source: "Formel", block: "lohn", desc: "=(N oder K)/60*Stundensatz*Menge" }
+      "id": "lohn",
+      "name": "1.1_Kalkulation_Lohn",
+      "header_rows": 2,
+      "first_data_row": 3,
+      "purpose": "Lohn-Detailtab — L3-Zuordnung, Vorab-Minutenwerte, Quellen, Konfidenz. 1.0 zieht Spalte K als Vorab-Fallback.",
+      "color": "#1e40af",
+      "columns": [
+        {
+          "col": "A-F",
+          "name": "LV-Referenz",
+          "type": "Formel",
+          "source": "Formel → 1.0",
+          "block": "neutral",
+          "desc": "OZ, Kurztext, Menge, Einheit (Referenz auf 1.0)"
+        },
+        {
+          "col": "G",
+          "name": "L3",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "lohn",
+          "desc": "Leistungsgruppe — \"Name — ID\" (Apostroph-Prefix)"
+        },
+        {
+          "col": "H-I",
+          "name": "Kalk-Typ Lohn/IBN",
+          "type": "Formel",
+          "source": "Formel → 1.0!L,M",
+          "block": "lohn",
+          "desc": "Referenz auf Kalk-Typen aus 1.0"
+        },
+        {
+          "col": "J",
+          "name": "Lohn-Hinweis",
+          "type": "Text",
+          "source": "hinweis-extraktion",
+          "block": "lohn",
+          "desc": "Demontage aufwändig, UP-Installation, etc."
+        },
+        {
+          "col": "K",
+          "name": "Lohn Min Vorab",
+          "type": "Zahl",
+          "source": "vorab-kalkulation",
+          "block": "lohn",
+          "desc": "Minutenwert-Schätzung (1 dp, z.B. 45.0)"
+        },
+        {
+          "col": "L",
+          "name": "Lohn Vorab Quelle",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "lohn",
+          "desc": "Ref: kl-bit_26-0027 Pos 02.508 (Score 0.72)"
+        },
+        {
+          "col": "M",
+          "name": "Lohn Konfidenz",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "lohn",
+          "desc": "Prozent-Wert, z.B. 85%"
+        },
+        {
+          "col": "N",
+          "name": "Lohn Min Final",
+          "type": "Zahl",
+          "source": "User",
+          "block": "lohn",
+          "desc": "Manuelle Korrektur nach Angebotsphase"
+        },
+        {
+          "col": "O",
+          "name": "Lohn Quelle Final",
+          "type": "Text",
+          "source": "User",
+          "block": "lohn",
+          "desc": "Herkunft des Final-Werts"
+        },
+        {
+          "col": "P",
+          "name": "Kommentar",
+          "type": "Text",
+          "source": "User",
+          "block": "lohn",
+          "desc": "Optionaler Kommentar"
+        },
+        {
+          "col": "Q",
+          "name": "Lohn VK Summe",
+          "type": "Formel",
+          "source": "Formel",
+          "block": "lohn",
+          "desc": "=(N oder K)/60*Stundensatz*Menge"
+        }
       ],
-      skills_write: ["vorab-kalkulation", "hinweis-extraktion"],
-      skills_read: ["vorab-kalkulation", "kalkulations-analyse"]
+      "skills_write": [
+        "vorab-kalkulation",
+        "hinweis-extraktion"
+      ],
+      "skills_read": [
+        "vorab-kalkulation",
+        "kalkulations-analyse"
+      ]
     },
     {
-      id: "matsub", name: "1.2_Kalkulation_Mat-Sub", header_rows: 2, first_data_row: 3,
-      purpose: "Material + Sub Detailtab — zwei Blöcke nebeneinander. L3, Hersteller, Vorab-EPs, Final-EPs.",
-      color: "#9a3412",
-      columns: [
-        { col: "A-F", name: "LV-Referenz", type: "Formel", source: "Formel → 1.0", block: "neutral", desc: "OZ, Kurztext, Menge, Einheit" },
-        { col: "G", name: "L3", type: "Text", source: "vorab-kalkulation", block: "mat", desc: "Leistungsgruppe — \"Name — ID\"" },
-        { col: "H", name: "Kalk-Typ Material", type: "Formel", source: "Formel → 1.0!N", block: "mat", desc: "Standard, Projekt, Sub_liefert, Miete" },
-        { col: "I", name: "Herstellerbindung", type: "Text", source: "hinweis-extraktion", block: "mat", desc: "Pflicht, Präferenz, oder leer" },
-        { col: "J", name: "Hersteller", type: "Text", source: "vorab-kalkulation", block: "mat", desc: "Busch-Jaeger, Hager, etc." },
-        { col: "K", name: "Material-Hinweis", type: "Text", source: "hinweis-extraktion", block: "mat", desc: "Kontakte, Kabel, Risiken" },
-        { col: "L", name: "Mat EK Vorab", type: "Zahl", source: "vorab-kalkulation", block: "mat", desc: "EUR (2 dp) — Vorab-Schätzung" },
-        { col: "M", name: "Mat Vorab Quelle", type: "Text", source: "vorab-kalkulation", block: "mat", desc: "Datanorm: Pramac DE-5543 (Score 0.88)" },
-        { col: "N", name: "Mat Konfidenz", type: "Text", source: "vorab-kalkulation", block: "mat", desc: "Prozent-Wert" },
-        { col: "O", name: "Mat EK Final", type: "Zahl", source: "angebots-auswertung / User", block: "mat", desc: "EUR (2 dp) — nach Angebotsvergleich" },
-        { col: "P", name: "Mat Quelle Final", type: "Text", source: "angebots-auswertung / User", block: "mat", desc: "Herkunft des Final-Werts" },
-        { col: "S", name: "Kalk-Typ Lohn (Sub)", type: "Formel", source: "Formel → 1.0!L", block: "sub", desc: "TAWO, Sub" },
-        { col: "T", name: "Kalk-Typ IBN (Sub)", type: "Formel", source: "Formel → 1.0!M", block: "sub", desc: "TAWO, Sub" },
-        { col: "U", name: "Kalk-Typ Material (Sub)", type: "Formel", source: "Formel → 1.0!N", block: "sub", desc: "Standard, Projekt, Sub_liefert" },
-        { col: "V", name: "Sub-Hinweis", type: "Text", source: "hinweis-extraktion", block: "sub", desc: "Schnittstellen, Risiken" },
-        { col: "W", name: "Sub EK Vorab", type: "Zahl", source: "vorab-kalkulation", block: "sub", desc: "EUR (2 dp) — Vorab-Schätzung" },
-        { col: "X", name: "Sub Vorab Quelle", type: "Text", source: "vorab-kalkulation", block: "sub", desc: "Ref-Sub: Firma XY (Score 0.80)" },
-        { col: "Y", name: "Sub Konfidenz", type: "Text", source: "vorab-kalkulation", block: "sub", desc: "Prozent-Wert" },
-        { col: "Z", name: "Sub EK Final", type: "Zahl", source: "angebots-auswertung / User", block: "sub", desc: "EUR (2 dp) — nach Angebotsvergleich" },
-        { col: "AA", name: "Sub Quelle Final", type: "Text", source: "angebots-auswertung / User", block: "sub", desc: "Herkunft des Final-Werts" }
+      "id": "matsub",
+      "name": "1.2_Kalkulation_Mat-Sub",
+      "header_rows": 2,
+      "first_data_row": 3,
+      "purpose": "Material + Sub Detailtab — zwei Blöcke nebeneinander. L3, Hersteller, Vorab-EPs, Final-EPs.",
+      "color": "#9a3412",
+      "columns": [
+        {
+          "col": "A-F",
+          "name": "LV-Referenz",
+          "type": "Formel",
+          "source": "Formel → 1.0",
+          "block": "neutral",
+          "desc": "OZ, Kurztext, Menge, Einheit"
+        },
+        {
+          "col": "G",
+          "name": "L3",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "mat",
+          "desc": "Leistungsgruppe — \"Name — ID\""
+        },
+        {
+          "col": "H",
+          "name": "Kalk-Typ Material",
+          "type": "Formel",
+          "source": "Formel → 1.0!N",
+          "block": "mat",
+          "desc": "Standard, Projekt, Sub_liefert, Miete"
+        },
+        {
+          "col": "I",
+          "name": "Herstellerbindung",
+          "type": "Text",
+          "source": "hinweis-extraktion",
+          "block": "mat",
+          "desc": "Pflicht, Präferenz, oder leer"
+        },
+        {
+          "col": "J",
+          "name": "Hersteller",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "mat",
+          "desc": "Busch-Jaeger, Hager, etc."
+        },
+        {
+          "col": "K",
+          "name": "Material-Hinweis",
+          "type": "Text",
+          "source": "hinweis-extraktion",
+          "block": "mat",
+          "desc": "Kontakte, Kabel, Risiken"
+        },
+        {
+          "col": "L",
+          "name": "Mat EK Vorab",
+          "type": "Zahl",
+          "source": "vorab-kalkulation",
+          "block": "mat",
+          "desc": "EUR (2 dp) — Vorab-Schätzung"
+        },
+        {
+          "col": "M",
+          "name": "Mat Vorab Quelle",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "mat",
+          "desc": "Datanorm: Pramac DE-5543 (Score 0.88)"
+        },
+        {
+          "col": "N",
+          "name": "Mat Konfidenz",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "mat",
+          "desc": "Prozent-Wert"
+        },
+        {
+          "col": "O",
+          "name": "Mat EK Final",
+          "type": "Zahl",
+          "source": "angebots-auswertung / User",
+          "block": "mat",
+          "desc": "EUR (2 dp) — nach Angebotsvergleich"
+        },
+        {
+          "col": "P",
+          "name": "Mat Quelle Final",
+          "type": "Text",
+          "source": "angebots-auswertung / User",
+          "block": "mat",
+          "desc": "Herkunft des Final-Werts"
+        },
+        {
+          "col": "S",
+          "name": "Kalk-Typ Lohn (Sub)",
+          "type": "Formel",
+          "source": "Formel → 1.0!L",
+          "block": "sub",
+          "desc": "TAWO, Sub"
+        },
+        {
+          "col": "T",
+          "name": "Kalk-Typ IBN (Sub)",
+          "type": "Formel",
+          "source": "Formel → 1.0!M",
+          "block": "sub",
+          "desc": "TAWO, Sub"
+        },
+        {
+          "col": "U",
+          "name": "Kalk-Typ Material (Sub)",
+          "type": "Formel",
+          "source": "Formel → 1.0!N",
+          "block": "sub",
+          "desc": "Standard, Projekt, Sub_liefert"
+        },
+        {
+          "col": "V",
+          "name": "Sub-Hinweis",
+          "type": "Text",
+          "source": "hinweis-extraktion",
+          "block": "sub",
+          "desc": "Schnittstellen, Risiken"
+        },
+        {
+          "col": "W",
+          "name": "Sub EK Vorab",
+          "type": "Zahl",
+          "source": "vorab-kalkulation",
+          "block": "sub",
+          "desc": "EUR (2 dp) — Vorab-Schätzung"
+        },
+        {
+          "col": "X",
+          "name": "Sub Vorab Quelle",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "sub",
+          "desc": "Ref-Sub: Firma XY (Score 0.80)"
+        },
+        {
+          "col": "Y",
+          "name": "Sub Konfidenz",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "sub",
+          "desc": "Prozent-Wert"
+        },
+        {
+          "col": "Z",
+          "name": "Sub EK Final",
+          "type": "Zahl",
+          "source": "angebots-auswertung / User",
+          "block": "sub",
+          "desc": "EUR (2 dp) — nach Angebotsvergleich"
+        },
+        {
+          "col": "AA",
+          "name": "Sub Quelle Final",
+          "type": "Text",
+          "source": "angebots-auswertung / User",
+          "block": "sub",
+          "desc": "Herkunft des Final-Werts"
+        }
       ],
-      skills_write: ["vorab-kalkulation", "hinweis-extraktion", "angebots-auswertung", "material-konsolidierung"],
-      skills_read: ["vorab-kalkulation", "angebots-auswertung", "material-konsolidierung", "kalkulations-analyse", "bieterbrief-verarbeitung"]
+      "skills_write": [
+        "vorab-kalkulation",
+        "hinweis-extraktion",
+        "angebots-auswertung",
+        "material-konsolidierung"
+      ],
+      "skills_read": [
+        "vorab-kalkulation",
+        "angebots-auswertung",
+        "material-konsolidierung",
+        "kalkulations-analyse",
+        "bieterbrief-verarbeitung"
+      ]
     },
     {
-      id: "sg", name: "2.0_SG-Pricing", header_rows: 2, first_data_row: 3,
-      purpose: "Summengruppen-Übersicht — pro SG eine Zeile mit EK/VK, Quellen-Mix, Margen. Aggregiert aus 1.0/1.1/1.2.",
-      color: "#475569",
-      columns: [
-        { col: "A-D", name: "SG-Referenz", type: "Formel", source: "Formel", block: "neutral", desc: "OZ, Kurztext, Anzahl Positionen, Herstellerbindung" },
-        { col: "E", name: "Lohn Quellen-Mix", type: "Text", source: "kalkulations-analyse", block: "lohn", desc: "Ref-DB 70%, KFE 30%" },
-        { col: "F", name: "Lohn EK", type: "Formel", source: "SUMPRODUCT", block: "lohn", desc: "Aggregiert aus 1.0" },
-        { col: "G", name: "Lohn Marge %", type: "Zahl", source: "User", block: "lohn", desc: "Marge-Prozentsatz" },
-        { col: "H", name: "Lohn VK", type: "Formel", source: "SUMIFS", block: "lohn", desc: "Aggregiert aus 1.0" },
-        { col: "I", name: "Material Lieferanten", type: "Text", source: "kalkulations-analyse", block: "mat", desc: "Obeta, IFE, etc." },
-        { col: "J", name: "Mat EK", type: "Formel", source: "SUMPRODUCT", block: "mat", desc: "Vorab-Fallback wenn Final leer" },
-        { col: "K", name: "Mat Marge %", type: "Zahl", source: "User", block: "mat", desc: "Marge-Prozentsatz" },
-        { col: "L", name: "Mat VK", type: "Formel", source: "SUMIFS", block: "mat", desc: "Aggregiert" },
-        { col: "M", name: "Sub Firmen", type: "Text", source: "kalkulations-analyse", block: "sub", desc: "CWS, TNA, etc." },
-        { col: "N", name: "Sub EK", type: "Formel", source: "SUMPRODUCT", block: "sub", desc: "Aggregiert" },
-        { col: "O", name: "Sub Marge %", type: "Zahl", source: "User", block: "sub", desc: "Marge-Prozentsatz" },
-        { col: "P", name: "Sub VK", type: "Formel", source: "SUMIFS", block: "sub", desc: "Aggregiert" },
-        { col: "Q", name: "Risiko-Indikator", type: "Text", source: "kalkulations-analyse", block: "neutral", desc: "BS ca. 4.500 EUR etc." }
+      "id": "sg",
+      "name": "2.0_SG-Pricing",
+      "header_rows": 2,
+      "first_data_row": 3,
+      "purpose": "Summengruppen-Übersicht — pro SG eine Zeile mit EK/VK, Quellen-Mix, Margen. Aggregiert aus 1.0/1.1/1.2.",
+      "color": "#475569",
+      "columns": [
+        {
+          "col": "A-D",
+          "name": "SG-Referenz",
+          "type": "Formel",
+          "source": "Formel",
+          "block": "neutral",
+          "desc": "OZ, Kurztext, Anzahl Positionen, Herstellerbindung"
+        },
+        {
+          "col": "E",
+          "name": "Lohn Quellen-Mix",
+          "type": "Text",
+          "source": "kalkulations-analyse",
+          "block": "lohn",
+          "desc": "Ref-DB 70%, KFE 30%"
+        },
+        {
+          "col": "F",
+          "name": "Lohn EK",
+          "type": "Formel",
+          "source": "SUMPRODUCT",
+          "block": "lohn",
+          "desc": "Aggregiert aus 1.0"
+        },
+        {
+          "col": "G",
+          "name": "Lohn Marge %",
+          "type": "Zahl",
+          "source": "User",
+          "block": "lohn",
+          "desc": "Marge-Prozentsatz"
+        },
+        {
+          "col": "H",
+          "name": "Lohn VK",
+          "type": "Formel",
+          "source": "SUMIFS",
+          "block": "lohn",
+          "desc": "Aggregiert aus 1.0"
+        },
+        {
+          "col": "I",
+          "name": "Material Lieferanten",
+          "type": "Text",
+          "source": "kalkulations-analyse",
+          "block": "mat",
+          "desc": "Obeta, IFE, etc."
+        },
+        {
+          "col": "J",
+          "name": "Mat EK",
+          "type": "Formel",
+          "source": "SUMPRODUCT",
+          "block": "mat",
+          "desc": "Vorab-Fallback wenn Final leer"
+        },
+        {
+          "col": "K",
+          "name": "Mat Marge %",
+          "type": "Zahl",
+          "source": "User",
+          "block": "mat",
+          "desc": "Marge-Prozentsatz"
+        },
+        {
+          "col": "L",
+          "name": "Mat VK",
+          "type": "Formel",
+          "source": "SUMIFS",
+          "block": "mat",
+          "desc": "Aggregiert"
+        },
+        {
+          "col": "M",
+          "name": "Sub Firmen",
+          "type": "Text",
+          "source": "kalkulations-analyse",
+          "block": "sub",
+          "desc": "CWS, TNA, etc."
+        },
+        {
+          "col": "N",
+          "name": "Sub EK",
+          "type": "Formel",
+          "source": "SUMPRODUCT",
+          "block": "sub",
+          "desc": "Aggregiert"
+        },
+        {
+          "col": "O",
+          "name": "Sub Marge %",
+          "type": "Zahl",
+          "source": "User",
+          "block": "sub",
+          "desc": "Marge-Prozentsatz"
+        },
+        {
+          "col": "P",
+          "name": "Sub VK",
+          "type": "Formel",
+          "source": "SUMIFS",
+          "block": "sub",
+          "desc": "Aggregiert"
+        },
+        {
+          "col": "Q",
+          "name": "Risiko-Indikator",
+          "type": "Text",
+          "source": "kalkulations-analyse",
+          "block": "neutral",
+          "desc": "BS ca. 4.500 EUR etc."
+        }
       ],
-      skills_write: ["vorab-kalkulation", "kalkulations-analyse"],
-      skills_read: ["kalkulations-analyse", "angebotserstellung"]
+      "skills_write": [
+        "vorab-kalkulation",
+        "kalkulations-analyse"
+      ],
+      "skills_read": [
+        "kalkulations-analyse",
+        "angebotserstellung"
+      ]
     },
     {
-      id: "hinweise", name: "3.0_SG-Hinweise", header_rows: 2, first_data_row: 3,
-      purpose: "SG-Level Kontext — Kalk-Typ-Verteilung, Herstellerbindung, Zusammenfassung, Konfidenz, Risiko-Flags.",
-      color: "#64748b",
-      columns: [
-        { col: "A-D", name: "SG-Referenz", type: "Formel", source: "Formel", block: "neutral", desc: "OZ, Kurztext (Index/Match zu 2.0)" },
-        { col: "E", name: "Kalk-Typ Lohn Verteilung", type: "Text", source: "vorab-kalkulation", block: "lohn", desc: "TAWO: 5, Sub: 2" },
-        { col: "F", name: "Kalk-Typ IBN Verteilung", type: "Text", source: "vorab-kalkulation", block: "lohn", desc: "TAWO: 1, Sub: 3" },
-        { col: "G", name: "Kalk-Typ Material Verteilung", type: "Text", source: "vorab-kalkulation", block: "mat", desc: "Standard: 4, Projekt: 2" },
-        { col: "H", name: "Herstellerbindung", type: "Text", source: "vorab-kalkulation", block: "mat", desc: "Busch-Jaeger (8 Pos), Hager (2 Pos)" },
-        { col: "I", name: "Relevante Hinweistexte", type: "Text", source: "vorab-kalkulation", block: "neutral", desc: "Fachliche Beschreibung" },
-        { col: "J", name: "Zusammenfassung", type: "Text", source: "vorab-kalkulation", block: "neutral", desc: "Exec-Summary der SG" },
-        { col: "K-M", name: "Lohn: EK GP / Konfidenz / Quelle", type: "Zahl + Text", source: "vorab-kalkulation", block: "lohn", desc: "Aggregiert aus 1.1" },
-        { col: "N-P", name: "Mat: EK GP / Konfidenz / Quelle", type: "Zahl + Text", source: "vorab-kalkulation", block: "mat", desc: "Aggregiert aus 1.2" },
-        { col: "Q-S", name: "Sub: EK GP / Konfidenz / Quelle", type: "Zahl + Text", source: "vorab-kalkulation", block: "sub", desc: "Aggregiert aus 1.2" },
-        { col: "T", name: "Vorab-EK Gesamt", type: "Formel", source: "Formel", block: "neutral", desc: "=K+N+Q" },
-        { col: "U", name: "Risiko-Flags", type: "Text", source: "kalkulations-analyse", block: "neutral", desc: "Handlungsorientiert: BMA, Lieferzeit etc." },
-        { col: "V", name: "Anfrage-Empfehlung", type: "Text", source: "vorab-kalkulation", block: "neutral", desc: "Keine Anfrage oder Anfrage notwendig — Grund" }
+      "id": "hinweise",
+      "name": "3.0_SG-Hinweise",
+      "header_rows": 2,
+      "first_data_row": 3,
+      "purpose": "SG-Level Kontext — Kalk-Typ-Verteilung, Herstellerbindung, Zusammenfassung, Konfidenz, Risiko-Flags.",
+      "color": "#64748b",
+      "columns": [
+        {
+          "col": "A-D",
+          "name": "SG-Referenz",
+          "type": "Formel",
+          "source": "Formel",
+          "block": "neutral",
+          "desc": "OZ, Kurztext (Index/Match zu 2.0)"
+        },
+        {
+          "col": "E",
+          "name": "Kalk-Typ Lohn Verteilung",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "lohn",
+          "desc": "TAWO: 5, Sub: 2"
+        },
+        {
+          "col": "F",
+          "name": "Kalk-Typ IBN Verteilung",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "lohn",
+          "desc": "TAWO: 1, Sub: 3"
+        },
+        {
+          "col": "G",
+          "name": "Kalk-Typ Material Verteilung",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "mat",
+          "desc": "Standard: 4, Projekt: 2"
+        },
+        {
+          "col": "H",
+          "name": "Herstellerbindung",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "mat",
+          "desc": "Busch-Jaeger (8 Pos), Hager (2 Pos)"
+        },
+        {
+          "col": "I",
+          "name": "Relevante Hinweistexte",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "neutral",
+          "desc": "Fachliche Beschreibung"
+        },
+        {
+          "col": "J",
+          "name": "Zusammenfassung",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "neutral",
+          "desc": "Exec-Summary der SG"
+        },
+        {
+          "col": "K-M",
+          "name": "Lohn: EK GP / Konfidenz / Quelle",
+          "type": "Zahl + Text",
+          "source": "vorab-kalkulation",
+          "block": "lohn",
+          "desc": "Aggregiert aus 1.1"
+        },
+        {
+          "col": "N-P",
+          "name": "Mat: EK GP / Konfidenz / Quelle",
+          "type": "Zahl + Text",
+          "source": "vorab-kalkulation",
+          "block": "mat",
+          "desc": "Aggregiert aus 1.2"
+        },
+        {
+          "col": "Q-S",
+          "name": "Sub: EK GP / Konfidenz / Quelle",
+          "type": "Zahl + Text",
+          "source": "vorab-kalkulation",
+          "block": "sub",
+          "desc": "Aggregiert aus 1.2"
+        },
+        {
+          "col": "T",
+          "name": "Vorab-EK Gesamt",
+          "type": "Formel",
+          "source": "Formel",
+          "block": "neutral",
+          "desc": "=K+N+Q"
+        },
+        {
+          "col": "U",
+          "name": "Risiko-Flags",
+          "type": "Text",
+          "source": "kalkulations-analyse",
+          "block": "neutral",
+          "desc": "Handlungsorientiert: BMA, Lieferzeit etc."
+        },
+        {
+          "col": "V",
+          "name": "Anfrage-Empfehlung",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "neutral",
+          "desc": "Keine Anfrage oder Anfrage notwendig — Grund"
+        }
       ],
-      skills_write: ["vorab-kalkulation", "kalkulations-analyse"],
-      skills_read: ["kalkulations-analyse", "material-anfragen"]
+      "skills_write": [
+        "vorab-kalkulation",
+        "kalkulations-analyse"
+      ],
+      "skills_read": [
+        "kalkulations-analyse",
+        "material-anfragen"
+      ]
     },
     {
-      id: "dd_final", name: "2.1_Deep-Dive Final", header_rows: 2, first_data_row: 3,
-      purpose: "Top 20 nach GP (Final) + Top 20 größter Delta Vorab vs Final. Automatisch via LARGE()/INDEX/MATCH.",
-      color: "#94a3b8",
-      columns: [
-        { col: "A-Z", name: "Automatische Top-Listen", type: "Formel", source: "Formel → 1.0", block: "neutral", desc: "Block 1 (Z3-22): Top 20 GP Final. Block 2 (Z26-45): Top 20 Delta. NICHT manuell befüllen." }
+      "id": "dd_final",
+      "name": "2.1_Deep-Dive Final",
+      "header_rows": 2,
+      "first_data_row": 3,
+      "purpose": "Top 20 nach GP (Final) + Top 20 größter Delta Vorab vs Final. Automatisch via LARGE()/INDEX/MATCH.",
+      "color": "#94a3b8",
+      "columns": [
+        {
+          "col": "A-Z",
+          "name": "Automatische Top-Listen",
+          "type": "Formel",
+          "source": "Formel → 1.0",
+          "block": "neutral",
+          "desc": "Block 1 (Z3-22): Top 20 GP Final. Block 2 (Z26-45): Top 20 Delta. NICHT manuell befüllen."
+        }
       ],
-      skills_write: [],
-      skills_read: ["kalkulations-analyse"]
+      "skills_write": [],
+      "skills_read": [
+        "kalkulations-analyse"
+      ]
     },
     {
-      id: "dd_hinw", name: "3.1_Deep-Dive Hinweise", header_rows: 2, first_data_row: 3,
-      purpose: "Top 20 nach GP + Top 20 größte Unsicherheit (Experten-Auswahl durch Claude).",
-      color: "#94a3b8",
-      columns: [
-        { col: "A-U", name: "Block 1: Top 20 GP (Auto)", type: "Formel", source: "Formel → 1.0", block: "neutral", desc: "Automatisch, wie 2.1" },
-        { col: "B", name: "Block 2: OZ (Experten-Auswahl)", type: "Text", source: "vorab-kalkulation", block: "neutral", desc: "Hand-ausgewählt nach Cu-Risiko, fehlende Ref, HB-Pflicht etc." },
-        { col: "V", name: "Unsicherheit EUR", type: "Zahl", source: "vorab-kalkulation", block: "neutral", desc: "Experten-Schätzung des Risiko-Betrags" },
-        { col: "W", name: "Kommentar", type: "Text", source: "vorab-kalkulation", block: "neutral", desc: "Fachliche Begründung" }
+      "id": "dd_hinw",
+      "name": "3.1_Deep-Dive Hinweise",
+      "header_rows": 2,
+      "first_data_row": 3,
+      "purpose": "Top 20 nach GP + Top 20 größte Unsicherheit (Experten-Auswahl durch Claude).",
+      "color": "#94a3b8",
+      "columns": [
+        {
+          "col": "A-U",
+          "name": "Block 1: Top 20 GP (Auto)",
+          "type": "Formel",
+          "source": "Formel → 1.0",
+          "block": "neutral",
+          "desc": "Automatisch, wie 2.1"
+        },
+        {
+          "col": "B",
+          "name": "Block 2: OZ (Experten-Auswahl)",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "neutral",
+          "desc": "Hand-ausgewählt nach Cu-Risiko, fehlende Ref, HB-Pflicht etc."
+        },
+        {
+          "col": "V",
+          "name": "Unsicherheit EUR",
+          "type": "Zahl",
+          "source": "vorab-kalkulation",
+          "block": "neutral",
+          "desc": "Experten-Schätzung des Risiko-Betrags"
+        },
+        {
+          "col": "W",
+          "name": "Kommentar",
+          "type": "Text",
+          "source": "vorab-kalkulation",
+          "block": "neutral",
+          "desc": "Fachliche Begründung"
+        }
       ],
-      skills_write: ["vorab-kalkulation"],
-      skills_read: ["kalkulations-analyse"]
+      "skills_write": [
+        "vorab-kalkulation"
+      ],
+      "skills_read": [
+        "kalkulations-analyse"
+      ]
     }
   ],
-  cross_refs: [
-    { from: "1.0!O", to: "1.1!K", desc: "Lohn Min Vorab — Fallback wenn Final (P) leer" },
-    { from: "1.0!V", to: "1.2!L", desc: "Mat EK Vorab — Fallback wenn Final (W) leer" },
-    { from: "1.0!AD", to: "1.2!W", desc: "Sub EK Vorab — Fallback wenn Final (AE) leer" },
-    { from: "1.0!L,M,N", to: "1.1!H,I + 1.2!H,S,T,U", desc: "Kalk-Typen werden in Detail-Tabs referenziert" },
-    { from: "2.0!F,J,N", to: "1.0 (SUMPRODUCT)", desc: "SG-EK aggregiert aus Positions-Level" },
-    { from: "2.0!H,L,P", to: "1.0 (SUMIFS)", desc: "SG-VK aggregiert aus Positions-Level" },
-    { from: "3.0!K-S", to: "1.1 + 1.2 (Aggregation)", desc: "SG-Hinweise aggregiert aus Vorab-Werten" },
-    { from: "3.0!T", to: "3.0!K+N+Q", desc: "Vorab-EK Gesamt = Lohn + Mat + Sub" },
-    { from: "2.1 + 3.1", to: "1.0!H (LARGE/INDEX)", desc: "Deep-Dives ziehen Top-Positionen aus 1.0" }
+  "cross_refs": [
+    {
+      "from": "1.0!O",
+      "to": "1.1!K",
+      "desc": "Lohn Min Vorab — Fallback wenn Final (P) leer"
+    },
+    {
+      "from": "1.0!V",
+      "to": "1.2!L",
+      "desc": "Mat EK Vorab — Fallback wenn Final (W) leer"
+    },
+    {
+      "from": "1.0!AD",
+      "to": "1.2!W",
+      "desc": "Sub EK Vorab — Fallback wenn Final (AE) leer"
+    },
+    {
+      "from": "1.0!L,M,N",
+      "to": "1.1!H,I + 1.2!H,S,T,U",
+      "desc": "Kalk-Typen werden in Detail-Tabs referenziert"
+    },
+    {
+      "from": "2.0!F,J,N",
+      "to": "1.0 (SUMPRODUCT)",
+      "desc": "SG-EK aggregiert aus Positions-Level"
+    },
+    {
+      "from": "2.0!H,L,P",
+      "to": "1.0 (SUMIFS)",
+      "desc": "SG-VK aggregiert aus Positions-Level"
+    },
+    {
+      "from": "3.0!K-S",
+      "to": "1.1 + 1.2 (Aggregation)",
+      "desc": "SG-Hinweise aggregiert aus Vorab-Werten"
+    },
+    {
+      "from": "3.0!T",
+      "to": "3.0!K+N+Q",
+      "desc": "Vorab-EK Gesamt = Lohn + Mat + Sub"
+    },
+    {
+      "from": "2.1 + 3.1",
+      "to": "1.0!H (LARGE/INDEX)",
+      "desc": "Deep-Dives ziehen Top-Positionen aus 1.0"
+    }
   ],
-  skills: [
-    { id: "template-anwendung", cmd: "/template-anwendung", tabs: { "1.0_Kalkulation": "C", "Übersicht": "C" }, desc: "Kopiert Template, importiert LV-Struktur" },
-    { id: "hinweis-extraktion", cmd: "/hinweis-extraktion", tabs: { "Übersicht": "U", "1.0_Kalkulation": "R", "1.1_Kalkulation_Lohn": "U", "1.2_Kalkulation_Mat-Sub": "U" }, desc: "Regex-Extraktion: Hinweistexte, HB, Kabel" },
-    { id: "vorab-kalkulation", cmd: "/vorab-kalkulation", tabs: { "1.0_Kalkulation": "U", "1.1_Kalkulation_Lohn": "U", "1.2_Kalkulation_Mat-Sub": "U", "2.0_SG-Pricing": "U", "3.0_SG-Hinweise": "U", "3.1_Deep-Dive Hinweise": "U" }, desc: "L3, Kalk-Typ, Lohn/Mat/Sub Vorab-Werte + SG-Aggregation" },
-    { id: "material-anfragen", cmd: "/material-anfragen", tabs: { "1.0_Kalkulation": "R", "3.0_SG-Hinweise": "R" }, desc: "Liest LV + Hinweise für Lieferanten-Zuordnung" },
-    { id: "angebots-auswertung", cmd: "/angebots-auswertung", tabs: { "1.0_Kalkulation": "R", "1.2_Kalkulation_Mat-Sub": "U" }, desc: "Schreibt Final-EPs nach Angebotsvergleich" },
-    { id: "material-konsolidierung", cmd: "/material-konsolidierung", tabs: { "1.0_Kalkulation": "U", "1.2_Kalkulation_Mat-Sub": "U" }, desc: "Bester Preis pro Position → Final-Spalten" },
-    { id: "kalkulations-analyse", cmd: "/kalkulations-analyse", tabs: { "1.0_Kalkulation": "R", "2.0_SG-Pricing": "U", "3.0_SG-Hinweise": "U", "2.1_Deep-Dive Final": "R", "3.1_Deep-Dive Hinweise": "R" }, desc: "Script rechnet, Claude bewertet als Oberbauleiter" },
-    { id: "angebotserstellung", cmd: "/angebotserstellung", tabs: { "1.0_Kalkulation": "R", "2.0_SG-Pricing": "R" }, desc: "Liest finale Werte für GAEB-Export" },
-    { id: "bieterbrief-verarbeitung", cmd: "/bieterbrief-verarbeitung", tabs: { "1.0_Kalkulation": "R", "1.2_Kalkulation_Mat-Sub": "R" }, desc: "Liest Kalkulation für EK-Untergrenzen" },
-    { id: "gh-verhandlung", cmd: "/gh-verhandlung", tabs: { "1.0_Kalkulation": "R" }, desc: "Liest Kalkulation für Potenzial-Analyse" }
+  "skills": [
+    {
+      "id": "template-anwendung",
+      "cmd": "/template-anwendung",
+      "tabs": {
+        "1.0_Kalkulation": "C",
+        "Übersicht": "C"
+      },
+      "desc": "Kopiert Template, importiert LV-Struktur"
+    },
+    {
+      "id": "hinweis-extraktion",
+      "cmd": "/hinweis-extraktion",
+      "tabs": {
+        "Übersicht": "U",
+        "1.0_Kalkulation": "R",
+        "1.1_Kalkulation_Lohn": "U",
+        "1.2_Kalkulation_Mat-Sub": "U"
+      },
+      "desc": "Regex-Extraktion: Hinweistexte, HB, Kabel"
+    },
+    {
+      "id": "vorab-kalkulation",
+      "cmd": "/vorab-kalkulation",
+      "tabs": {
+        "1.0_Kalkulation": "U",
+        "1.1_Kalkulation_Lohn": "U",
+        "1.2_Kalkulation_Mat-Sub": "U",
+        "2.0_SG-Pricing": "U",
+        "3.0_SG-Hinweise": "U",
+        "3.1_Deep-Dive Hinweise": "U"
+      },
+      "desc": "L3, Kalk-Typ, Lohn/Mat/Sub Vorab-Werte + SG-Aggregation"
+    },
+    {
+      "id": "material-anfragen",
+      "cmd": "/material-anfragen",
+      "tabs": {
+        "1.0_Kalkulation": "R",
+        "3.0_SG-Hinweise": "R"
+      },
+      "desc": "Liest LV + Hinweise für Lieferanten-Zuordnung"
+    },
+    {
+      "id": "angebots-auswertung",
+      "cmd": "/angebots-auswertung",
+      "tabs": {
+        "1.0_Kalkulation": "R",
+        "1.2_Kalkulation_Mat-Sub": "U"
+      },
+      "desc": "Schreibt Final-EPs nach Angebotsvergleich"
+    },
+    {
+      "id": "material-konsolidierung",
+      "cmd": "/material-konsolidierung",
+      "tabs": {
+        "1.0_Kalkulation": "U",
+        "1.2_Kalkulation_Mat-Sub": "U"
+      },
+      "desc": "Bester Preis pro Position → Final-Spalten"
+    },
+    {
+      "id": "kalkulations-analyse",
+      "cmd": "/kalkulations-analyse",
+      "tabs": {
+        "1.0_Kalkulation": "R",
+        "2.0_SG-Pricing": "U",
+        "3.0_SG-Hinweise": "U",
+        "2.1_Deep-Dive Final": "R",
+        "3.1_Deep-Dive Hinweise": "R"
+      },
+      "desc": "Script rechnet, Claude bewertet als Oberbauleiter"
+    },
+    {
+      "id": "angebotserstellung",
+      "cmd": "/angebotserstellung",
+      "tabs": {
+        "1.0_Kalkulation": "R",
+        "2.0_SG-Pricing": "R"
+      },
+      "desc": "Liest finale Werte für GAEB-Export"
+    },
+    {
+      "id": "bieterbrief-verarbeitung",
+      "cmd": "/bieterbrief-verarbeitung",
+      "tabs": {
+        "1.0_Kalkulation": "R",
+        "1.2_Kalkulation_Mat-Sub": "R"
+      },
+      "desc": "Liest Kalkulation für EK-Untergrenzen"
+    },
+    {
+      "id": "gh-verhandlung",
+      "cmd": "/gh-verhandlung",
+      "tabs": {
+        "1.0_Kalkulation": "R"
+      },
+      "desc": "Liest Kalkulation für Potenzial-Analyse"
+    }
   ],
-  offset_warning: "KRITISCH: 1.0 hat 3 Header-Zeilen (Daten ab Zeile 4), 1.1/1.2/2.0/3.0 haben nur 2 (Daten ab Zeile 3)!"
+  "offset_warning": "KRITISCH: 1.0 hat 3 Header-Zeilen (Daten ab Zeile 4), 1.1/1.2/2.0/3.0 haben nur 2 (Daten ab Zeile 3)!",
+  "generated_at": "2026-04-10T12:56:54.279Z",
+  "generated_by": "workflow-analyse"
 };
 </script>
 
