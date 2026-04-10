@@ -169,8 +169,7 @@ function Tab1() {
                 return (
                   <tr key={sid} className="skill-row">
                     <td className="sticky-col">
-                      <div style={{fontWeight:600, fontSize:12}}>{skill.name}</div>
-                      <div className="skill-cmd">{skill.slash_command}</div>
+                      <div style={{fontWeight:600, fontSize:12}}>{skill.slash_command}</div>
                     </td>
                     <td style={{textAlign:'center'}}><StatusPill status={skill.status}/></td>
                     {orderedResources.map(r => {
@@ -220,8 +219,7 @@ function Tab2() {
             return (
               <div key={sid} style={{marginBottom:16, paddingBottom:12, borderBottom:'1px solid #e2e8f0'}}>
                 <div style={{display:'flex', alignItems:'center', gap:8, marginBottom:6}}>
-                  <strong style={{fontSize:13}}>{skill.name}</strong>
-                  <span className="skill-cmd" style={{fontSize:11, color:'#64748b'}}>{skill.slash_command}</span>
+                  <strong style={{fontSize:13}}>{skill.slash_command}</strong>
                   <StatusPill status={skill.status}/>
                 </div>
                 <div style={{marginBottom:4}}>
@@ -302,19 +300,19 @@ function Tab3() {
               expanded === r.name && (
                 <tr key={r.name + '-detail'}>
                   <td colSpan={2} style={{background:'#f8fafc'}}></td>
-                  <td style={{padding:'8px 10px', background:'#f8fafc', verticalAlign:'top'}}>
+                  <td style={{padding:'4px 10px', background:'#f8fafc', verticalAlign:'top'}}>
                     {r.written_by.length === 0 ? <div style={{fontSize:11, color:'#94a3b8'}}>—</div> :
                       r.written_by.map(sid => {
                         const s = skillById[sid];
-                        return <div key={sid} style={{fontSize:11, padding:'1px 0'}}><span style={{color:'#64748b', marginRight:4}}>{sid}</span>{s ? s.name : ''}</div>;
+                        return <div key={sid} style={{fontSize:11, padding:'1px 0', color:'#475569'}}>/{s ? s.name : sid}</div>;
                       })
                     }
                   </td>
-                  <td style={{padding:'8px 10px', background:'#f8fafc', verticalAlign:'top'}}>
+                  <td style={{padding:'4px 10px', background:'#f8fafc', verticalAlign:'top'}}>
                     {r.read_by.length === 0 ? <div style={{fontSize:11, color:'#94a3b8'}}>—</div> :
                       r.read_by.map(sid => {
                         const s = skillById[sid];
-                        return <div key={sid} style={{fontSize:11, padding:'1px 0'}}><span style={{color:'#64748b', marginRight:4}}>{sid}</span>{s ? s.name : ''}</div>;
+                        return <div key={sid} style={{fontSize:11, padding:'1px 0', color:'#475569'}}>/{s ? s.name : sid}</div>;
                       })
                     }
                   </td>
@@ -388,8 +386,7 @@ function Tab4() {
             return (
               <div key={sid} style={{marginBottom:14, paddingBottom:10, borderBottom:'1px solid #f1f5f9'}}>
                 <div style={{display:'flex', alignItems:'center', gap:8, marginBottom:6}}>
-                  <strong style={{fontSize:13}}>{skill.name}</strong>
-                  <span className="skill-cmd" style={{fontSize:11, color:'#64748b'}}>{skill.slash_command}</span>
+                  <strong style={{fontSize:13}}>{skill.slash_command}</strong>
                 </div>
                 {Object.keys(deps).length === 0 && extResources.length === 0 && (
                   <div style={{fontSize:12, color:'#94a3b8'}}>Keine internen Skill-Abhängigkeiten</div>
@@ -398,7 +395,7 @@ function Tab4() {
                   const depSkill = skillById[depId];
                   return (
                     <div key={depId} className="dep-item">
-                      <strong style={{color:'#1e293b'}}>{depSkill ? depSkill.name : depId}</strong>
+                      <strong style={{color:'#1e293b'}}>{depSkill ? depSkill.slash_command : depId}</strong>
                       {' '}wegen:{' '}
                       {deps[depId].map(r => <span key={r} className="tag tag-r">{r}</span>)}
                     </div>
@@ -492,16 +489,15 @@ function Tab5() {
       <div className="entry-grid">
         {filteredSkills.map(skill => (
           <button key={skill.id} className={`entry-btn ${selected === skill.id ? 'selected' : ''}`} onClick={() => setSelected(skill.id === selected ? null : skill.id)}>
-            <div className="entry-btn-id">{skill.id} · <StatusPill status={skill.status}/></div>
-            <div style={{fontWeight:600, fontSize:12}}>{skill.name}</div>
-            <div style={{fontSize:10, color:'#64748b', marginTop:2}}>{skill.slash_command}</div>
+            <div className="entry-btn-id"><StatusPill status={skill.status}/></div>
+            <div style={{fontWeight:600, fontSize:12}}>{skill.slash_command}</div>
           </button>
         ))}
       </div>
       {selected && (
         <div className="panel" style={{marginTop:8}}>
           <div className="panel-title">
-            Analyse: Einstieg bei <strong>{skillById[selected]?.name}</strong> ({selected})
+            Analyse: Einstieg bei <strong>{skillById[selected]?.slash_command}</strong>
           </div>
           <div style={{fontSize:12, color:'#64748b', marginBottom:12}}>
             Wenn alle vorherigen Skills übersprungen werden — welcher State fehlt?
@@ -518,7 +514,7 @@ function Tab5() {
                     <div style={{fontSize:11, color:'#64748b', marginTop:2}}>
                       Würde erzeugt von: {m.wouldBeProducedBy.map(p => {
                         const sk = skillById[p];
-                        return <span key={p} className="tag tag-r" style={{marginLeft:2}}>{sk ? sk.name : p}</span>;
+                        return <span key={p} className="tag tag-r" style={{marginLeft:2}}>{sk ? sk.slash_command : p}</span>;
                       })}
                     </div>
                   </div>
