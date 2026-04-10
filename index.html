@@ -488,7 +488,9 @@ function Tab5() {
           items.push({ resource: res, status: 'extern' });
         } else {
           // Ressource wird von anderem Workflow-Skill erzeugt → fehlt beim Direkteinstieg
-          items.push({ resource: res, status: 'fehlt', producers });
+          const creator = firstWriterOf[res];
+          const updaters = producers.filter(p => p !== creator);
+          items.push({ resource: res, status: 'fehlt', creator, updaters });
         }
       });
       map[skill.id] = { items, fehltCount: items.filter(i => i.status === 'fehlt').length, total: items.length };
@@ -567,7 +569,10 @@ function Tab5() {
                     <div style={{fontSize:11, color:'#64748b', marginTop:1}}>
                       {item.status === 'self' && 'Wird von diesem Skill selbst erzeugt'}
                       {item.status === 'extern' && 'Externe Ressource — immer manuell bereitzustellen'}
-                      {item.status === 'fehlt' && <span>Muss vorhanden sein — erzeugt von: {item.producers.map(p => <span key={p} className="tag tag-miss" style={{marginLeft:2}}>{skillById[p]?.slash_command || p}</span>)}</span>}
+                      {item.status === 'fehlt' && <span>
+                        Erstellt von: <span className="tag tag-miss" style={{marginLeft:2}}>{skillById[item.creator]?.slash_command || item.creator}</span>
+                        {item.updaters.length > 0 && <span style={{marginLeft:6, color:'#94a3b8'}}>| Update: {item.updaters.map(p => <span key={p} style={{fontSize:10, color:'#92400e', marginLeft:2}}>{skillById[p]?.slash_command || p}</span>)}</span>}
+                      </span>}
                     </div>
                   </div>
                 </div>
