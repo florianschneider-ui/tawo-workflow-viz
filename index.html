@@ -307,9 +307,9 @@ function Tab3() {
             <tr>
               <th>Ressource</th>
               <th>Typ</th>
-              <th style={{textAlign:'center'}}>Schreiber</th>
-              <th style={{textAlign:'center'}}>Leser</th>
-              <th style={{textAlign:'center'}}>Gesamt</th>
+              <th style={{minWidth:160}}>Schreiber</th>
+              <th style={{minWidth:160}}>Leser</th>
+              <th style={{textAlign:'center', minWidth:60}}>Gesamt</th>
               <th>Zugriffe</th>
             </tr>
           </thead>
@@ -321,10 +321,10 @@ function Tab3() {
                   {r.name}
                 </td>
                 <td><span style={{fontSize:10, fontWeight:600, color: typeColor[r.type]}}>{r.type}</span></td>
-                <td style={{textAlign:'center'}}>
+                <td>
                   {r.writeCount > 0 ? <span className="pill pill-w">{r.writeCount}</span> : <span style={{color:'#e2e8f0'}}>—</span>}
                 </td>
-                <td style={{textAlign:'center'}}>
+                <td>
                   {r.readCount > 0 ? <span className="pill pill-r">{r.readCount}</span> : <span style={{color:'#e2e8f0'}}>—</span>}
                 </td>
                 <td style={{textAlign:'center'}}>
@@ -344,7 +344,7 @@ function Tab3() {
                     {r.written_by.length === 0 ? <div style={{fontSize:11, color:'#94a3b8'}}>—</div> :
                       r.written_by.map(sid => {
                         const s = skillById[sid];
-                        return <div key={sid} style={{fontSize:11, padding:'1px 0', color:'#475569'}}>/{s ? s.name : sid}</div>;
+                        return <div key={sid} style={{fontSize:11, padding:'2px 0', whiteSpace:'nowrap'}}>{s ? s.slash_command : sid}</div>;
                       })
                     }
                   </td>
@@ -352,7 +352,7 @@ function Tab3() {
                     {r.read_by.length === 0 ? <div style={{fontSize:11, color:'#94a3b8'}}>—</div> :
                       r.read_by.map(sid => {
                         const s = skillById[sid];
-                        return <div key={sid} style={{fontSize:11, padding:'1px 0', color:'#475569'}}>/{s ? s.name : sid}</div>;
+                        return <div key={sid} style={{fontSize:11, padding:'2px 0', whiteSpace:'nowrap'}}>{s ? s.slash_command : sid}</div>;
                       })
                     }
                   </td>
@@ -582,10 +582,10 @@ function App() {
   const [tab, setTab] = useState(0);
   const tabs = [
     { label: 'Ressource-Matrix', comp: Tab1 },
-    { label: 'State-Requirements', comp: Tab2 },
-    { label: 'Reuse-Analyse', comp: Tab3 },
-    { label: 'Dependencies', comp: Tab4 },
-    { label: 'Entry-Point Simulator', comp: Tab5 },
+    { label: 'Skill-Anforderungen', comp: Tab2 },
+    { label: 'Ressourcen-Analyse', comp: Tab3 },
+    { label: 'Datenfluss', comp: Tab4 },
+    { label: 'Einstiegspunkte', comp: Tab5 },
   ];
   const ActiveComp = tabs[tab].comp;
   const issues = D.validation_issues || [];
