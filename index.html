@@ -27,6 +27,11 @@
   tr:hover td { background: #f8fafc; }
   .pill { display: inline-block; border-radius: 12px; padding: 2px 8px; font-size: 10px; font-weight: 600; line-height: 1.6; white-space: nowrap; }
   .pill-r { background: #dbeafe; color: #1e40af; }
+  .pill-c { background: #dcfce7; color: #166534; }
+  .pill-u { background: #fef3c7; color: #92400e; }
+  .pill-d { background: #fef2f2; color: #991b1b; }
+  .pill-cr { background: #ccfbf1; color: #0f766e; }
+  .pill-ru { background: #ede9fe; color: #5b21b6; }
   .pill-w { background: #dcfce7; color: #166534; }
   .pill-rw { background: #fef3c7; color: #92400e; }
   .pill-none { background: #f1f5f9; color: #94a3b8; }
@@ -35,6 +40,7 @@
   .pill-status-live { background: #dcfce7; color: #166534; }
   .pill-status-beta { background: #fef3c7; color: #92400e; }
   .pill-status-inarbeit { background: #fef2f2; color: #991b1b; }
+  .tab-desc { font-size: 12px; color: #64748b; line-height: 1.5; margin-bottom: 14px; padding: 10px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; }
   .block-header { background: #e2e8f0; font-weight: 700; font-size: 11px; color: #475569; }
   .block-header td { padding: 4px 10px; }
   .sticky-col { position: sticky; left: 0; background: #fff; z-index: 2; min-width: 160px; border-right: 1px solid #e2e8f0; }
@@ -90,6 +96,17 @@ D.blocks.forEach(b => { blockById[b.id] = b; });
 const resourceByName = {};
 D.resources.forEach(r => { resourceByName[r.name] = r; });
 
+// Determine first writer of each resource (workflow order)
+const orderedSkillIds = D.blocks.flatMap(b => b.skills);
+const firstWriterOf = {};
+orderedSkillIds.forEach(sid => {
+  const skill = skillById[sid];
+  if (!skill) return;
+  skill.writes.forEach(w => {
+    if (!firstWriterOf[w]) firstWriterOf[w] = sid;
+  });
+});
+
 // Resource type groups (ordered)
 const TYPE_ORDER = ['Google Sheet','Datei','Datenbank Prozess','Externer Service','Referenz-Daten','Dateisystem'];
 const typeColor = {
@@ -114,11 +131,23 @@ function groupResourcesByType(resources) {
 function getAccessType(skill, resourceName) {
   const reads = skill.reads.includes(resourceName);
   const writes = skill.writes.includes(resourceName);
-  if (reads && writes) return 'rw';
-  if (reads) return 'r';
-  if (writes) return 'w';
-  return null;
+  if (!reads && !writes) return null;
+  const isCreator = writes && firstWriterOf[resourceName] === skill.id;
+  const isUpdater = writes && !isCreator;
+  if (isCreator && reads) return 'cr';
+  if (isCreator) return 'c';
+  if (isUpdater && reads) return 'ru';
+  if (isUpdater) return 'u';
+  return 'r';
 }
+
+const CRUD_PILL = {
+  c:  { cls: 'pill-c',  label: 'C' },
+  r:  { cls: 'pill-r',  label: 'R' },
+  u:  { cls: 'pill-u',  label: 'U' },
+  cr: { cls: 'pill-cr', label: 'C/R' },
+  ru: { cls: 'pill-ru', label: 'R/U' },
+};
 
 function StatusPill({ status }) {
   const cls = status === 'live' ? 'pill-status-live' : status === 'beta' ? 'pill-status-beta' : 'pill-status-inarbeit';
@@ -132,14 +161,20 @@ function Tab1() {
 
   return (
     <div>
+      <div className="tab-desc">
+        Zeigt pro Skill (Zeile) und Ressource (Spalte) den Zugriffstyp nach CRUD-Schema. <strong>C</strong> = der Skill erzeugt die Ressource erstmalig im Workflow, <strong>U</strong> = der Skill aktualisiert eine bereits existierende Ressource, <strong>R</strong> = nur Lesen. Skills sind nach Prozessblock gruppiert, Ressourcen nach Typ.
+      </div>
       <div className="info-row" style={{marginBottom: 12}}>
         <span className="info-item"><strong>{D.skills.length}</strong> Skills</span>
         <span className="info-item"><strong>{D.resources.length}</strong> Ressourcen</span>
         <span className="info-item"><strong>{D.blocks.length}</strong> Blöcke</span>
         <span className="info-item">
-          <span className="pill pill-r" style={{marginRight:4}}>R</span>Lesen&nbsp;
-          <span className="pill pill-w" style={{marginRight:4}}>W</span>Schreiben&nbsp;
-          <span className="pill pill-rw" style={{marginRight:4}}>R/W</span>Beides
+          <span className="pill pill-c" style={{marginRight:4}}>C</span>Create&nbsp;
+          <span className="pill pill-r" style={{marginRight:4}}>R</span>Read&nbsp;
+          <span className="pill pill-u" style={{marginRight:4}}>U</span>Update&nbsp;
+          <span className="pill pill-d" style={{marginRight:4}}>D</span>Delete&nbsp;
+          <span className="pill pill-cr" style={{marginRight:4}}>C/R</span>Create+Read&nbsp;
+          <span className="pill pill-ru" style={{marginRight:4}}>R/U</span>Read+Update
         </span>
       </div>
       <div className="overflow-x">
@@ -175,9 +210,8 @@ function Tab1() {
                     {orderedResources.map(r => {
                       const t = getAccessType(skill, r.name);
                       if (!t) return <td key={r.name} style={{textAlign:'center'}}><span style={{color:'#e2e8f0', fontSize:12}}>·</span></td>;
-                      const cls = t === 'rw' ? 'pill-rw' : t === 'r' ? 'pill-r' : 'pill-w';
-                      const label = t === 'rw' ? 'R/W' : t.toUpperCase();
-                      return <td key={r.name} style={{textAlign:'center'}}><span className={`pill ${cls}`}>{label}</span></td>;
+                      const p = CRUD_PILL[t];
+                      return <td key={r.name} style={{textAlign:'center'}}><span className={`pill ${p.cls}`}>{p.label}</span></td>;
                     })}
                   </tr>
                 );
@@ -208,6 +242,9 @@ function Tab2() {
 
   return (
     <div>
+      <div className="tab-desc">
+        Zeigt pro Skill welche Ressourcen er benötigt (Reads) und welche er erzeugt (Writes). Externe Vorbedingungen (<span className="tag tag-ext">⚡</span>) werden von keinem Workflow-Skill erzeugt und müssen manuell vorhanden sein.
+      </div>
       {D.blocks.map(block => (
         <div key={block.id} className="panel">
           <div className="panel-title">{block.name}</div>
@@ -261,6 +298,9 @@ function Tab3() {
 
   return (
     <div>
+      <div className="tab-desc">
+        Alle Ressourcen sortiert nach Gesamtzugriffen (kritischste oben). Zeigt wie viele Skills lesen und schreiben. Klick auf eine Zeile klappt die konkreten Skills auf.
+      </div>
       <div className="overflow-x">
         <table>
           <thead>
@@ -360,6 +400,9 @@ function Tab4() {
 
   return (
     <div>
+      <div className="tab-desc">
+        Zeigt die Datenabhängigkeiten zwischen Skills. "Skill X hängt ab von Skill Y wegen Ressource Z." Externe Vorbedingungen (orange) werden von keinem vorherigen Skill erzeugt.
+      </div>
       {D.blocks.map(block => (
         <div key={block.id} className="panel">
           <div className="panel-title">{block.name}</div>
@@ -475,6 +518,9 @@ function Tab5() {
 
   return (
     <div>
+      <div className="tab-desc">
+        Simuliert den Einstieg bei einem beliebigen Skill. Wähle einen Skill aus und sieh welcher State fehlt, wenn vorherige Schritte übersprungen werden. Mit Spur-Filter (A/B) eingrenzbar.
+      </div>
       <div style={{marginBottom:16}}>
         <div style={{fontSize:13, fontWeight:600, marginBottom:8}}>Spur-Filter</div>
         <div className="spur-filter">
