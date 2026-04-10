@@ -479,9 +479,12 @@ function Tab5() {
       skill.reads.forEach(res => {
         const producers = writtenBy[res] || [];
         const isExternal = producers.length === 0;
+        const selfProduces = skill.writes.includes(res);
         const producersBefore = producers.filter(p => before.has(p));
 
-        if (isExternal) {
+        if (selfProduces) {
+          items.push({ resource: res, status: 'self' });
+        } else if (isExternal) {
           items.push({ resource: res, status: 'extern' });
         } else if (producersBefore.length > 0) {
           items.push({ resource: res, status: 'available', producers: producersBefore });
@@ -547,15 +550,16 @@ function Tab5() {
                 <div key={item.resource} style={{
                   display:'flex', alignItems:'flex-start', gap:8, padding:'6px 10px', marginBottom:4,
                   borderRadius:6,
-                  background: item.status === 'missing' ? '#fef2f2' : item.status === 'extern' ? '#f8fafc' : '#f0fdf4',
+                  background: item.status === 'missing' ? '#fef2f2' : item.status === 'self' ? '#eff6ff' : item.status === 'extern' ? '#f8fafc' : '#f0fdf4',
                   border: item.status === 'missing' ? '1px solid #fecaca' : '1px solid #e2e8f0'
                 }}>
-                  <span style={{fontSize:13, flexShrink:0, marginTop:1, color: item.status === 'missing' ? '#991b1b' : '#166534'}}>
+                  <span style={{fontSize:13, flexShrink:0, marginTop:1, color: item.status === 'missing' ? '#991b1b' : item.status === 'self' ? '#1e40af' : '#166534'}}>
                     {item.status === 'missing' ? '✗' : '✓'}
                   </span>
                   <div>
                     <strong style={{fontSize:12}}>{item.resource}</strong>
                     <div style={{fontSize:11, color:'#64748b', marginTop:1}}>
+                      {item.status === 'self' && 'Wird von diesem Skill selbst erzeugt'}
                       {item.status === 'extern' && 'Externe Ressource — immer manuell bereitzustellen'}
                       {item.status === 'available' && <span>Verfügbar über: {item.producers.map(p => <span key={p} className="tag tag-w" style={{marginLeft:2}}>{skillById[p]?.slash_command || p}</span>)}</span>}
                       {item.status === 'missing' && <span>Fehlt — erzeugt von: {item.producers.map(p => <span key={p} className="tag tag-miss" style={{marginLeft:2}}>{skillById[p]?.slash_command || p}</span>)}</span>}
