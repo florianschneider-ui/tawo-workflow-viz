@@ -471,30 +471,36 @@ function Tab5() {
   }
 
   // Readiness for ALL skills — computed once
+  // Logik: Wenn du bei Skill X einsteigst, überspringst du ALLE vorherigen Skills.
+  // Deren Outputs sind also NICHT vorhanden → fehlt.
   const readinessMap = useMemo(() => {
     const map = {};
     D.skills.forEach(skill => {
-      const before = getSkillsBefore(skill.id);
       const items = [];
       skill.reads.forEach(res => {
         const producers = writtenBy[res] || [];
         const isExternal = producers.length === 0;
         const selfProduces = skill.writes.includes(res);
-        const producersBefore = producers.filter(p => before.has(p));
 
         if (selfProduces) {
           items.push({ resource: res, status: 'self' });
         } else if (isExternal) {
           items.push({ resource: res, status: 'extern' });
-        } else if (producersBefore.length > 0) {
-          items.push({ resource: res, status: 'available', producers: producersBefore });
         } else {
-          items.push({ resource: res, status: 'missing', producers });
+          // Ressource wird von anderem Workflow-Skill erzeugt → fehlt beim Direkteinstieg
+          items.push({ resource: res, status: 'fehlt', producers });
         }
       });
-      map[skill.id] = { items, missingCount: items.filter(i => i.status === 'missing').length, total: items.length };
+      map[skill.id] = { items, fehltCount: items.filter(i => i.status === 'fehlt').length, total: items.length };
     });
     return map;
+  }, []);
+
+  // Spuren dynamisch aus Daten ableiten
+  const allSpuren = useMemo(() => {
+    const set = new Set();
+    D.skills.forEach(s => s.spuren.forEach(sp => set.add(sp)));
+    return [...set].sort();
   }, []);
 
   const filteredSkills = D.skills.filter(s => {
@@ -507,12 +513,12 @@ function Tab5() {
   return (
     <div>
       <div className="tab-desc">
-        Wähle einen Skill als Einstiegspunkt. Der Badge zeigt sofort ob Ressourcen fehlen würden. Die Checkliste unten zeigt alle benötigten Ressourcen: <span style={{color:'#166534'}}>✓</span> verfügbar/extern, <span style={{color:'#991b1b'}}>✗</span> fehlt ohne vorherige Skills.
+        Wähle einen Skill als Einstiegspunkt. Der Badge zeigt wie viele Ressourcen fehlen wenn alle vorherigen Skills übersprungen werden. <span style={{color:'#166534'}}>✓</span> = selbst erzeugt oder extern, <span style={{color:'#991b1b'}}>✗</span> = fehlt (muss vorher bereitgestellt werden).
       </div>
       <div style={{marginBottom:16}}>
         <div style={{fontSize:13, fontWeight:600, marginBottom:8}}>Spur-Filter</div>
         <div className="spur-filter">
-          {['all','A','B','C'].map(spur => (
+          {['all', ...allSpuren].map(spur => (
             <button key={spur} className={`spur-btn ${spurFilter === spur ? 'active' : ''}`} onClick={() => setSpurFilter(spur)}>
               {spur === 'all' ? 'Alle Spuren' : `Spur ${spur}`}
             </button>
@@ -527,9 +533,9 @@ function Tab5() {
             <button key={skill.id} className={`entry-btn ${selected === skill.id ? 'selected' : ''}`} onClick={() => setSelected(skill.id === selected ? null : skill.id)}>
               <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:2}}>
                 <StatusPill status={skill.status}/>
-                {r.missingCount === 0
+                {r.fehltCount === 0
                   ? <span style={{fontSize:9, fontWeight:700, color:'#166534', background:'#dcfce7', borderRadius:8, padding:'1px 6px'}}>✓ direkt</span>
-                  : <span style={{fontSize:9, fontWeight:700, color:'#991b1b', background:'#fef2f2', borderRadius:8, padding:'1px 6px'}}>{r.missingCount} fehlt</span>
+                  : <span style={{fontSize:9, fontWeight:700, color:'#991b1b', background:'#fef2f2', borderRadius:8, padding:'1px 6px'}}>{r.fehltCount} fehlt</span>
                 }
               </div>
               <div style={{fontWeight:600, fontSize:12}}>{skill.slash_command}</div>
@@ -540,7 +546,7 @@ function Tab5() {
       {selected && sel && (
         <div className="panel" style={{marginTop:8}}>
           <div className="panel-title">
-            Einstieg bei <strong>{skillById[selected]?.slash_command}</strong> — {sel.total} Ressourcen benötigt, {sel.missingCount} fehlen
+            Einstieg bei <strong>{skillById[selected]?.slash_command}</strong> — {sel.total} Ressourcen benötigt, {sel.fehltCount} fehlen
           </div>
           {sel.items.length === 0 ? (
             <div className="missing-ok">Keine Ressourcen benötigt — Skill hat keine Reads.</div>
@@ -550,19 +556,18 @@ function Tab5() {
                 <div key={item.resource} style={{
                   display:'flex', alignItems:'flex-start', gap:8, padding:'6px 10px', marginBottom:4,
                   borderRadius:6,
-                  background: item.status === 'missing' ? '#fef2f2' : item.status === 'self' ? '#eff6ff' : item.status === 'extern' ? '#f8fafc' : '#f0fdf4',
-                  border: item.status === 'missing' ? '1px solid #fecaca' : '1px solid #e2e8f0'
+                  background: item.status === 'fehlt' ? '#fef2f2' : item.status === 'self' ? '#eff6ff' : '#f8fafc',
+                  border: item.status === 'fehlt' ? '1px solid #fecaca' : '1px solid #e2e8f0'
                 }}>
-                  <span style={{fontSize:13, flexShrink:0, marginTop:1, color: item.status === 'missing' ? '#991b1b' : item.status === 'self' ? '#1e40af' : '#166534'}}>
-                    {item.status === 'missing' ? '✗' : '✓'}
+                  <span style={{fontSize:13, flexShrink:0, marginTop:1, color: item.status === 'fehlt' ? '#991b1b' : item.status === 'self' ? '#1e40af' : '#166534'}}>
+                    {item.status === 'fehlt' ? '✗' : '✓'}
                   </span>
                   <div>
                     <strong style={{fontSize:12}}>{item.resource}</strong>
                     <div style={{fontSize:11, color:'#64748b', marginTop:1}}>
                       {item.status === 'self' && 'Wird von diesem Skill selbst erzeugt'}
                       {item.status === 'extern' && 'Externe Ressource — immer manuell bereitzustellen'}
-                      {item.status === 'available' && <span>Verfügbar über: {item.producers.map(p => <span key={p} className="tag tag-w" style={{marginLeft:2}}>{skillById[p]?.slash_command || p}</span>)}</span>}
-                      {item.status === 'missing' && <span>Fehlt — erzeugt von: {item.producers.map(p => <span key={p} className="tag tag-miss" style={{marginLeft:2}}>{skillById[p]?.slash_command || p}</span>)}</span>}
+                      {item.status === 'fehlt' && <span>Muss vorhanden sein — erzeugt von: {item.producers.map(p => <span key={p} className="tag tag-miss" style={{marginLeft:2}}>{skillById[p]?.slash_command || p}</span>)}</span>}
                     </div>
                   </div>
                 </div>
