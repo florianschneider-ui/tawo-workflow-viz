@@ -373,98 +373,76 @@ function Tab3() {
   );
 }
 
-// ---- TAB 4: Dependencies ----
+// ---- TAB 4: Datenfluss ----
 function Tab4() {
-  // For each skill: what does it need (reads) and which skills write those resources?
-  const writtenBy = {};
-  D.skills.forEach(skill => {
-    skill.writes.forEach(w => {
-      if (!writtenBy[w]) writtenBy[w] = [];
-      if (!writtenBy[w].includes(skill.id)) writtenBy[w].push(skill.id);
-    });
-  });
-
-  // Helper: is skillA before skillB in workflow order?
-  const blockOrder = D.blocks.map(b => b.id);
-  function isBefore(aId, bId) {
-    const a = skillById[aId], b = skillById[bId];
-    if (!a || !b) return false;
-    const aBlock = blockOrder.indexOf(a.block);
-    const bBlock = blockOrder.indexOf(b.block);
-    if (aBlock < bBlock) return true;
-    if (aBlock > bBlock) return false;
-    // Same block: compare position in block.skills array
-    const blockSkills = (blockById[a.block] || {}).skills || [];
-    return blockSkills.indexOf(aId) < blockSkills.indexOf(bId);
-  }
+  const resGroups = groupResourcesByType(D.resources);
 
   return (
     <div>
       <div className="tab-desc">
-        Zeigt die Datenabhängigkeiten zwischen Skills. "Skill X hängt ab von Skill Y wegen Ressource Z." Externe Vorbedingungen (orange) werden von keinem vorherigen Skill erzeugt.
+        Dreispalten-Ansicht: Welcher Skill erzeugt eine Ressource (Quelle), welcher konsumiert sie (Konsument). Ressourcen ohne Quelle sind externe Vorbedingungen — müssen immer manuell vorhanden sein.
       </div>
-      {D.blocks.map(block => (
-        <div key={block.id} className="panel">
-          <div className="panel-title">{block.name}</div>
-          {block.skills.map(sid => {
-            const skill = skillById[sid];
-            if (!skill) return null;
-            // Build deps: only from skills that come BEFORE this one
-            const deps = {};
-            skill.reads.forEach(res => {
-              const producers = (writtenBy[res] || []).filter(p => p !== sid && isBefore(p, sid));
-              if (producers.length > 0) {
-                producers.forEach(p => {
-                  if (!deps[p]) deps[p] = [];
-                  deps[p].push(res);
-                });
-              }
-            });
-            // External resources (not produced by any earlier skill)
-            const extResources = skill.reads.filter(res => {
-              const producers = (writtenBy[res] || []).filter(p => p !== sid && isBefore(p, sid));
-              return producers.length === 0;
-            });
-
-            return (
-              <div key={sid} style={{marginBottom:14, paddingBottom:10, borderBottom:'1px solid #f1f5f9'}}>
-                <div style={{display:'flex', alignItems:'center', gap:8, marginBottom:6}}>
-                  <strong style={{fontSize:13}}>{skill.slash_command}</strong>
-                </div>
-                {Object.keys(deps).length === 0 && extResources.length === 0 && (
-                  <div style={{fontSize:12, color:'#94a3b8'}}>Keine internen Skill-Abhängigkeiten</div>
-                )}
-                {Object.keys(deps).map(depId => {
-                  const depSkill = skillById[depId];
-                  return (
-                    <div key={depId} className="dep-item">
-                      <strong style={{color:'#1e293b'}}>{depSkill ? depSkill.slash_command : depId}</strong>
-                      {' '}wegen:{' '}
-                      {deps[depId].map(r => <span key={r} className="tag tag-r">{r}</span>)}
-                    </div>
-                  );
-                })}
-                {extResources.length > 0 && (
-                  <div className="dep-item">
-                    <strong style={{color:'#92400e'}}>Externe Vorbedingungen:</strong>{' '}
-                    {extResources.map(r => <span key={r} className="tag tag-ext">{r}</span>)}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      ))}
+      <div className="overflow-x">
+        <table>
+          <thead>
+            <tr>
+              <th style={{minWidth:200}}>Quelle</th>
+              <th style={{textAlign:'center', width:30, padding:'6px 4px'}}></th>
+              <th style={{minWidth:180}}>Ressource</th>
+              <th style={{textAlign:'center', width:30, padding:'6px 4px'}}></th>
+              <th style={{minWidth:200}}>Konsument</th>
+            </tr>
+          </thead>
+          <tbody>
+            {TYPE_ORDER.map(type => {
+              const resources = resGroups[type];
+              if (!resources || resources.length === 0) return null;
+              return [
+                <tr key={`type-${type}`}>
+                  <td colSpan={5} style={{background:'#e2e8f0', fontWeight:700, fontSize:11, color: typeColor[type] || '#475569', padding:'4px 10px'}}>{type}</td>
+                </tr>,
+                ...resources.map(r => (
+                  <tr key={r.name}>
+                    <td style={{verticalAlign:'top', padding:'8px 10px'}}>
+                      {r.written_by.length === 0
+                        ? <span className="tag tag-ext">extern</span>
+                        : r.written_by.map(sid => {
+                            const s = skillById[sid];
+                            return <div key={sid} style={{fontSize:11, padding:'1px 0'}}>{s?.slash_command || sid}</div>;
+                          })
+                      }
+                    </td>
+                    <td style={{textAlign:'center', verticalAlign:'middle', color:'#94a3b8', fontSize:16}}>→</td>
+                    <td style={{fontWeight:600, fontSize:12, verticalAlign:'top', padding:'8px 10px'}}>
+                      <div>{r.name}</div>
+                      <div style={{fontSize:10, fontWeight:600, color: typeColor[r.type], marginTop:1}}>{r.type}</div>
+                    </td>
+                    <td style={{textAlign:'center', verticalAlign:'middle', color:'#94a3b8', fontSize:16}}>→</td>
+                    <td style={{verticalAlign:'top', padding:'8px 10px'}}>
+                      {r.read_by.length === 0
+                        ? <span style={{fontSize:11, color:'#94a3b8'}}>— kein Konsument</span>
+                        : r.read_by.map(sid => {
+                            const s = skillById[sid];
+                            return <div key={sid} style={{fontSize:11, padding:'1px 0'}}>{s?.slash_command || sid}</div>;
+                          })
+                      }
+                    </td>
+                  </tr>
+                ))
+              ];
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
 
-// ---- TAB 5: Entry-Point Simulator ----
+// ---- TAB 5: Einstiegspunkte ----
 function Tab5() {
   const [selected, setSelected] = useState(null);
   const [spurFilter, setSpurFilter] = useState('all');
 
-  // Build: for each resource, which skills write it?
   const writtenBy = {};
   D.skills.forEach(skill => {
     skill.writes.forEach(w => {
@@ -473,8 +451,6 @@ function Tab5() {
     });
   });
 
-  // Get all skills that run BEFORE a given skill in normal flow
-  // (simplified: predecessors chain + all skills in earlier blocks)
   function getSkillsBefore(skillId) {
     const skill = skillById[skillId];
     if (!skill) return new Set();
@@ -484,7 +460,6 @@ function Tab5() {
     D.skills.forEach(s => {
       const sBlockIdx = blockOrder.indexOf(s.block);
       if (sBlockIdx < myBlockIdx) before.add(s.id);
-      // Same block, earlier in block.skills list
       if (sBlockIdx === myBlockIdx) {
         const blockSkills = blockById[skill.block]?.skills || [];
         const myIdx = blockSkills.indexOf(skillId);
@@ -495,31 +470,41 @@ function Tab5() {
     return before;
   }
 
-  const missingAnalysis = useMemo(() => {
-    if (!selected) return null;
-    const skill = skillById[selected];
-    const before = getSkillsBefore(selected);
-    const missing = [];
-    skill.reads.forEach(res => {
-      const producers = writtenBy[res] || [];
-      const availableProducers = producers.filter(p => before.has(p));
-      const isExternal = producers.length === 0;
-      if (!isExternal && availableProducers.length === 0) {
-        missing.push({ resource: res, wouldBeProducedBy: producers });
-      }
+  // Readiness for ALL skills — computed once
+  const readinessMap = useMemo(() => {
+    const map = {};
+    D.skills.forEach(skill => {
+      const before = getSkillsBefore(skill.id);
+      const items = [];
+      skill.reads.forEach(res => {
+        const producers = writtenBy[res] || [];
+        const isExternal = producers.length === 0;
+        const producersBefore = producers.filter(p => before.has(p));
+
+        if (isExternal) {
+          items.push({ resource: res, status: 'extern' });
+        } else if (producersBefore.length > 0) {
+          items.push({ resource: res, status: 'available', producers: producersBefore });
+        } else {
+          items.push({ resource: res, status: 'missing', producers });
+        }
+      });
+      map[skill.id] = { items, missingCount: items.filter(i => i.status === 'missing').length, total: items.length };
     });
-    return missing;
-  }, [selected]);
+    return map;
+  }, []);
 
   const filteredSkills = D.skills.filter(s => {
     if (spurFilter === 'all') return true;
     return s.spuren.includes(spurFilter);
   });
 
+  const sel = selected ? readinessMap[selected] : null;
+
   return (
     <div>
       <div className="tab-desc">
-        Simuliert den Einstieg bei einem beliebigen Skill. Wähle einen Skill aus und sieh welcher State fehlt, wenn vorherige Schritte übersprungen werden. Mit Spur-Filter (A/B) eingrenzbar.
+        Wähle einen Skill als Einstiegspunkt. Der Badge zeigt sofort ob Ressourcen fehlen würden. Die Checkliste unten zeigt alle benötigten Ressourcen: <span style={{color:'#166534'}}>✓</span> verfügbar/extern, <span style={{color:'#991b1b'}}>✗</span> fehlt ohne vorherige Skills.
       </div>
       <div style={{marginBottom:16}}>
         <div style={{fontSize:13, fontWeight:600, marginBottom:8}}>Spur-Filter</div>
@@ -533,35 +518,47 @@ function Tab5() {
       </div>
       <div style={{fontSize:13, fontWeight:600, marginBottom:8}}>Skill als Einstiegspunkt wählen:</div>
       <div className="entry-grid">
-        {filteredSkills.map(skill => (
-          <button key={skill.id} className={`entry-btn ${selected === skill.id ? 'selected' : ''}`} onClick={() => setSelected(skill.id === selected ? null : skill.id)}>
-            <div className="entry-btn-id"><StatusPill status={skill.status}/></div>
-            <div style={{fontWeight:600, fontSize:12}}>{skill.slash_command}</div>
-          </button>
-        ))}
+        {filteredSkills.map(skill => {
+          const r = readinessMap[skill.id];
+          return (
+            <button key={skill.id} className={`entry-btn ${selected === skill.id ? 'selected' : ''}`} onClick={() => setSelected(skill.id === selected ? null : skill.id)}>
+              <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:2}}>
+                <StatusPill status={skill.status}/>
+                {r.missingCount === 0
+                  ? <span style={{fontSize:9, fontWeight:700, color:'#166534', background:'#dcfce7', borderRadius:8, padding:'1px 6px'}}>✓ direkt</span>
+                  : <span style={{fontSize:9, fontWeight:700, color:'#991b1b', background:'#fef2f2', borderRadius:8, padding:'1px 6px'}}>{r.missingCount} fehlt</span>
+                }
+              </div>
+              <div style={{fontWeight:600, fontSize:12}}>{skill.slash_command}</div>
+            </button>
+          );
+        })}
       </div>
-      {selected && (
+      {selected && sel && (
         <div className="panel" style={{marginTop:8}}>
           <div className="panel-title">
-            Analyse: Einstieg bei <strong>{skillById[selected]?.slash_command}</strong>
+            Einstieg bei <strong>{skillById[selected]?.slash_command}</strong> — {sel.total} Ressourcen benötigt, {sel.missingCount} fehlen
           </div>
-          <div style={{fontSize:12, color:'#64748b', marginBottom:12}}>
-            Wenn alle vorherigen Skills übersprungen werden — welcher State fehlt?
-          </div>
-          {missingAnalysis?.length === 0 ? (
-            <div className="missing-ok">Kein fehlender State — alle Reads sind extern oder werden durch frühere Steps bereitgestellt.</div>
+          {sel.items.length === 0 ? (
+            <div className="missing-ok">Keine Ressourcen benötigt — Skill hat keine Reads.</div>
           ) : (
-            <div className="missing-list">
-              {missingAnalysis?.map(m => (
-                <div key={m.resource} className="missing-item">
-                  <span className="pill pill-miss">FEHLT</span>
+            <div style={{marginTop:8}}>
+              {sel.items.map(item => (
+                <div key={item.resource} style={{
+                  display:'flex', alignItems:'flex-start', gap:8, padding:'6px 10px', marginBottom:4,
+                  borderRadius:6,
+                  background: item.status === 'missing' ? '#fef2f2' : item.status === 'extern' ? '#f8fafc' : '#f0fdf4',
+                  border: item.status === 'missing' ? '1px solid #fecaca' : '1px solid #e2e8f0'
+                }}>
+                  <span style={{fontSize:13, flexShrink:0, marginTop:1, color: item.status === 'missing' ? '#991b1b' : '#166534'}}>
+                    {item.status === 'missing' ? '✗' : '✓'}
+                  </span>
                   <div>
-                    <strong style={{fontSize:12}}>{m.resource}</strong>
-                    <div style={{fontSize:11, color:'#64748b', marginTop:2}}>
-                      Würde erzeugt von: {m.wouldBeProducedBy.map(p => {
-                        const sk = skillById[p];
-                        return <span key={p} className="tag tag-r" style={{marginLeft:2}}>{sk ? sk.slash_command : p}</span>;
-                      })}
+                    <strong style={{fontSize:12}}>{item.resource}</strong>
+                    <div style={{fontSize:11, color:'#64748b', marginTop:1}}>
+                      {item.status === 'extern' && 'Externe Ressource — immer manuell bereitzustellen'}
+                      {item.status === 'available' && <span>Verfügbar über: {item.producers.map(p => <span key={p} className="tag tag-w" style={{marginLeft:2}}>{skillById[p]?.slash_command || p}</span>)}</span>}
+                      {item.status === 'missing' && <span>Fehlt — erzeugt von: {item.producers.map(p => <span key={p} className="tag tag-miss" style={{marginLeft:2}}>{skillById[p]?.slash_command || p}</span>)}</span>}
                     </div>
                   </div>
                 </div>
@@ -569,7 +566,7 @@ function Tab5() {
             </div>
           )}
           <div style={{marginTop:12, fontSize:11, color:'#94a3b8'}}>
-            Normale Vorgänger laut Daten: {skillById[selected]?.predecessors?.length > 0 ? skillById[selected].predecessors.join(', ') : '—'}
+            Vorgänger im normalen Ablauf: {skillById[selected]?.predecessors?.length > 0 ? skillById[selected].predecessors.join(', ') : '—'}
           </div>
         </div>
       )}
