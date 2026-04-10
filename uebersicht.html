@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAWO Kalkulations-Workflow — TBA-Uebersicht</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; color: #1a1a1a; font-size: 13px; overflow-x: auto; }
+.page { min-width: 1100px; max-width: 1300px; margin: 0 auto; padding: 20px 24px 60px; }
+h1 { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
+.subtitle { color: #666; font-size: 12px; margin-bottom: 16px; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; padding: 10px 14px; background: #fff; border: 1px solid #ddd; border-radius: 8px; font-size: 11px; align-items: center; }
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.legend-swatch { width: 16px; height: 16px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.15); flex-shrink: 0; }
+
+/* Swim lanes */
+.lane { display: flex; margin-bottom: 2px; min-height: 100px; position: relative; }
+.lane-label { width: 160px; flex-shrink: 0; padding: 12px 10px; font-weight: 700; font-size: 12px; display: flex; align-items: flex-start; justify-content: flex-start; border-radius: 6px 0 0 6px; line-height: 1.3; }
+.lane-content { flex: 1; padding: 14px 16px; display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-start; align-content: flex-start; border-radius: 0 6px 6px 0; position: relative; }
+
+/* Lane colors */
+.lane-gray .lane-label { background: #e8e8e4; color: #555; }
+.lane-gray .lane-content { background: #f0f0ec; }
+.lane-yellow .lane-label { background: #f5e6a3; color: #6b5900; }
+.lane-yellow .lane-content { background: #fdf6d8; }
+.lane-blue .lane-label { background: #b8d4f0; color: #1a3a5c; }
+.lane-blue .lane-content { background: #deeaf6; }
+.lane-lightblue .lane-label { background: #c8ddf0; color: #2a4a6c; }
+.lane-lightblue .lane-content { background: #e4eef6; }
+.lane-green .lane-label { background: #b8e0c8; color: #1a4a2c; }
+.lane-green .lane-content { background: #daf0e4; }
+
+/* Process boxes */
+.box { padding: 8px 12px; border-radius: 6px; font-size: 11px; line-height: 1.35; text-align: center; min-width: 120px; max-width: 200px; position: relative; }
+.box-claude { background: #4a90d9; color: #fff; border: 2px solid #2b6cb0; font-weight: 600; }
+.box-manual { background: #fff; border: 1px solid #ccc; color: #333; }
+.box-auto { background: #e8f4e8; border: 1px solid #8bc48b; color: #1a4a2c; }
+.box-critical { background: #fff; border: 2px solid #d9534f; color: #333; }
+.box-output { background: #f0f0f0; border: 1px dashed #999; color: #555; font-style: italic; }
+.box-decision { background: #fff8e1; border: 2px solid #f0c040; color: #6b5900; font-weight: 600; transform: rotate(0deg); padding: 6px 14px; }
+.box-disabled { background: #f5f5f5; border: 1px solid #ddd; color: #999; }
+
+/* Badge */
+.badge { position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; border-radius: 50%; font-size: 9px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.badge-f { background: #f0c040; color: #6b5900; border: 1px solid #d4a017; }
+.badge-claude { background: #4a90d9; color: #fff; border: 1px solid #2b6cb0; }
+.badge-skill { font-size: 9px; color: #888; display: block; margin-top: 2px; font-weight: 400; }
+
+/* Flow arrows */
+.arrow { color: #999; font-size: 16px; display: flex; align-items: center; align-self: center; flex-shrink: 0; }
+.arrow-down-lane { display: flex; justify-content: center; padding: 0; margin: -4px 0; color: #bbb; font-size: 14px; padding-left: 160px; }
+
+/* Spur labels */
+.spur-label { position: absolute; top: 4px; right: 10px; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+.spur-a { background: #2b6cb0; color: #fff; }
+.spur-b { background: #7c3aed; color: #fff; }
+.spur-ab { background: #64748b; color: #fff; }
+
+/* Row within lane */
+.lane-row { display: flex; gap: 10px; align-items: center; width: 100%; }
+.lane-rows { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+
+/* Connector line */
+.connector { border-top: 2px solid #bbb; flex: 1; min-width: 20px; max-width: 40px; }
+.connector-long { min-width: 40px; max-width: 80px; }
+
+/* Section divider */
+.section-gap { height: 6px; }
+
+/* Tooltip */
+.box[title] { cursor: help; }
+.box:hover { filter: brightness(0.95); }
+
+/* Branch container */
+.branch { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.branch-label { font-size: 10px; color: #888; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>TAWO Kalkulations-Workflow</h1>
+  <div class="subtitle">Tatigkeitsbereichs-Ablauf (TBA) — Vom Lead bis zur Uebergabe</div>
+
+  <div class="legend">
+    <span style="font-weight:600">Legende:</span>
+    <div class="legend-item"><div class="legend-swatch" style="background:#4a90d9"></div> Claude Code Skill</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#fff;border-color:#ccc"></div> Manueller Schritt</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#e8f4e8;border-color:#8bc48b"></div> Automatisiert</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#fff;border-color:#d9534f;border-width:2px"></div> Pruefung / Entscheidung</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#f0f0f0;border:1px dashed #999"></div> Output / Ergebnis</div>
+    <div class="legend-item"><div style="width:18px;height:18px;border-radius:50%;background:#f0c040;border:1px solid #d4a017;font-size:8px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#6b5900">F</div> Florian / GF</div>
+  </div>
+
+  <!-- Phase 0: Acquise -->
+  <div class="lane lane-gray">
+    <div class="lane-label">0 — Projekt<br>Acquise</div>
+    <div class="lane-content">
+      <div class="lane-rows">
+        <div class="lane-row">
+          <div class="box box-auto" title="Lead wird gefunden ueber Portale, Netzwerk oder Direktanfrage">Lead wird gefunden</div>
+          <div class="arrow">&#8594;</div>
+          <div class="box box-manual" title="Pruefen ob Portal-Zugang vorhanden ist">Portal-Zugang<br>vorhanden?</div>
+          <div class="arrow">&#8594;</div>
+          <div class="box box-manual" title="Cosuno, DTVP, Deutsche eVergabe etc.">Projektanfrage<br>Supplier Portal</div>
+          <div class="box box-manual">Projektanfrage<br>Cosuno</div>
+          <div class="box box-manual">Projektanfrage<br>per Mail</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down-lane">&#8595;</div>
+
+  <!-- Phase 0.1: Klassifizierung -->
+  <div class="lane lane-yellow">
+    <div class="lane-label">0.1 — Klassifizierung<br>& Aufbereitung</div>
+    <div class="lane-content">
+      <div class="lane-rows">
+        <div class="lane-row">
+          <div class="box box-decision" title="Was fuer ein LV liegt vor?">LV-Typ?</div>
+          <div class="arrow">&#8594;</div>
+          <div class="branch">
+            <div class="branch-label">Klassisches LV</div>
+            <div class="box box-claude" title="/projekt-erfassung: Dateien sichten, LV analysieren, Notion-Eintrag, Spur empfehlen">
+              Claude Workflow inkl.<br>Vorabkalkulation
+              <span class="badge badge-claude">C</span>
+              <span class="badge-skill">/projekt-erfassung<br>/vorab-kalkulation-komplett</span>
+            </div>
+          </div>
+          <div class="branch">
+            <div class="branch-label">Funktionales LV</div>
+            <div class="box box-critical" title="Funktionale Leistungsbeschreibung muss erst in ein Positions-LV umgewandelt werden">
+              Aufbereitung<br>Funktionales LV
+              <span class="badge badge-f">F</span>
+            </div>
+          </div>
+          <div class="branch">
+            <div class="branch-label">Kleinstauftrag</div>
+            <div class="box box-disabled">Small / Random<br>(nicht kalkulieren)</div>
+          </div>
+        </div>
+        <div class="lane-row" style="margin-top:4px">
+          <div class="box box-manual" style="max-width:160px" title="Workflow-Parameter und Regeln anpassen falls noetig">Workflow Anpassungen<br>& Regeln</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down-lane">&#8595;</div>
+
+  <!-- Phase 0.2: Priorisierung -->
+  <div class="lane lane-yellow">
+    <div class="lane-label">0.2 — Priorisierung</div>
+    <div class="lane-content">
+      <div class="lane-row">
+        <div class="box box-decision" title="Spur A: Mit Lieferantenanfragen (Standard). Spur B: Ohne Anfragen (schnell, referenz-basiert).">
+          Spur A oder B?
+          <span class="badge badge-f">F</span>
+        </div>
+        <div class="arrow">&#8594;</div>
+        <div class="branch">
+          <div class="branch-label" style="color:#2b6cb0">Spur A — mit Anfragen</div>
+          <div class="box box-manual" style="background:#dbeafe;border-color:#93c5fd;min-width:160px">Material & Sub Anfragen<br>(Claude) + Notion-DB
+            <span class="badge-skill">/material-anfragen</span>
+          </div>
+        </div>
+        <div class="branch">
+          <div class="branch-label" style="color:#7c3aed">Spur B — ohne Anfragen</div>
+          <div class="box box-manual" style="background:#ede9fe;border-color:#c4b5fd;min-width:140px">Rahmenvertraege &amp;<br>Material Verfuegbarkeit</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down-lane">&#8595;</div>
+
+  <!-- Phase 1: Kalkulation -->
+  <div class="lane lane-blue">
+    <div class="lane-label">1 — Projekt<br>Kalkulation</div>
+    <div class="lane-content">
+      <span class="spur-label spur-ab">A + B</span>
+      <div class="lane-rows">
+        <div class="lane-row">
+          <div class="box box-claude" title="Spur A: Angebote auswerten, konsolidieren, dann Claude-Kalkulation. Spur B: Direkt Claude-Kalkulation.">
+            Claude Kalkulation
+            <span class="badge badge-claude">C</span>
+            <span class="badge-skill">/angebots-auswertung<br>/material-konsolidierung</span>
+          </div>
+          <div class="arrow">&#8594;</div>
+          <div class="box box-manual" title="AG stellt Rueckfragen zum LV oder aendert Positionen">AG Rueckfragen</div>
+          <div class="arrow">&#8594;</div>
+          <div class="box box-claude" title="Claude kalkuliert weiter / passt an">Claude Kalkulation<br>Fortsetzung
+            <span class="badge badge-claude">C</span>
+          </div>
+        </div>
+        <div class="lane-row">
+          <div class="box box-critical" style="max-width:180px" title="AG aendert das LV waehrend der Kalkulation — Impact auf bestehende Kalkulation pruefen">
+            LV Update durch AG<br>&#8594; Impact Analyse
+            <span class="badge badge-f">F</span>
+          </div>
+          <div class="box box-manual" style="max-width:180px" title="Anfragen nachbessern mit technischem Support / Fachplaner">Anfragen nachbessern<br>mit techn. Support</div>
+          <div class="box box-claude" style="max-width:160px" title="Baustellenbesuch-LV fuer funktionale Projekte">Baustellenbesuch<br>(funktionales LV)
+            <span class="badge badge-claude">C</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down-lane">&#8595;</div>
+
+  <!-- Phase 1.1: Pruefung -->
+  <div class="lane lane-lightblue">
+    <div class="lane-label">1.1 — Projekt<br>Pruefung</div>
+    <div class="lane-content">
+      <div class="lane-rows">
+        <div class="lane-row">
+          <div class="box box-claude" title="/kalkulations-analyse: Fehler, Margen, Risiken pruefen">
+            Financial Analyse<br>Kalkulation
+            <span class="badge badge-claude">C</span>
+            <span class="badge-skill">/kalkulations-analyse</span>
+          </div>
+          <div class="arrow">&#8594;</div>
+          <div class="box box-decision" title="Projekte ueber 100k EUR benoetigen kaufmaennische + technische Pruefung">&gt; 100k?</div>
+          <div class="arrow">&#8594;</div>
+          <div class="branch">
+            <div class="branch-label">Ja</div>
+            <div class="box box-critical" title="Kaufmaennische und technische Pruefung durch GF / Technik">
+              Kaufmaennisch &amp;<br>Technisch Pruefung
+              <span class="badge badge-f">F</span>
+            </div>
+          </div>
+          <div class="branch">
+            <div class="branch-label">Nein</div>
+            <div class="box box-auto">Financial Analyse<br>Kalkulation<br><span style="font-size:10px">(direkt weiter)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down-lane">&#8595;</div>
+
+  <!-- Phase 1.2: Abgabe -->
+  <div class="lane lane-blue">
+    <div class="lane-label">1.2 — Projekt<br>Abgabe</div>
+    <div class="lane-content">
+      <div class="lane-rows">
+        <div class="lane-row">
+          <div class="box box-claude" title="Kalkulations-Daten sauber aufbereiten und in die Referenz-Datenbank einspeisen">
+            Kalk-Daten aufbereiten<br>fuer Referenz-DB
+            <span class="badge badge-claude">C</span>
+          </div>
+          <div class="arrow">&#8594;</div>
+          <div class="box box-claude" title="/angebotserstellung: GAEB X84 + PDF Angebot generieren">
+            Angebots X84 &amp; PDF
+            <span class="badge badge-claude">C</span>
+            <span class="badge-skill">/angebotserstellung</span>
+          </div>
+          <div class="arrow">&#8594;</div>
+          <div class="box box-output">Referenz-Datenbank<br>Qualitaet B</div>
+        </div>
+        <div class="lane-row">
+          <div style="min-width:280px"></div>
+          <div class="box box-manual" title="Angebot im Portal oder per Mail abschicken" style="background:#dcfce7;border-color:#86efac">
+            Angebot abschicken
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down-lane">&#8595;</div>
+
+  <!-- Phase 2: AG Kommunikation -->
+  <div class="lane lane-green">
+    <div class="lane-label">2 — AG<br>Kommunikation</div>
+    <div class="lane-content">
+      <div class="lane-rows">
+        <div class="lane-row">
+          <div class="box box-manual" title="Follow-Up beim AG nach Angebotsabgabe">Follow Up</div>
+          <div class="arrow">&#8594;</div>
+          <div class="box box-manual" title="Feedback vom AG einholen und Qualitaet des Angebots pruefen">Feedback &amp;<br>Qualitaetspruefung</div>
+          <div class="arrow">&#8594;</div>
+          <div class="box box-decision" title="Wurden wir zum Preisgespraech eingeladen?">Einladung<br>Preisgespraech?</div>
+          <div class="arrow">&#8594;</div>
+          <div class="branch">
+            <div class="branch-label">Ja</div>
+            <div class="box box-auto" style="background:#dcfce7;border-color:#86efac">&#8594; Bietergespach</div>
+          </div>
+          <div class="branch">
+            <div class="branch-label">Nein</div>
+            <div class="box box-output">Kalkulation ins Mapping,<br>Referenz-DB speichern
+              <span class="badge-skill">/lieferanten-absage</span>
+            </div>
+          </div>
+        </div>
+        <div class="lane-row">
+          <div class="box box-auto" title="Claude Code Angebot als Basis nutzen fuer Verhandlung">Ja — Claude Code<br>Angebot &#8594;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down-lane">&#8595;</div>
+
+  <!-- Phase 2.1: Bietergespraech -->
+  <div class="lane lane-green">
+    <div class="lane-label">2.1 — Bietergespraech<br>&amp; Nachverhandlung</div>
+    <div class="lane-content">
+      <div class="lane-rows">
+        <div class="lane-row">
+          <div class="box box-claude" title="Material und Sub-Anfragen fuer Nachverhandlung stellen">
+            Material &amp; Sub<br>Anfragen stellen
+            <span class="badge badge-claude">C</span>
+            <span class="badge-skill">/gh-verhandlung</span>
+          </div>
+          <div class="arrow">&#8594;</div>
+          <div class="box box-critical" title="Bieterbrief vom AG verarbeiten, EK-Untergrenzen berechnen">
+            Bietergespraech
+            <span class="badge badge-f">F</span>
+            <span class="badge-skill">/bieterbrief-verarbeitung</span>
+          </div>
+          <div class="arrow">&#8594;</div>
+          <div class="box box-output" title="Ergebnisse in Referenz-Datenbank speichern">
+            Kalkulation ins Mapping<br>Referenz-DB speichern
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down-lane">&#8595;</div>
+
+  <!-- Phase 3: Uebergabe -->
+  <div class="lane lane-gray">
+    <div class="lane-label">3 — Uebergabe<br>Sales &#8594; Ops</div>
+    <div class="lane-content">
+      <div class="lane-row">
+        <div class="box box-claude" title="/projekt-zusammenfassung: Kompakte Zusammenfassung fuer Bauleiter">
+          Projekt-Zusammenfassung
+          <span class="badge badge-claude">C</span>
+          <span class="badge-skill">/projekt-zusammenfassung</span>
+        </div>
+        <div class="arrow">&#8594;</div>
+        <div class="box box-claude" title="/uebergabe: Dokumente in Ops-Ordner kopieren">
+          Dokumenten-Uebergabe
+          <span class="badge badge-claude">C</span>
+          <span class="badge-skill">/uebergabe</span>
+        </div>
+        <div class="arrow">&#8594;</div>
+        <div class="box box-output">Ops-Ordner<br>vollstaendig</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 20px; padding: 12px 16px; background: #fff; border: 1px solid #ddd; border-radius: 8px; font-size: 11px; color: #666; line-height: 1.5;">
+    <strong style="color:#333">Hinweise:</strong>
+    Spur A (mit Anfragen) durchlaeuft Block C komplett. Spur B (ohne Anfragen) ueberspringt Block C und geht direkt von Vorab-Kalkulation zur Analyse.
+    Funktionale LVs werden in Phase 0.1 aufbereitet bevor der Claude-Workflow startet.
+    <span style="display:inline-flex;align-items:center;gap:3px;margin-left:8px"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#f0c040;border:1px solid #d4a017;font-size:7px;text-align:center;line-height:14px;font-weight:800;color:#6b5900">F</span> = Manuelle Pruefung / Entscheidung durch GF</span>
+  </div>
+</div>
+</body>
+</html>
