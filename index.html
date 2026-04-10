@@ -480,9 +480,10 @@ function Tab5() {
       skill.reads.forEach(res => {
         const producers = writtenBy[res] || [];
         const isExternal = producers.length === 0;
-        const selfProduces = skill.writes.includes(res);
+        // Nur "self" wenn dieser Skill der ERSTE Schreiber ist (Create, nicht Update)
+        const selfCreates = skill.writes.includes(res) && firstWriterOf[res] === skill.id;
 
-        if (selfProduces) {
+        if (selfCreates) {
           items.push({ resource: res, status: 'self' });
         } else if (isExternal) {
           items.push({ resource: res, status: 'extern' });
