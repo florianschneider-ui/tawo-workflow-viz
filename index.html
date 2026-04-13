@@ -43,7 +43,7 @@
   .tab-desc { font-size: 12px; color: #64748b; line-height: 1.5; margin-bottom: 14px; padding: 10px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; }
   .block-header { background: #e2e8f0; font-weight: 700; font-size: 11px; color: #475569; }
   .block-header td { padding: 4px 10px; }
-  .sticky-col { position: sticky; left: 0; background: #fff; z-index: 2; min-width: 160px; border-right: 1px solid #e2e8f0; }
+  .sticky-col { position: sticky; left: 0; background: #fff; z-index: 2; min-width: 260px; border-right: 1px solid #e2e8f0; }
   .overflow-x { overflow-x: auto; }
   .res-group-header { background: #f8fafc; font-weight: 600; font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
   .res-group-header td { padding: 3px 10px; }
@@ -244,14 +244,22 @@ function Tab1() {
                     const importerCount = (si.imported_by_scripts || []).length;
                     return (
                       <tr key={`${sid}-script-${idx}`} className="script-row">
-                        <td className="sticky-col" colSpan={2}>
-                          <span className="script-name">{idx === scripts.length - 1 ? '\u2514\u2500' : '\u251C\u2500'} {sc.name}</span>
-                          <span className={`role-badge role-${sc.role}`}>{sc.role}</span>
-                          {sc.imports && sc.imports.length > 0 && <span className="script-meta">imports: {sc.imports.join(', ')}</span>}
-                          {sc.role === 'shared' && otherSkills.length > 0 && <span className="script-meta">auch: {otherSkills.join(', ')}{importerCount > 0 ? ` + ${importerCount} Importer` : ''}</span>}
-                          {sc.role === 'infra' && importerCount > 0 && <span className="script-meta">{importerCount} Importer</span>}
+                        <td className="sticky-col" style={{background:'#fafbfc'}}>
+                          <div style={{display:'flex', alignItems:'center', flexWrap:'wrap', gap:2}}>
+                            <span className="script-name">{idx === scripts.length - 1 ? '\u2514\u2500' : '\u251C\u2500'} {sc.name}</span>
+                            <span className={`role-badge role-${sc.role}`}>{sc.role}</span>
+                            {sc.imports && sc.imports.length > 0 && <span className="script-meta">imports: {sc.imports.join(', ')}</span>}
+                            {sc.role === 'shared' && otherSkills.length > 0 && <span className="script-meta">auch: {otherSkills.join(', ')}{importerCount > 0 ? ` + ${importerCount} Importer` : ''}</span>}
+                            {sc.role === 'infra' && importerCount > 0 && <span className="script-meta">{importerCount} Importer</span>}
+                          </div>
                         </td>
-                        {orderedResources.map(r => <td key={r.name}></td>)}
+                        <td style={{background:'#fafbfc'}}></td>
+                        {orderedResources.map(r => {
+                          const t = getAccessType(skill, r.name);
+                          if (!t) return <td key={r.name} style={{textAlign:'center', background:'#fafbfc'}}></td>;
+                          const p = CRUD_PILL[t];
+                          return <td key={r.name} style={{textAlign:'center', background:'#fafbfc'}}><span className={`pill ${p.cls}`} style={{opacity:0.4, fontSize:9}}>{p.label}</span></td>;
+                        })}
                       </tr>
                     );
                   })
