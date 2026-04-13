@@ -40,6 +40,15 @@
   .col-letter { font-family: monospace; font-weight: 700; font-size: 11px; color: #475569; min-width: 24px; display: inline-block; }
   .skill-tag { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 6px; display: inline-block; margin: 1px; }
   .prefix-tag { font-family: monospace; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px; display: inline-block; margin-right: 6px; }
+  .script-row td { background: #fafbfc !important; }
+  .script-name { font-family: monospace; font-size: 11px; color: #475569; padding-left: 20px; }
+  .role-badge { display: inline-block; border-radius: 8px; padding: 1px 6px; font-size: 9px; font-weight: 700; margin-left: 6px; }
+  .role-main { background: #f1f5f9; color: #475569; }
+  .role-shared { background: #fef3c7; color: #92400e; }
+  .role-infra { background: #ede9fe; color: #6d28d9; }
+  .role-data { background: #e0f2fe; color: #0369a1; }
+  .script-meta { font-size: 10px; color: #94a3b8; margin-left: 8px; }
+  .expand-btn { cursor: pointer; color: #94a3b8; font-size: 10px; margin-right: 4px; user-select: none; }
 </style>
 </head>
 <body>
@@ -549,7 +558,24 @@ window.GSHEET_DATA = {
         "Positionen": "C",
         "Meta": "C"
       },
-      "desc": "Erstellt GSheet, befüllt Anfragen + Positionen + Meta"
+      "desc": "Erstellt GSheet, befüllt Anfragen + Positionen + Meta",
+      "scripts": [
+        {
+          "name": "attach_drafts.py",
+          "role": "main",
+          "imports": []
+        }
+      ],
+      "data_files": [
+        {
+          "name": "draft_manifest.json",
+          "path": "draft_manifest.json",
+          "written_by": "skill",
+          "read_by": [
+            "attach_drafts.py"
+          ]
+        }
+      ]
     },
     {
       "id": "inbox-scan",
@@ -557,7 +583,27 @@ window.GSHEET_DATA = {
       "tabs": {
         "Anfragen": "U"
       },
-      "desc": "Aktualisiert Anfragen-Tab (Angebots-Links)"
+      "desc": "Aktualisiert Anfragen-Tab (Angebots-Links)",
+      "scripts": [
+        {
+          "name": "email_intake.py",
+          "role": "main",
+          "imports": []
+        },
+        {
+          "name": "inbox_scanner.py",
+          "role": "main",
+          "imports": []
+        }
+      ],
+      "data_files": [
+        {
+          "name": "draft_manifest_replies.json",
+          "path": "draft_manifest_replies.json",
+          "written_by": "skill",
+          "read_by": []
+        }
+      ]
     },
     {
       "id": "angebots-auswertung",
@@ -567,7 +613,41 @@ window.GSHEET_DATA = {
         "Positionen": "U",
         "02-05_Lieferant": "C"
       },
-      "desc": "Erstellt Lieferanten-Tabs, befüllt Anfragen G-O"
+      "desc": "Erstellt Lieferanten-Tabs, befüllt Anfragen G-O",
+      "scripts": [
+        {
+          "name": "oz_matcher.py",
+          "role": "main",
+          "imports": []
+        },
+        {
+          "name": "write_lieferant_tab.py",
+          "role": "main",
+          "imports": [
+            "gsheet_retry.py"
+          ]
+        },
+        {
+          "name": "angebots_auswertung.py",
+          "role": "shared",
+          "imports": [
+            "gsheet_retry.py"
+          ]
+        },
+        {
+          "name": "oz_normalizer.py",
+          "role": "shared",
+          "imports": []
+        }
+      ],
+      "data_files": [
+        {
+          "name": "cu_zuschlaege.json",
+          "path": "cu_zuschlaege.json",
+          "written_by": "skill",
+          "read_by": []
+        }
+      ]
     },
     {
       "id": "sg-vergleich",
@@ -576,7 +656,16 @@ window.GSHEET_DATA = {
         "Vergleich": "C",
         "02-05_Lieferant": "R"
       },
-      "desc": "Erstellt SG-Vergleichs-Tabs"
+      "desc": "Erstellt SG-Vergleichs-Tabs",
+      "scripts": [],
+      "data_files": [
+        {
+          "name": "angebot_tna.json",
+          "path": "angebot_tna.json",
+          "written_by": "skill",
+          "read_by": []
+        }
+      ]
     },
     {
       "id": "material-konsolidierung",
@@ -587,7 +676,77 @@ window.GSHEET_DATA = {
         "02-05_Lieferant": "R",
         "Vergleich": "U"
       },
-      "desc": "Master-Tabs, bester Preis → Kalk-GSheet"
+      "desc": "Master-Tabs, bester Preis → Kalk-GSheet",
+      "scripts": [
+        {
+          "name": "read_konsolidierung_data.py",
+          "role": "main",
+          "imports": [
+            "angebots_auswertung.py",
+            "gsheet_retry.py"
+          ]
+        },
+        {
+          "name": "write_gh_vergleich.py",
+          "role": "main",
+          "imports": [
+            "angebots_auswertung.py",
+            "gsheet_formatting.py",
+            "gsheet_retry.py"
+          ]
+        },
+        {
+          "name": "write_sg_vergleich.py",
+          "role": "main",
+          "imports": [
+            "angebots_auswertung.py",
+            "gsheet_formatting.py",
+            "gsheet_retry.py",
+            "oz_normalizer.py"
+          ]
+        },
+        {
+          "name": "write_scope_results.py",
+          "role": "main",
+          "imports": [
+            "angebots_auswertung.py",
+            "gsheet_formatting.py"
+          ]
+        },
+        {
+          "name": "write_master_tabs.py",
+          "role": "main",
+          "imports": [
+            "angebots_auswertung.py",
+            "gsheet_formatting.py",
+            "gsheet_retry.py",
+            "oz_normalizer.py"
+          ]
+        },
+        {
+          "name": "gsheet_formatting.py",
+          "role": "shared",
+          "imports": []
+        },
+        {
+          "name": "angebots_auswertung.py",
+          "role": "shared",
+          "imports": [
+            "gsheet_retry.py"
+          ]
+        }
+      ],
+      "data_files": [
+        {
+          "name": "konsolidierung_data.json",
+          "path": "3_Kalkulation/_workflow/konsolidierung_data.json",
+          "written_by": "read_konsolidierung_data.py",
+          "read_by": [
+            "write_gh_vergleich.py",
+            "write_sg_vergleich.py"
+          ]
+        }
+      ]
     },
     {
       "id": "gh-verhandlung",
@@ -596,7 +755,9 @@ window.GSHEET_DATA = {
         "02-05_Lieferant": "R",
         "Vergleich": "R"
       },
-      "desc": "Liest für Potenzial-Analyse"
+      "desc": "Liest für Potenzial-Analyse",
+      "scripts": [],
+      "data_files": []
     }
   ],
   "generated_at": "2026-04-10T12:57:01.051Z",
@@ -711,6 +872,7 @@ function TabLieferanten() {
 
 // ---- TAB 3: Skill-Zuordnung ----
 function TabSkills() {
+  const [expandedSkills, setExpandedSkills] = useState(new Set());
   const crudColor = { C: '#166534', R: '#1e40af', U: '#92400e' };
   const crudBg = { C: '#dcfce7', R: '#dbeafe', U: '#fef3c7' };
 
@@ -723,23 +885,82 @@ function TabSkills() {
         <table>
           <thead>
             <tr>
-              <th style={{minWidth:200}}>Skill</th>
+              <th style={{minWidth:260}}>Skill</th>
               {D.tabs.map(t => <th key={t.id} style={{minWidth:60, fontSize:10, textAlign:'center', whiteSpace:'normal', lineHeight:1.3}}>{t.name}</th>)}
               <th>Beschreibung</th>
             </tr>
           </thead>
           <tbody>
-            {D.skills.map(s => (
-              <tr key={s.id}>
-                <td style={{fontWeight:600, fontSize:12}}>{s.cmd}</td>
-                {D.tabs.map(t => {
-                  const a = s.tabs[t.name];
-                  if (!a) return <td key={t.id} style={{textAlign:'center'}}><span style={{color:'#e2e8f0'}}>·</span></td>;
-                  return <td key={t.id} style={{textAlign:'center'}}><span className="pill" style={{background: crudBg[a], color: crudColor[a]}}>{a}</span></td>;
-                })}
-                <td style={{fontSize:11, color:'#475569'}}>{s.desc}</td>
-              </tr>
-            ))}
+            {D.skills.map(s => {
+              const scripts = s.scripts || [];
+              const dataFiles = s.data_files || [];
+              const totalChildren = scripts.length + dataFiles.length;
+              const isExpanded = expandedSkills.has(s.id);
+              const toggleExpand = () => {
+                const next = new Set(expandedSkills);
+                next.has(s.id) ? next.delete(s.id) : next.add(s.id);
+                setExpandedSkills(next);
+              };
+              return [
+                <tr key={s.id}>
+                  <td style={{fontWeight:600, fontSize:12}}>
+                    <div style={{display:'flex', alignItems:'center'}}>
+                      {totalChildren > 0 && <span className="expand-btn" onClick={toggleExpand}>{isExpanded ? '\u25BC' : '\u25B6'}</span>}
+                      {s.cmd}
+                      {totalChildren > 0 && <span style={{fontSize:9, color:'#94a3b8', marginLeft:4}}>({scripts.length}{dataFiles.length > 0 ? `+${dataFiles.length}` : ''})</span>}
+                    </div>
+                  </td>
+                  {D.tabs.map(t => {
+                    const a = s.tabs[t.name];
+                    if (!a) return <td key={t.id} style={{textAlign:'center'}}><span style={{color:'#e2e8f0'}}>·</span></td>;
+                    return <td key={t.id} style={{textAlign:'center'}}><span className="pill" style={{background: crudBg[a], color: crudColor[a]}}>{a}</span></td>;
+                  })}
+                  <td style={{fontSize:11, color:'#475569'}}>{s.desc}</td>
+                </tr>,
+                isExpanded && scripts.map((sc, idx) => {
+                  const isLast = idx === scripts.length - 1 && dataFiles.length === 0;
+                  return (
+                    <tr key={`${s.id}-script-${idx}`} className="script-row">
+                      <td>
+                        <div style={{display:'flex', alignItems:'center', flexWrap:'wrap', gap:2}}>
+                          <span className="script-name">{isLast ? '\u2514\u2500' : '\u251C\u2500'} {sc.name}</span>
+                          <span className={`role-badge role-${sc.role}`}>{sc.role}</span>
+                          {sc.imports && sc.imports.length > 0 && <span className="script-meta">imports: {sc.imports.join(', ')}</span>}
+                        </div>
+                      </td>
+                      {D.tabs.map(t => {
+                        const a = s.tabs[t.name];
+                        if (!a) return <td key={t.id} style={{textAlign:'center', background:'#fafbfc'}}></td>;
+                        return <td key={t.id} style={{textAlign:'center', background:'#fafbfc'}}><span className="pill" style={{background: crudBg[a], color: crudColor[a], opacity:0.4, fontSize:9}}>{a}</span></td>;
+                      })}
+                      <td style={{background:'#fafbfc'}}></td>
+                    </tr>
+                  );
+                }),
+                isExpanded && dataFiles.map((df, idx) => {
+                  const isLast = idx === dataFiles.length - 1;
+                  const readBy = (df.read_by || []).map(r => r.replace('.py', '')).join(', ');
+                  const writtenBy = (df.written_by || 'skill').replace('.py', '');
+                  return (
+                    <tr key={`${s.id}-data-${idx}`} className="script-row">
+                      <td>
+                        <div style={{display:'flex', alignItems:'center', flexWrap:'wrap', gap:2}}>
+                          <span className="script-name">{isLast ? '\u2514\u2500' : '\u251C\u2500'} \uD83D\uDCC4 {df.name}</span>
+                          <span className="role-badge role-data">data</span>
+                          <span className="script-meta">write: {writtenBy}{readBy ? ` \u2192 read: ${readBy}` : ''}</span>
+                        </div>
+                      </td>
+                      {D.tabs.map(t => {
+                        const a = s.tabs[t.name];
+                        if (!a) return <td key={t.id} style={{textAlign:'center', background:'#fafbfc'}}></td>;
+                        return <td key={t.id} style={{textAlign:'center', background:'#fafbfc'}}><span className="pill" style={{background: crudBg[a], color: crudColor[a], opacity:0.4, fontSize:9}}>{a}</span></td>;
+                      })}
+                      <td style={{background:'#fafbfc'}}></td>
+                    </tr>
+                  );
+                })
+              ];
+            })}
           </tbody>
         </table>
       </div>

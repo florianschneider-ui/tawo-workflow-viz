@@ -41,6 +41,15 @@
   .col-letter { font-family: monospace; font-weight: 700; font-size: 11px; color: #475569; min-width: 24px; display: inline-block; }
   .formula-ref { font-family: monospace; font-size: 11px; background: #f3e8ff; color: #6b21a8; padding: 1px 6px; border-radius: 4px; }
   .skill-tag { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 6px; display: inline-block; margin: 1px; }
+  .script-row td { background: #fafbfc !important; }
+  .script-name { font-family: monospace; font-size: 11px; color: #475569; padding-left: 20px; }
+  .role-badge { display: inline-block; border-radius: 8px; padding: 1px 6px; font-size: 9px; font-weight: 700; margin-left: 6px; }
+  .role-main { background: #f1f5f9; color: #475569; }
+  .role-shared { background: #fef3c7; color: #92400e; }
+  .role-infra { background: #ede9fe; color: #6d28d9; }
+  .role-data { background: #e0f2fe; color: #0369a1; }
+  .script-meta { font-size: 10px; color: #94a3b8; margin-left: 8px; }
+  .expand-btn { cursor: pointer; color: #94a3b8; font-size: 10px; margin-right: 4px; user-select: none; }
 </style>
 </head>
 <body>
@@ -973,7 +982,25 @@ window.GSHEET_DATA = {
         "1.0_Kalkulation": "C",
         "Übersicht": "C"
       },
-      "desc": "Kopiert Template, importiert LV-Struktur"
+      "desc": "Kopiert Template, importiert LV-Struktur",
+      "scripts": [
+        {
+          "name": "gaeb_to_excel.py",
+          "role": "shared",
+          "imports": []
+        },
+        {
+          "name": "template_anwendung.py",
+          "role": "main",
+          "imports": []
+        },
+        {
+          "name": "gsheet_auth_setup.py",
+          "role": "main",
+          "imports": []
+        }
+      ],
+      "data_files": []
     },
     {
       "id": "hinweis-extraktion",
@@ -984,7 +1011,15 @@ window.GSHEET_DATA = {
         "1.1_Kalkulation_Lohn": "U",
         "1.2_Kalkulation_Mat-Sub": "U"
       },
-      "desc": "Regex-Extraktion: Hinweistexte, HB, Kabel"
+      "desc": "Regex-Extraktion: Hinweistexte, HB, Kabel",
+      "scripts": [
+        {
+          "name": "hinweis_extraktion.py",
+          "role": "main",
+          "imports": []
+        }
+      ],
+      "data_files": []
     },
     {
       "id": "vorab-kalkulation",
@@ -997,7 +1032,30 @@ window.GSHEET_DATA = {
         "3.0_SG-Hinweise": "U",
         "3.1_Deep-Dive Hinweise": "U"
       },
-      "desc": "L3, Kalk-Typ, Lohn/Mat/Sub Vorab-Werte + SG-Aggregation"
+      "desc": "L3, Kalk-Typ, Lohn/Mat/Sub Vorab-Werte + SG-Aggregation",
+      "scripts": [
+        {
+          "name": "vorab_matching.py",
+          "role": "main",
+          "imports": []
+        },
+        {
+          "name": "vorab_aggregation.py",
+          "role": "main",
+          "imports": []
+        },
+        {
+          "name": "vorab_gsheet_writer.py",
+          "role": "main",
+          "imports": []
+        },
+        {
+          "name": "build_template.py",
+          "role": "main",
+          "imports": []
+        }
+      ],
+      "data_files": []
     },
     {
       "id": "material-anfragen",
@@ -1006,7 +1064,24 @@ window.GSHEET_DATA = {
         "1.0_Kalkulation": "R",
         "3.0_SG-Hinweise": "R"
       },
-      "desc": "Liest LV + Hinweise für Lieferanten-Zuordnung"
+      "desc": "Liest LV + Hinweise für Lieferanten-Zuordnung",
+      "scripts": [
+        {
+          "name": "attach_drafts.py",
+          "role": "main",
+          "imports": []
+        }
+      ],
+      "data_files": [
+        {
+          "name": "draft_manifest.json",
+          "path": "draft_manifest.json",
+          "written_by": "skill",
+          "read_by": [
+            "attach_drafts.py"
+          ]
+        }
+      ]
     },
     {
       "id": "angebots-auswertung",
@@ -1015,7 +1090,41 @@ window.GSHEET_DATA = {
         "1.0_Kalkulation": "R",
         "1.2_Kalkulation_Mat-Sub": "U"
       },
-      "desc": "Schreibt Final-EPs nach Angebotsvergleich"
+      "desc": "Schreibt Final-EPs nach Angebotsvergleich",
+      "scripts": [
+        {
+          "name": "oz_matcher.py",
+          "role": "main",
+          "imports": []
+        },
+        {
+          "name": "write_lieferant_tab.py",
+          "role": "main",
+          "imports": [
+            "gsheet_retry.py"
+          ]
+        },
+        {
+          "name": "angebots_auswertung.py",
+          "role": "shared",
+          "imports": [
+            "gsheet_retry.py"
+          ]
+        },
+        {
+          "name": "oz_normalizer.py",
+          "role": "shared",
+          "imports": []
+        }
+      ],
+      "data_files": [
+        {
+          "name": "cu_zuschlaege.json",
+          "path": "cu_zuschlaege.json",
+          "written_by": "skill",
+          "read_by": []
+        }
+      ]
     },
     {
       "id": "material-konsolidierung",
@@ -1024,7 +1133,77 @@ window.GSHEET_DATA = {
         "1.0_Kalkulation": "U",
         "1.2_Kalkulation_Mat-Sub": "U"
       },
-      "desc": "Bester Preis pro Position → Final-Spalten"
+      "desc": "Bester Preis pro Position → Final-Spalten",
+      "scripts": [
+        {
+          "name": "read_konsolidierung_data.py",
+          "role": "main",
+          "imports": [
+            "angebots_auswertung.py",
+            "gsheet_retry.py"
+          ]
+        },
+        {
+          "name": "write_gh_vergleich.py",
+          "role": "main",
+          "imports": [
+            "angebots_auswertung.py",
+            "gsheet_formatting.py",
+            "gsheet_retry.py"
+          ]
+        },
+        {
+          "name": "write_sg_vergleich.py",
+          "role": "main",
+          "imports": [
+            "angebots_auswertung.py",
+            "gsheet_formatting.py",
+            "gsheet_retry.py",
+            "oz_normalizer.py"
+          ]
+        },
+        {
+          "name": "write_scope_results.py",
+          "role": "main",
+          "imports": [
+            "angebots_auswertung.py",
+            "gsheet_formatting.py"
+          ]
+        },
+        {
+          "name": "write_master_tabs.py",
+          "role": "main",
+          "imports": [
+            "angebots_auswertung.py",
+            "gsheet_formatting.py",
+            "gsheet_retry.py",
+            "oz_normalizer.py"
+          ]
+        },
+        {
+          "name": "gsheet_formatting.py",
+          "role": "shared",
+          "imports": []
+        },
+        {
+          "name": "angebots_auswertung.py",
+          "role": "shared",
+          "imports": [
+            "gsheet_retry.py"
+          ]
+        }
+      ],
+      "data_files": [
+        {
+          "name": "konsolidierung_data.json",
+          "path": "3_Kalkulation/_workflow/konsolidierung_data.json",
+          "written_by": "read_konsolidierung_data.py",
+          "read_by": [
+            "write_gh_vergleich.py",
+            "write_sg_vergleich.py"
+          ]
+        }
+      ]
     },
     {
       "id": "kalkulations-analyse",
@@ -1036,7 +1215,15 @@ window.GSHEET_DATA = {
         "2.1_Deep-Dive Final": "R",
         "3.1_Deep-Dive Hinweise": "R"
       },
-      "desc": "Script rechnet, Claude bewertet als Oberbauleiter"
+      "desc": "Script rechnet, Claude bewertet als Oberbauleiter",
+      "scripts": [
+        {
+          "name": "kalkulations_analyse.py",
+          "role": "main",
+          "imports": []
+        }
+      ],
+      "data_files": []
     },
     {
       "id": "angebotserstellung",
@@ -1045,7 +1232,17 @@ window.GSHEET_DATA = {
         "1.0_Kalkulation": "R",
         "2.0_SG-Pricing": "R"
       },
-      "desc": "Liest finale Werte für GAEB-Export"
+      "desc": "Liest finale Werte für GAEB-Export",
+      "scripts": [
+        {
+          "name": "gaeb_to_pdf.py",
+          "role": "main",
+          "imports": [
+            "gaeb_to_excel.py"
+          ]
+        }
+      ],
+      "data_files": []
     },
     {
       "id": "bieterbrief-verarbeitung",
@@ -1054,7 +1251,53 @@ window.GSHEET_DATA = {
         "1.0_Kalkulation": "R",
         "1.2_Kalkulation_Mat-Sub": "R"
       },
-      "desc": "Liest Kalkulation für EK-Untergrenzen"
+      "desc": "Liest Kalkulation für EK-Untergrenzen",
+      "scripts": [
+        {
+          "name": "bieterbrief_parser.py",
+          "role": "main",
+          "imports": [
+            "oz_normalizer.py"
+          ]
+        },
+        {
+          "name": "oz_normalizer.py",
+          "role": "shared",
+          "imports": []
+        },
+        {
+          "name": "vorab_matching.py",
+          "role": "main",
+          "imports": []
+        },
+        {
+          "name": "bieterbrief_excel_filler.py",
+          "role": "main",
+          "imports": [
+            "oz_normalizer.py"
+          ]
+        }
+      ],
+      "data_files": [
+        {
+          "name": "bieterbrief_aenderungen.json",
+          "path": "bieterbrief_aenderungen.json",
+          "written_by": "skill",
+          "read_by": []
+        },
+        {
+          "name": "bieterbrief_raw.json",
+          "path": "_workflow/bieterbrief_raw.json",
+          "written_by": "bieterbrief_parser.py",
+          "read_by": []
+        },
+        {
+          "name": "neue_positionen_kalkulation.json",
+          "path": "neue_positionen_kalkulation.json",
+          "written_by": "skill",
+          "read_by": []
+        }
+      ]
     },
     {
       "id": "gh-verhandlung",
@@ -1062,7 +1305,9 @@ window.GSHEET_DATA = {
       "tabs": {
         "1.0_Kalkulation": "R"
       },
-      "desc": "Liest Kalkulation für Potenzial-Analyse"
+      "desc": "Liest Kalkulation für Potenzial-Analyse",
+      "scripts": [],
+      "data_files": []
     }
   ],
   "offset_warning": "KRITISCH: 1.0 hat 3 Header-Zeilen (Daten ab Zeile 4), 1.1/1.2/2.0/3.0 haben nur 2 (Daten ab Zeile 3)!",
@@ -1134,6 +1379,7 @@ function TabOverview() {
 
 // ---- TAB 2: Skill-Zuordnung ----
 function TabSkills() {
+  const [expandedSkills, setExpandedSkills] = useState(new Set());
   const tabNames = D.tabs.map(t => t.name);
 
   return (
@@ -1145,21 +1391,78 @@ function TabSkills() {
         <table>
           <thead>
             <tr>
-              <th style={{minWidth:200}}>Skill</th>
+              <th style={{minWidth:260}}>Skill</th>
               {D.tabs.map(t => <th key={t.id} style={{minWidth:60, fontSize:10, textAlign:'center', color: t.color, whiteSpace:'normal', lineHeight:1.3}}>{t.name}</th>)}
             </tr>
           </thead>
           <tbody>
-            {D.skills.map(s => (
-              <tr key={s.id}>
-                <td style={{fontWeight:600, fontSize:12}}>{s.cmd}</td>
-                {D.tabs.map(t => {
-                  const access = s.tabs[t.name];
-                  if (!access) return <td key={t.id} style={{textAlign:'center'}}><span style={{color:'#e2e8f0'}}>·</span></td>;
-                  return <td key={t.id} style={{textAlign:'center'}}><span className="pill" style={{background: crudBg[access], color: crudColor[access]}}>{access}</span></td>;
-                })}
-              </tr>
-            ))}
+            {D.skills.map(s => {
+              const scripts = s.scripts || [];
+              const dataFiles = s.data_files || [];
+              const totalChildren = scripts.length + dataFiles.length;
+              const isExpanded = expandedSkills.has(s.id);
+              const toggleExpand = () => {
+                const next = new Set(expandedSkills);
+                next.has(s.id) ? next.delete(s.id) : next.add(s.id);
+                setExpandedSkills(next);
+              };
+              return [
+                <tr key={s.id}>
+                  <td style={{fontWeight:600, fontSize:12}}>
+                    <div style={{display:'flex', alignItems:'center'}}>
+                      {totalChildren > 0 && <span className="expand-btn" onClick={toggleExpand}>{isExpanded ? '\u25BC' : '\u25B6'}</span>}
+                      {s.cmd}
+                      {totalChildren > 0 && <span style={{fontSize:9, color:'#94a3b8', marginLeft:4}}>({scripts.length}{dataFiles.length > 0 ? `+${dataFiles.length}` : ''})</span>}
+                    </div>
+                  </td>
+                  {D.tabs.map(t => {
+                    const access = s.tabs[t.name];
+                    if (!access) return <td key={t.id} style={{textAlign:'center'}}><span style={{color:'#e2e8f0'}}>·</span></td>;
+                    return <td key={t.id} style={{textAlign:'center'}}><span className="pill" style={{background: crudBg[access], color: crudColor[access]}}>{access}</span></td>;
+                  })}
+                </tr>,
+                isExpanded && scripts.map((sc, idx) => {
+                  const isLast = idx === scripts.length - 1 && dataFiles.length === 0;
+                  return (
+                    <tr key={`${s.id}-script-${idx}`} className="script-row">
+                      <td>
+                        <div style={{display:'flex', alignItems:'center', flexWrap:'wrap', gap:2}}>
+                          <span className="script-name">{isLast ? '\u2514\u2500' : '\u251C\u2500'} {sc.name}</span>
+                          <span className={`role-badge role-${sc.role}`}>{sc.role}</span>
+                          {sc.imports && sc.imports.length > 0 && <span className="script-meta">imports: {sc.imports.join(', ')}</span>}
+                        </div>
+                      </td>
+                      {D.tabs.map(t => {
+                        const access = s.tabs[t.name];
+                        if (!access) return <td key={t.id} style={{textAlign:'center', background:'#fafbfc'}}></td>;
+                        return <td key={t.id} style={{textAlign:'center', background:'#fafbfc'}}><span className="pill" style={{background: crudBg[access], color: crudColor[access], opacity:0.4, fontSize:9}}>{access}</span></td>;
+                      })}
+                    </tr>
+                  );
+                }),
+                isExpanded && dataFiles.map((df, idx) => {
+                  const isLast = idx === dataFiles.length - 1;
+                  const readBy = (df.read_by || []).map(r => r.replace('.py', '')).join(', ');
+                  const writtenBy = (df.written_by || 'skill').replace('.py', '');
+                  return (
+                    <tr key={`${s.id}-data-${idx}`} className="script-row">
+                      <td>
+                        <div style={{display:'flex', alignItems:'center', flexWrap:'wrap', gap:2}}>
+                          <span className="script-name">{isLast ? '\u2514\u2500' : '\u251C\u2500'} \uD83D\uDCC4 {df.name}</span>
+                          <span className="role-badge role-data">data</span>
+                          <span className="script-meta">write: {writtenBy}{readBy ? ` \u2192 read: ${readBy}` : ''}</span>
+                        </div>
+                      </td>
+                      {D.tabs.map(t => {
+                        const access = s.tabs[t.name];
+                        if (!access) return <td key={t.id} style={{textAlign:'center', background:'#fafbfc'}}></td>;
+                        return <td key={t.id} style={{textAlign:'center', background:'#fafbfc'}}><span className="pill" style={{background: crudBg[access], color: crudColor[access], opacity:0.4, fontSize:9}}>{access}</span></td>;
+                      })}
+                    </tr>
+                  );
+                })
+              ];
+            })}
           </tbody>
         </table>
       </div>
