@@ -93,15 +93,29 @@
 
 <script>
 window.WORKFLOW_DATA = {
-  "generated_at": "2026-04-20T13:07:12Z",
-  "generated_by": "workflow-validation (Phase 2-4 via Subagent)",
+  "generated_at": "2026-04-20T14:05:09Z",
+  "generated_by": "workflow-validation (Phase 2-4, Final-Run nach Scanner-Fixes)",
   "validation_status": "has_issues",
-  "issues_count": 75,
+  "issues_count": 69,
   "issues_by_severity": {
     "critical": 3,
-    "high": 16,
+    "high": 10,
     "medium": 56,
     "low": 0
+  },
+  "previous_run": {
+    "issues_count": 162,
+    "issues_by_severity": {
+      "critical": 20,
+      "high": 13,
+      "medium": 129,
+      "low": 0
+    },
+    "generated_at": "2026-04-20T13:58:51Z"
+  },
+  "baseline_run": {
+    "issues_count": 75,
+    "note": "Original pre-Scanner-Fix Baseline (2026-04-19)"
   },
   "scan_mode": "full",
   "skills_scanned": 14,
@@ -117,7 +131,7 @@ window.WORKFLOW_DATA = {
     "workflow-analyse",
     "workflow-validation"
   ],
-  "notion_relations_source": "Proxy: docs/workflow-data.json (2026-04-19). Notion MCP nicht live gefetched (Kostenoptimierung).",
+  "notion_relations_source": "Proxy: vorige docs/workflow-data.json + Auto-Fix (workflow_state.md Read fuer 6 Skills). Notion MCP nicht live gefetched.",
   "blocks": [
     {
       "id": "A",
@@ -278,7 +292,8 @@ window.WORKFLOW_DATA = {
         "GAEB-Quelldateien (X83/D83)",
         "Notion DB Snapshots",
         "Projekt-DB",
-        "Referenz-LV"
+        "Referenz-LV",
+        "workflow_state.md"
       ],
       "notion_writes": [
         "workflow_state.md",
@@ -300,7 +315,14 @@ window.WORKFLOW_DATA = {
         "l1_mapper.py",
         "workflow_state.py"
       ],
-      "data_files": [],
+      "data_files": [
+        {
+          "name": "leistungsgruppen.json"
+        },
+        {
+          "name": "output.xlsx"
+        }
+      ],
       "scanned": true
     },
     {
@@ -362,7 +384,8 @@ window.WORKFLOW_DATA = {
       "slash_command": "/template-anwendung",
       "skill_path": ".claude/skills/template-anwendung/",
       "key_files": [
-        "SKILL.md"
+        "SKILL.md",
+        "template_anwendung.py"
       ],
       "block": "B",
       "status": "live",
@@ -427,7 +450,8 @@ window.WORKFLOW_DATA = {
       "slash_command": "/hinweis-extraktion",
       "skill_path": ".claude/skills/hinweis-extraktion/",
       "key_files": [
-        "SKILL.md"
+        "SKILL.md",
+        "hinweis_extraktion.py"
       ],
       "block": "B",
       "status": "live",
@@ -478,7 +502,11 @@ window.WORKFLOW_DATA = {
         "skill_completion_check.py",
         "workflow_state.py"
       ],
-      "data_files": [],
+      "data_files": [
+        {
+          "name": "args.json"
+        }
+      ],
       "scanned": true
     },
     {
@@ -539,7 +567,8 @@ window.WORKFLOW_DATA = {
         "Referenz-LV",
         "KFE-Katalog",
         "Datanorm-Preise",
-        "TAWO-Stundensaetze"
+        "TAWO-Stundensaetze",
+        "workflow_state.md"
       ],
       "notion_writes": [
         "GSheet Kalkulation",
@@ -567,7 +596,11 @@ window.WORKFLOW_DATA = {
         "vorab_matching.py",
         "workflow_state.py"
       ],
-      "data_files": [],
+      "data_files": [
+        {
+          "name": "leistungsgruppen.json"
+        }
+      ],
       "scanned": true
     },
     {
@@ -623,7 +656,7 @@ window.WORKFLOW_DATA = {
       ],
       "predecessors": [
         "A-01",
-        "projekt-erfassung-light"
+        ""
       ],
       "successors": [
         "C-01",
@@ -721,7 +754,28 @@ window.WORKFLOW_DATA = {
       ],
       "data_files": [
         {
+          "name": "business_partner.json"
+        },
+        {
+          "name": "leistungsgruppen.json"
+        },
+        {
+          "name": "kontakte.json"
+        },
+        {
+          "name": "team_signaturen.json"
+        },
+        {
+          "name": "cache_meta.json"
+        },
+        {
+          "name": "gsheet_template_ids.json"
+        },
+        {
           "name": "draft_manifest.json"
+        },
+        {
+          "name": "_Anfragen.xlsx"
         },
         {
           "name": "inbox_registry.json"
@@ -735,7 +789,8 @@ window.WORKFLOW_DATA = {
       "slash_command": "/inbox-scan",
       "skill_path": ".claude/skills/inbox-scan/",
       "key_files": [
-        "SKILL.md"
+        "SKILL.md",
+        "inbox_scanner.py"
       ],
       "block": "C",
       "status": "live",
@@ -775,7 +830,8 @@ window.WORKFLOW_DATA = {
       "notion_reads": [
         "Gmail (Inbox/Drafts)",
         "MaterialAnfragen-DB",
-        "Notion DB Snapshots"
+        "Notion DB Snapshots",
+        "workflow_state.md"
       ],
       "notion_writes": [
         "GDrive Projektordner",
@@ -808,10 +864,19 @@ window.WORKFLOW_DATA = {
           "name": "draft_manifest_replies.json"
         },
         {
+          "name": "kontakte.json"
+        },
+        {
+          "name": "business_partner.json"
+        },
+        {
           "name": "processed_messages.json"
         },
         {
           "name": "rename_log.json"
+        },
+        {
+          "name": "gsheet_credentials.json"
         }
       ],
       "scanned": true
@@ -822,7 +887,8 @@ window.WORKFLOW_DATA = {
       "slash_command": "/angebots-auswertung",
       "skill_path": ".claude/skills/angebots-auswertung/",
       "key_files": [
-        "SKILL.md"
+        "SKILL.md",
+        "angebots_auswertung.py"
       ],
       "block": "C",
       "status": "beta",
@@ -867,7 +933,8 @@ window.WORKFLOW_DATA = {
         "GSheet Kalkulation",
         "MaterialAnfragen-DB",
         "Anfragen-GSheet (Material)",
-        "hinweise.json"
+        "hinweise.json",
+        "workflow_state.md"
       ],
       "notion_writes": [
         "GSheet Kalkulation",
@@ -898,6 +965,12 @@ window.WORKFLOW_DATA = {
       "data_files": [
         {
           "name": "lv_positionen.json"
+        },
+        {
+          "name": "gsheet_template_ids.json"
+        },
+        {
+          "name": "args.json"
         }
       ],
       "scanned": true
@@ -1024,7 +1097,8 @@ window.WORKFLOW_DATA = {
       "slash_command": "/kalkulations-analyse",
       "skill_path": ".claude/skills/kalkulations-analyse/",
       "key_files": [
-        "SKILL.md"
+        "SKILL.md",
+        "kalkulations_analyse.py"
       ],
       "block": "D",
       "status": "beta",
@@ -1192,7 +1266,8 @@ window.WORKFLOW_DATA = {
         "hinweise.json",
         "Referenz-LV",
         "KFE-Katalog",
-        "Datanorm-Preise"
+        "Datanorm-Preise",
+        "workflow_state.md"
       ],
       "notion_writes": [
         "GSheet Kalkulation",
@@ -1203,7 +1278,7 @@ window.WORKFLOW_DATA = {
         "D-02"
       ],
       "successors": [],
-      "validation_status": "drift",
+      "validation_status": "warn",
       "summary": "Bieterbrief-Excel vom AG verarbeiten: Parsen, OZ-Normalisierung, Matching gegen Kalk-GSheet, EK-Untergrenzen berechnen, User-Review, ausgefuellten Bieterbrief + neues Kalkulations-GSheet erzeugen.",
       "description": "Bieterbrief vom AG parsen, gegen Kalkulation matchen, EK-Untergrenzen berechnen, ausgefuellten Bieterbrief + Bieterbrief-Kalkulations-GSheet erzeugen.",
       "scripts": [
@@ -1217,6 +1292,12 @@ window.WORKFLOW_DATA = {
       "data_files": [
         {
           "name": "bieterbrief_aenderungen.json"
+        },
+        {
+          "name": "_Bieterbrief_filled.xlsx"
+        },
+        {
+          "name": "pfad_bieterbrief.xlsx"
         },
         {
           "name": "bieterbrief_raw.json"
@@ -1260,7 +1341,8 @@ window.WORKFLOW_DATA = {
       ],
       "notion_reads": [
         "Anfragen-GSheet (Material)",
-        "GSheet Kalkulation"
+        "GSheet Kalkulation",
+        "workflow_state.md"
       ],
       "notion_writes": [
         "Anfragen-GSheet (Material)",
@@ -1272,7 +1354,7 @@ window.WORKFLOW_DATA = {
         "C-06"
       ],
       "successors": [],
-      "validation_status": "drift",
+      "validation_status": "warn",
       "summary": "GH-Preisverhandlung vorbereiten. Analysiert den Angebotsvergleich, erstellt zwei Tabs fuer den GH (Potenzial-Positionen + Bauzeitenplan) und einen internen Gespraechsleitfaden.",
       "description": "GH-Preisverhandlung vorbereiten: Angebotsvergleich analysieren, Potenzial-Positionen + Bauzeitenplan erstellen, Gespraechsleitfaden generieren.",
       "scripts": [
@@ -1566,12 +1648,42 @@ window.WORKFLOW_DATA = {
         "A",
         "B"
       ],
-      "reads": [],
-      "writes": [],
+      "reads": [
+        "Anfragen-GSheet (Material)",
+        "GAEB-Quelldateien (X83/D83)",
+        "GDrive Projektordner",
+        "MaterialAnfragen DB",
+        "Notion DB Snapshots",
+        "Notion Dokumenten-DB (Inline)",
+        "Projekt-DB",
+        "hinweise.json",
+        "matching.json",
+        "workflow_state.md"
+      ],
+      "writes": [
+        "Angebots-Abgabe (X84/PDF)",
+        "Gmail (Inbox/Drafts)",
+        "workflow_state.md"
+      ],
       "code_reads": [],
       "code_writes": [],
-      "notion_reads": [],
-      "notion_writes": [],
+      "notion_reads": [
+        "Anfragen-GSheet (Material)",
+        "GAEB-Quelldateien (X83/D83)",
+        "GDrive Projektordner",
+        "MaterialAnfragen DB",
+        "Notion DB Snapshots",
+        "Notion Dokumenten-DB (Inline)",
+        "Projekt-DB",
+        "hinweise.json",
+        "matching.json",
+        "workflow_state.md"
+      ],
+      "notion_writes": [
+        "Angebots-Abgabe (X84/PDF)",
+        "Gmail (Inbox/Drafts)",
+        "workflow_state.md"
+      ],
       "predecessors": [],
       "successors": [
         "B-01->03",
@@ -1623,7 +1735,8 @@ window.WORKFLOW_DATA = {
         "C-05",
         "C-06",
         "E-02",
-        "G-03"
+        "G-03",
+        ""
       ],
       "written_by": [
         "C-01",
@@ -1644,7 +1757,8 @@ window.WORKFLOW_DATA = {
       "written_by": [
         "A-01",
         "C-03",
-        "D-02"
+        "D-02",
+        ""
       ]
     },
     {
@@ -1676,7 +1790,8 @@ window.WORKFLOW_DATA = {
         "C-01",
         "C-02",
         "C-03",
-        "D-02"
+        "D-02",
+        ""
       ],
       "written_by": []
     },
@@ -1699,7 +1814,8 @@ window.WORKFLOW_DATA = {
         "D-02",
         "E-01",
         "G-01",
-        "G-02"
+        "G-02",
+        ""
       ],
       "written_by": [
         "A-01",
@@ -1759,7 +1875,8 @@ window.WORKFLOW_DATA = {
         "C-01",
         "C-02",
         "E-02",
-        "F-01"
+        "F-01",
+        ""
       ]
     },
     {
@@ -1788,7 +1905,8 @@ window.WORKFLOW_DATA = {
         "A-01",
         "B-03",
         "C-01",
-        "C-02"
+        "C-02",
+        ""
       ],
       "written_by": []
     },
@@ -1822,7 +1940,8 @@ window.WORKFLOW_DATA = {
         "A-01",
         "B-03",
         "C-01",
-        "C-02"
+        "C-02",
+        ""
       ],
       "written_by": []
     },
@@ -1838,7 +1957,8 @@ window.WORKFLOW_DATA = {
         "A-02",
         "C-01",
         "G-01",
-        "G-02"
+        "G-02",
+        ""
       ],
       "written_by": [
         "A-01",
@@ -1870,7 +1990,8 @@ window.WORKFLOW_DATA = {
         "C-01",
         "C-02",
         "D-02",
-        "F-01"
+        "F-01",
+        ""
       ],
       "written_by": [
         "A-01",
@@ -1938,7 +2059,8 @@ window.WORKFLOW_DATA = {
         "C-06",
         "D-01",
         "E-01",
-        "G-01"
+        "G-01",
+        ""
       ],
       "written_by": [
         "B-01",
@@ -1961,7 +2083,8 @@ window.WORKFLOW_DATA = {
         "C-02",
         "C-03",
         "D-02",
-        "E-01"
+        "E-01",
+        ""
       ],
       "written_by": [
         "B-03",
@@ -2024,7 +2147,8 @@ window.WORKFLOW_DATA = {
         "F-01",
         "G-01",
         "G-02",
-        "G-03"
+        "G-03",
+        ""
       ],
       "written_by": [
         "A-01",
@@ -2042,7 +2166,8 @@ window.WORKFLOW_DATA = {
         "E-01",
         "E-02",
         "F-01",
-        "G-03"
+        "G-03",
+        ""
       ]
     }
   ],
@@ -2052,8 +2177,8 @@ window.WORKFLOW_DATA = {
       "skill_id": "A-01",
       "type": "undocumented_read",
       "severity": "medium",
-      "resource": "hinweise.json",
-      "detail": "Code liest 'hinweise.json', Notion hat keine Liest-aus-Relation"
+      "resource": "MaterialAnfragen DB",
+      "detail": "Code liest 'MaterialAnfragen DB', Notion hat keine Liest-aus-Relation"
     },
     {
       "skill": "projekt-erfassung",
@@ -2068,8 +2193,8 @@ window.WORKFLOW_DATA = {
       "skill_id": "A-01",
       "type": "undocumented_read",
       "severity": "medium",
-      "resource": "MaterialAnfragen DB",
-      "detail": "Code liest 'MaterialAnfragen DB', Notion hat keine Liest-aus-Relation"
+      "resource": "hinweise.json",
+      "detail": "Code liest 'hinweise.json', Notion hat keine Liest-aus-Relation"
     },
     {
       "skill": "projekt-erfassung",
@@ -2078,14 +2203,6 @@ window.WORKFLOW_DATA = {
       "severity": "high",
       "resource": "Notion Dokumenten-DB (Inline)",
       "detail": "Code liest 'Notion Dokumenten-DB (Inline)', Notion dokumentiert als Write"
-    },
-    {
-      "skill": "projekt-erfassung",
-      "skill_id": "A-01",
-      "type": "direction_mismatch",
-      "severity": "high",
-      "resource": "workflow_state.md",
-      "detail": "Code liest 'workflow_state.md', Notion dokumentiert als Write"
     },
     {
       "skill": "projekt-erfassung",
@@ -2124,16 +2241,16 @@ window.WORKFLOW_DATA = {
       "skill_id": "B-01",
       "type": "undocumented_read",
       "severity": "medium",
-      "resource": "hinweise.json",
-      "detail": "Code liest 'hinweise.json', Notion hat keine Liest-aus-Relation"
+      "resource": "GDrive Projektordner",
+      "detail": "Code liest 'GDrive Projektordner', Notion hat keine Liest-aus-Relation"
     },
     {
       "skill": "template-anwendung",
       "skill_id": "B-01",
       "type": "undocumented_read",
       "severity": "medium",
-      "resource": "GDrive Projektordner",
-      "detail": "Code liest 'GDrive Projektordner', Notion hat keine Liest-aus-Relation"
+      "resource": "hinweise.json",
+      "detail": "Code liest 'hinweise.json', Notion hat keine Liest-aus-Relation"
     },
     {
       "skill": "template-anwendung",
@@ -2146,14 +2263,30 @@ window.WORKFLOW_DATA = {
     {
       "skill": "hinweis-extraktion",
       "skill_id": "B-02",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "GDrive Projektordner",
+      "detail": "Code liest 'GDrive Projektordner', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "hinweis-extraktion",
+      "skill_id": "B-02",
       "type": "direction_mismatch",
       "severity": "high",
       "resource": "hinweise.json",
       "detail": "Code liest 'hinweise.json', Notion dokumentiert als Write"
     },
     {
-      "skill": "hinweis-extraktion",
-      "skill_id": "B-02",
+      "skill": "vorab-kalkulation",
+      "skill_id": "B-03",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "MaterialAnfragen DB",
+      "detail": "Code liest 'MaterialAnfragen DB', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "vorab-kalkulation",
+      "skill_id": "B-03",
       "type": "undocumented_read",
       "severity": "medium",
       "resource": "GDrive Projektordner",
@@ -2170,42 +2303,18 @@ window.WORKFLOW_DATA = {
     {
       "skill": "vorab-kalkulation",
       "skill_id": "B-03",
-      "type": "direction_mismatch",
-      "severity": "high",
-      "resource": "matching.json",
-      "detail": "Code liest 'matching.json', Notion dokumentiert als Write"
-    },
-    {
-      "skill": "vorab-kalkulation",
-      "skill_id": "B-03",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "GDrive Projektordner",
-      "detail": "Code liest 'GDrive Projektordner', Notion hat keine Liest-aus-Relation"
-    },
-    {
-      "skill": "vorab-kalkulation",
-      "skill_id": "B-03",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "MaterialAnfragen DB",
-      "detail": "Code liest 'MaterialAnfragen DB', Notion hat keine Liest-aus-Relation"
-    },
-    {
-      "skill": "vorab-kalkulation",
-      "skill_id": "B-03",
-      "type": "direction_mismatch",
-      "severity": "high",
-      "resource": "workflow_state.md",
-      "detail": "Code liest 'workflow_state.md', Notion dokumentiert als Write"
-    },
-    {
-      "skill": "vorab-kalkulation",
-      "skill_id": "B-03",
       "type": "undocumented_read",
       "severity": "medium",
       "resource": "Notion DB Snapshots",
       "detail": "Code liest 'Notion DB Snapshots', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "vorab-kalkulation",
+      "skill_id": "B-03",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "matching.json",
+      "detail": "Code liest 'matching.json', Notion dokumentiert als Write"
     },
     {
       "skill": "vorab-kalkulation",
@@ -2221,7 +2330,7 @@ window.WORKFLOW_DATA = {
       "type": "phantom_read",
       "severity": "medium",
       "resource": "Referenz-LV",
-      "detail": "Notion listet Read auf 'Referenz-LV', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+      "detail": "Notion listet Read auf 'Referenz-LV', Scanner keine Evidence"
     },
     {
       "skill": "vorab-kalkulation-komplett",
@@ -2229,23 +2338,7 @@ window.WORKFLOW_DATA = {
       "type": "phantom_read",
       "severity": "medium",
       "resource": "Referenz-LV",
-      "detail": "Notion listet Read auf 'Referenz-LV', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
-    },
-    {
-      "skill": "vorab-kalkulation-komplett",
-      "skill_id": "B-01->03",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "Datanorm-Preise",
-      "detail": "Notion listet Read auf 'Datanorm-Preise', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
-    },
-    {
-      "skill": "vorab-kalkulation-komplett",
-      "skill_id": "B-01->03",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "KFE-Katalog",
-      "detail": "Notion listet Read auf 'KFE-Katalog', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+      "detail": "Notion listet Read auf 'Referenz-LV', Scanner keine Evidence"
     },
     {
       "skill": "vorab-kalkulation-komplett",
@@ -2253,15 +2346,7 @@ window.WORKFLOW_DATA = {
       "type": "phantom_read",
       "severity": "medium",
       "resource": "GSheet Kalkulation",
-      "detail": "Notion listet Read auf 'GSheet Kalkulation', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
-    },
-    {
-      "skill": "vorab-kalkulation-komplett",
-      "skill_id": "B-01->03",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "GAEB-Quelldateien (X83/D83)",
-      "detail": "Notion listet Read auf 'GAEB-Quelldateien (X83/D83)', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+      "detail": "Notion listet Read auf 'GSheet Kalkulation', Scanner keine Evidence"
     },
     {
       "skill": "vorab-kalkulation-komplett",
@@ -2269,7 +2354,31 @@ window.WORKFLOW_DATA = {
       "type": "phantom_read",
       "severity": "medium",
       "resource": "TAWO-Stundensaetze",
-      "detail": "Notion listet Read auf 'TAWO-Stundensaetze', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+      "detail": "Notion listet Read auf 'TAWO-Stundensaetze', Scanner keine Evidence"
+    },
+    {
+      "skill": "vorab-kalkulation-komplett",
+      "skill_id": "B-01->03",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "Datanorm-Preise",
+      "detail": "Notion listet Read auf 'Datanorm-Preise', Scanner keine Evidence"
+    },
+    {
+      "skill": "vorab-kalkulation-komplett",
+      "skill_id": "B-01->03",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "KFE-Katalog",
+      "detail": "Notion listet Read auf 'KFE-Katalog', Scanner keine Evidence"
+    },
+    {
+      "skill": "vorab-kalkulation-komplett",
+      "skill_id": "B-01->03",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "GAEB-Quelldateien (X83/D83)",
+      "detail": "Notion listet Read auf 'GAEB-Quelldateien (X83/D83)', Scanner keine Evidence"
     },
     {
       "skill": "vorab-kalkulation-komplett",
@@ -2292,22 +2401,6 @@ window.WORKFLOW_DATA = {
       "skill_id": "C-01",
       "type": "undocumented_read",
       "severity": "medium",
-      "resource": "Projekt-DB",
-      "detail": "Code liest 'Projekt-DB', Notion hat keine Liest-aus-Relation"
-    },
-    {
-      "skill": "material-anfragen",
-      "skill_id": "C-01",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "GAEB-Quelldateien (X83/D83)",
-      "detail": "Code liest 'GAEB-Quelldateien (X83/D83)', Notion hat keine Liest-aus-Relation"
-    },
-    {
-      "skill": "material-anfragen",
-      "skill_id": "C-01",
-      "type": "undocumented_read",
-      "severity": "medium",
       "resource": "MaterialAnfragen DB",
       "detail": "Code liest 'MaterialAnfragen DB', Notion hat keine Liest-aus-Relation"
     },
@@ -2316,8 +2409,24 @@ window.WORKFLOW_DATA = {
       "skill_id": "C-01",
       "type": "undocumented_read",
       "severity": "medium",
+      "resource": "GDrive Projektordner",
+      "detail": "Code liest 'GDrive Projektordner', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "material-anfragen",
+      "skill_id": "C-01",
+      "type": "undocumented_read",
+      "severity": "medium",
       "resource": "Notion Dokumenten-DB (Inline)",
       "detail": "Code liest 'Notion Dokumenten-DB (Inline)', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "material-anfragen",
+      "skill_id": "C-01",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "GAEB-Quelldateien (X83/D83)",
+      "detail": "Code liest 'GAEB-Quelldateien (X83/D83)', Notion hat keine Liest-aus-Relation"
     },
     {
       "skill": "material-anfragen",
@@ -2332,8 +2441,8 @@ window.WORKFLOW_DATA = {
       "skill_id": "C-01",
       "type": "undocumented_read",
       "severity": "medium",
-      "resource": "GDrive Projektordner",
-      "detail": "Code liest 'GDrive Projektordner', Notion hat keine Liest-aus-Relation"
+      "resource": "Projekt-DB",
+      "detail": "Code liest 'Projekt-DB', Notion hat keine Liest-aus-Relation"
     },
     {
       "skill": "material-anfragen",
@@ -2357,7 +2466,7 @@ window.WORKFLOW_DATA = {
       "type": "phantom_read",
       "severity": "medium",
       "resource": "MaterialAnfragen-DB",
-      "detail": "Notion listet Read auf 'MaterialAnfragen-DB', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+      "detail": "Notion listet Read auf 'MaterialAnfragen-DB', Scanner keine Evidence"
     },
     {
       "skill": "material-anfragen",
@@ -2365,7 +2474,7 @@ window.WORKFLOW_DATA = {
       "type": "phantom_read",
       "severity": "medium",
       "resource": "matching.json",
-      "detail": "Notion listet Read auf 'matching.json', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+      "detail": "Notion listet Read auf 'matching.json', Scanner keine Evidence"
     },
     {
       "skill": "material-anfragen",
@@ -2380,16 +2489,24 @@ window.WORKFLOW_DATA = {
       "skill_id": "C-02",
       "type": "undocumented_read",
       "severity": "medium",
-      "resource": "Projekt-DB",
-      "detail": "Code liest 'Projekt-DB', Notion hat keine Liest-aus-Relation"
+      "resource": "MaterialAnfragen DB",
+      "detail": "Code liest 'MaterialAnfragen DB', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "inbox-scan",
+      "skill_id": "C-02",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "GDrive Projektordner",
+      "detail": "Code liest 'GDrive Projektordner', Notion dokumentiert als Write"
     },
     {
       "skill": "inbox-scan",
       "skill_id": "C-02",
       "type": "undocumented_read",
       "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Code liest 'matching.json', Notion hat keine Liest-aus-Relation"
+      "resource": "Projekt-DB",
+      "detail": "Code liest 'Projekt-DB', Notion hat keine Liest-aus-Relation"
     },
     {
       "skill": "inbox-scan",
@@ -2404,24 +2521,8 @@ window.WORKFLOW_DATA = {
       "skill_id": "C-02",
       "type": "undocumented_read",
       "severity": "medium",
-      "resource": "MaterialAnfragen DB",
-      "detail": "Code liest 'MaterialAnfragen DB', Notion hat keine Liest-aus-Relation"
-    },
-    {
-      "skill": "inbox-scan",
-      "skill_id": "C-02",
-      "type": "direction_mismatch",
-      "severity": "high",
-      "resource": "workflow_state.md",
-      "detail": "Code liest 'workflow_state.md', Notion dokumentiert als Write"
-    },
-    {
-      "skill": "inbox-scan",
-      "skill_id": "C-02",
-      "type": "direction_mismatch",
-      "severity": "high",
-      "resource": "GDrive Projektordner",
-      "detail": "Code liest 'GDrive Projektordner', Notion dokumentiert als Write"
+      "resource": "matching.json",
+      "detail": "Code liest 'matching.json', Notion hat keine Liest-aus-Relation"
     },
     {
       "skill": "inbox-scan",
@@ -2429,7 +2530,7 @@ window.WORKFLOW_DATA = {
       "type": "phantom_read",
       "severity": "medium",
       "resource": "MaterialAnfragen-DB",
-      "detail": "Notion listet Read auf 'MaterialAnfragen-DB', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+      "detail": "Notion listet Read auf 'MaterialAnfragen-DB', Scanner keine Evidence"
     },
     {
       "skill": "inbox-scan",
@@ -2446,14 +2547,6 @@ window.WORKFLOW_DATA = {
       "severity": "high",
       "resource": "matching.json",
       "detail": "Code liest 'matching.json', Notion dokumentiert als Write"
-    },
-    {
-      "skill": "angebots-auswertung",
-      "skill_id": "C-03",
-      "type": "direction_mismatch",
-      "severity": "high",
-      "resource": "workflow_state.md",
-      "detail": "Code liest 'workflow_state.md', Notion dokumentiert als Write"
     },
     {
       "skill": "angebots-auswertung",
@@ -2477,7 +2570,7 @@ window.WORKFLOW_DATA = {
       "type": "phantom_read",
       "severity": "medium",
       "resource": "MaterialAnfragen-DB",
-      "detail": "Notion listet Read auf 'MaterialAnfragen-DB', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+      "detail": "Notion listet Read auf 'MaterialAnfragen-DB', Scanner keine Evidence"
     },
     {
       "skill": "angebots-auswertung",
@@ -2493,15 +2586,7 @@ window.WORKFLOW_DATA = {
       "type": "phantom_read",
       "severity": "medium",
       "resource": "hinweise.json",
-      "detail": "Notion listet Read auf 'hinweise.json', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
-    },
-    {
-      "skill": "material-konsolidierung",
-      "skill_id": "C-06",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "GSheet Kalkulation",
-      "detail": "Notion listet Read auf 'GSheet Kalkulation', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+      "detail": "Notion listet Read auf 'hinweise.json', Scanner keine Evidence"
     },
     {
       "skill": "material-konsolidierung",
@@ -2509,7 +2594,15 @@ window.WORKFLOW_DATA = {
       "type": "phantom_read",
       "severity": "medium",
       "resource": "MaterialAnfragen-DB",
-      "detail": "Notion listet Read auf 'MaterialAnfragen-DB', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+      "detail": "Notion listet Read auf 'MaterialAnfragen-DB', Scanner keine Evidence"
+    },
+    {
+      "skill": "material-konsolidierung",
+      "skill_id": "C-06",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "GSheet Kalkulation",
+      "detail": "Notion listet Read auf 'GSheet Kalkulation', Scanner keine Evidence"
     },
     {
       "skill": "material-konsolidierung",
@@ -2533,15 +2626,7 @@ window.WORKFLOW_DATA = {
       "type": "phantom_read",
       "severity": "medium",
       "resource": "Referenz-LV",
-      "detail": "Notion listet Read auf 'Referenz-LV', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
-    },
-    {
-      "skill": "angebotserstellung",
-      "skill_id": "D-02",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Code liest 'matching.json', Notion hat keine Liest-aus-Relation"
+      "detail": "Notion listet Read auf 'Referenz-LV', Scanner keine Evidence"
     },
     {
       "skill": "angebotserstellung",
@@ -2562,10 +2647,18 @@ window.WORKFLOW_DATA = {
     {
       "skill": "angebotserstellung",
       "skill_id": "D-02",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "matching.json",
+      "detail": "Code liest 'matching.json', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "angebotserstellung",
+      "skill_id": "D-02",
       "type": "phantom_read",
       "severity": "medium",
       "resource": "Projekt-DB",
-      "detail": "Notion listet Read auf 'Projekt-DB', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+      "detail": "Notion listet Read auf 'Projekt-DB', Scanner keine Evidence"
     },
     {
       "skill": "angebotserstellung",
@@ -2586,26 +2679,10 @@ window.WORKFLOW_DATA = {
     {
       "skill": "bieterbrief-verarbeitung",
       "skill_id": "E-01",
-      "type": "direction_mismatch",
-      "severity": "high",
-      "resource": "workflow_state.md",
-      "detail": "Code liest 'workflow_state.md', Notion dokumentiert als Write"
-    },
-    {
-      "skill": "bieterbrief-verarbeitung",
-      "skill_id": "E-01",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "hinweise.json",
-      "detail": "Notion listet Read auf 'hinweise.json', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
-    },
-    {
-      "skill": "bieterbrief-verarbeitung",
-      "skill_id": "E-01",
       "type": "phantom_read",
       "severity": "medium",
       "resource": "Referenz-LV",
-      "detail": "Notion listet Read auf 'Referenz-LV', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+      "detail": "Notion listet Read auf 'Referenz-LV', Scanner keine Evidence"
     },
     {
       "skill": "bieterbrief-verarbeitung",
@@ -2613,7 +2690,15 @@ window.WORKFLOW_DATA = {
       "type": "phantom_read",
       "severity": "medium",
       "resource": "GDrive Projektordner",
-      "detail": "Notion listet Read auf 'GDrive Projektordner', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+      "detail": "Notion listet Read auf 'GDrive Projektordner', Scanner keine Evidence"
+    },
+    {
+      "skill": "bieterbrief-verarbeitung",
+      "skill_id": "E-01",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "hinweise.json",
+      "detail": "Notion listet Read auf 'hinweise.json', Scanner keine Evidence"
     },
     {
       "skill": "bieterbrief-verarbeitung",
@@ -2621,7 +2706,7 @@ window.WORKFLOW_DATA = {
       "type": "phantom_read",
       "severity": "medium",
       "resource": "Datanorm-Preise",
-      "detail": "Notion listet Read auf 'Datanorm-Preise', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+      "detail": "Notion listet Read auf 'Datanorm-Preise', Scanner keine Evidence"
     },
     {
       "skill": "bieterbrief-verarbeitung",
@@ -2634,18 +2719,10 @@ window.WORKFLOW_DATA = {
     {
       "skill": "gh-verhandlung",
       "skill_id": "E-02",
-      "type": "direction_mismatch",
-      "severity": "high",
-      "resource": "workflow_state.md",
-      "detail": "Code liest 'workflow_state.md', Notion dokumentiert als Write"
-    },
-    {
-      "skill": "gh-verhandlung",
-      "skill_id": "E-02",
       "type": "phantom_read",
       "severity": "medium",
       "resource": "GSheet Kalkulation",
-      "detail": "Notion listet Read auf 'GSheet Kalkulation', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+      "detail": "Notion listet Read auf 'GSheet Kalkulation', Scanner keine Evidence"
     }
   ],
   "composite_skill_check": {
@@ -2693,440 +2770,13 @@ window.WORKFLOW_DATA = {
       "matching.json",
       "workflow_state.md"
     ],
-    "note": "Composite Skill ruft Sub-Skills ueber Sub-Agent auf, scannt selbst nur SKILL.md. Erwartete Union ist informativ."
+    "note": "Composite Skill ruft Sub-Skills per Sub-Agent, scannt selbst nur SKILL.md. Erwartete Union ist informativ."
   },
   "script_index": [
     {
-      "name": "angebots_auswertung.py",
-      "path": "scripts/angebots_auswertung.py",
-      "role": "shared",
-      "used_by_skills": [
-        "angebots-auswertung"
-      ],
-      "imported_by_scripts": [
-        "evaluate_gh_scope.py",
-        "gsheet_quality_gate.py",
-        "read_from_gsheet.py",
-        "read_konsolidierung_data.py",
-        "write_gh_vergleich.py",
-        "write_master_tabs.py",
-        "write_scope_results.py",
-        "write_sg_vergleich.py",
-        "write_uebergabe_sheet.py"
-      ],
-      "imports": [
-        "gsheet_retry.py",
-        "oz_normalizer.py"
-      ],
-      "total_dependents": 11
-    },
-    {
-      "name": "attach_drafts.py",
-      "path": "scripts/attach_drafts.py",
-      "role": "shared",
-      "used_by_skills": [
-        "material-anfragen",
-        "lieferanten-absage"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 2
-    },
-    {
-      "name": "bieterbrief_excel_filler.py",
-      "path": "scripts/bieterbrief_excel_filler.py",
-      "role": "main",
-      "used_by_skills": [
-        "bieterbrief-verarbeitung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [
-        "oz_normalizer.py"
-      ],
-      "total_dependents": 1
-    },
-    {
-      "name": "bieterbrief_gsheet_writer.py",
-      "path": "scripts/bieterbrief_gsheet_writer.py",
-      "role": "main",
-      "used_by_skills": [
-        "bieterbrief-verarbeitung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 0
-    },
-    {
-      "name": "bieterbrief_parser.py",
-      "path": "scripts/bieterbrief_parser.py",
-      "role": "main",
-      "used_by_skills": [
-        "bieterbrief-verarbeitung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [
-        "oz_normalizer.py"
-      ],
-      "total_dependents": 1
-    },
-    {
-      "name": "build_template.py",
-      "path": "scripts/build_template.py",
-      "role": "main",
-      "used_by_skills": [
-        "vorab-kalkulation"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 1
-    },
-    {
-      "name": "drive_file_index.py",
-      "path": "scripts/drive_file_index.py",
-      "role": "shared",
-      "used_by_skills": [
-        "projekt-erfassung",
-        "nachreichung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 2
-    },
-    {
-      "name": "email_intake.py",
-      "path": "scripts/email_intake.py",
-      "role": "main",
-      "used_by_skills": [
-        "inbox-scan"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 1
-    },
-    {
-      "name": "filename_normalizer.py",
-      "path": "scripts/filename_normalizer.py",
-      "role": "main",
-      "used_by_skills": [
-        "nachreichung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 0
-    },
-    {
-      "name": "gaeb_to_excel.py",
-      "path": "scripts/gaeb_to_excel.py",
-      "role": "shared",
-      "used_by_skills": [
-        "projekt-erfassung",
-        "template-anwendung",
-        "projekt-erfassung-light"
-      ],
-      "imported_by_scripts": [
-        "final_kalkulation.py",
-        "gaeb_to_pdf.py"
-      ],
-      "imports": [],
-      "total_dependents": 4
-    },
-    {
-      "name": "gaeb_to_pdf.py",
-      "path": "scripts/gaeb_to_pdf.py",
-      "role": "main",
-      "used_by_skills": [
-        "projekt-erfassung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [
-        "gaeb_to_excel.py"
-      ],
-      "total_dependents": 2
-    },
-    {
-      "name": "gsheet_auth_setup.py",
-      "path": "scripts/gsheet_auth_setup.py",
-      "role": "main",
-      "used_by_skills": [
-        "template-anwendung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 1
-    },
-    {
-      "name": "gsheet_config.json",
-      "path": "scripts/gsheet_config.json",
-      "role": "shared",
-      "used_by_skills": [
-        "material-anfragen",
-        "angebotserstellung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 0
-    },
-    {
-      "name": "gsheet_formatting.py",
-      "path": "scripts/gsheet_formatting.py",
-      "role": "shared",
-      "used_by_skills": [
-        "material-konsolidierung"
-      ],
-      "imported_by_scripts": [
-        "evaluate_gh_scope.py",
-        "write_gh_vergleich.py",
-        "write_master_tabs.py",
-        "write_scope_results.py",
-        "write_sg_vergleich.py",
-        "write_uebergabe_sheet.py"
-      ],
-      "imports": [],
-      "total_dependents": 7
-    },
-    {
-      "name": "gsheet_quality_gate.py",
-      "path": "scripts/gsheet_quality_gate.py",
-      "role": "main",
-      "used_by_skills": [],
-      "imported_by_scripts": [
-        "write_master_tabs.py"
-      ],
-      "imports": [
-        "angebots_auswertung.py"
-      ],
-      "total_dependents": 1
-    },
-    {
-      "name": "gsheet_retry.py",
-      "path": "scripts/gsheet_retry.py",
-      "role": "shared",
-      "used_by_skills": [],
-      "imported_by_scripts": [
-        "angebots_auswertung.py",
-        "read_konsolidierung_data.py",
-        "write_gh_vergleich.py",
-        "write_lieferant_tab.py",
-        "write_master_tabs.py",
-        "write_sg_vergleich.py",
-        "write_uebergabe_sheet.py"
-      ],
-      "imports": [],
-      "total_dependents": 7
-    },
-    {
-      "name": "hinweis_extraktion.py",
-      "path": "scripts/hinweis_extraktion.py",
-      "role": "main",
-      "used_by_skills": [
-        "hinweis-extraktion"
-      ],
-      "imported_by_scripts": [
-        "kalk_typ_classifier.py"
-      ],
-      "imports": [],
-      "total_dependents": 2
-    },
-    {
-      "name": "inbox_scanner.py",
-      "path": "scripts/inbox_scanner.py",
-      "role": "main",
-      "used_by_skills": [
-        "inbox-scan"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 1
-    },
-    {
-      "name": "kalk_typ_classifier.py",
-      "path": "scripts/kalk_typ_classifier.py",
-      "role": "shared",
-      "used_by_skills": [
-        "vorab-kalkulation"
-      ],
-      "imported_by_scripts": [
-        "vorab_kalk_validator.py",
-        "vorab_matching.py"
-      ],
-      "imports": [
-        "hinweis_extraktion.py"
-      ],
-      "total_dependents": 3
-    },
-    {
-      "name": "kalkulations_analyse.py",
-      "path": "scripts/kalkulations_analyse.py",
-      "role": "main",
-      "used_by_skills": [
-        "kalkulations-analyse"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 1
-    },
-    {
-      "name": "l1_mapper.py",
-      "path": "scripts/l1_mapper.py",
-      "role": "main",
-      "used_by_skills": [
-        "projekt-erfassung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 0
-    },
-    {
-      "name": "oz_matcher.py",
-      "path": "scripts/oz_matcher.py",
-      "role": "main",
-      "used_by_skills": [
-        "angebots-auswertung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [
-        "oz_normalizer.py"
-      ],
-      "total_dependents": 1
-    },
-    {
-      "name": "oz_normalizer.py",
-      "path": "scripts/oz_normalizer.py",
-      "role": "shared",
-      "used_by_skills": [
-        "angebots-auswertung",
-        "bieterbrief-verarbeitung",
-        "projekt-erfassung-light"
-      ],
-      "imported_by_scripts": [
-        "angebots_auswertung.py",
-        "bieterbrief_excel_filler.py",
-        "bieterbrief_parser.py",
-        "evaluate_gh_scope.py",
-        "evaluate_sg_scope.py",
-        "final_kalkulation.py",
-        "final_to_gsheet.py",
-        "lv_schema_validator.py",
-        "oz_matcher.py",
-        "read_from_gsheet.py",
-        "read_konsolidierung_data.py",
-        "update_matrix.py",
-        "vorab_gsheet_writer.py",
-        "write_lieferant_tab.py",
-        "write_master_tabs.py",
-        "write_sg_vergleich.py"
-      ],
-      "imports": [],
-      "total_dependents": 18
-    },
-    {
-      "name": "qs_module.py",
-      "path": "scripts/qs_module.py",
-      "role": "main",
-      "used_by_skills": [
-        "angebots-auswertung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 0
-    },
-    {
-      "name": "read_konsolidierung_data.py",
-      "path": "scripts/read_konsolidierung_data.py",
-      "role": "main",
-      "used_by_skills": [
-        "material-konsolidierung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [
-        "angebots_auswertung.py",
-        "gsheet_retry.py",
-        "oz_normalizer.py"
-      ],
-      "total_dependents": 1
-    },
-    {
-      "name": "skill_completion_check.py",
-      "path": "scripts/skill_completion_check.py",
-      "role": "shared",
-      "used_by_skills": [
-        "template-anwendung",
-        "hinweis-extraktion",
-        "vorab-kalkulation",
-        "angebots-auswertung",
-        "material-konsolidierung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 0
-    },
-    {
-      "name": "template_anwendung.py",
-      "path": "scripts/template_anwendung.py",
-      "role": "main",
-      "used_by_skills": [
-        "template-anwendung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 1
-    },
-    {
-      "name": "vorab_aggregation.py",
-      "path": "scripts/vorab_aggregation.py",
-      "role": "main",
-      "used_by_skills": [
-        "vorab-kalkulation"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 1
-    },
-    {
-      "name": "vorab_gsheet_writer.py",
-      "path": "scripts/vorab_gsheet_writer.py",
-      "role": "main",
-      "used_by_skills": [
-        "vorab-kalkulation"
-      ],
-      "imported_by_scripts": [],
-      "imports": [
-        "oz_normalizer.py"
-      ],
-      "total_dependents": 1
-    },
-    {
-      "name": "vorab_kalk_validator.py",
-      "path": "scripts/vorab_kalk_validator.py",
-      "role": "main",
-      "used_by_skills": [
-        "vorab-kalkulation"
-      ],
-      "imported_by_scripts": [],
-      "imports": [
-        "kalk_typ_classifier.py"
-      ],
-      "total_dependents": 1
-    },
-    {
-      "name": "vorab_matching.py",
-      "path": "scripts/vorab_matching.py",
-      "role": "shared",
-      "used_by_skills": [
-        "vorab-kalkulation",
-        "bieterbrief-verarbeitung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [
-        "kalk_typ_classifier.py"
-      ],
-      "total_dependents": 2
-    },
-    {
       "name": "workflow_state.py",
       "path": "scripts/workflow_state.py",
-      "role": "shared",
-      "used_by_skills": [
+      "dependents": [
         "projekt-erfassung",
         "nachreichung",
         "template-anwendung",
@@ -3145,105 +2795,391 @@ window.WORKFLOW_DATA = {
         "uebergabe-sheet",
         "projekt-erfassung-light"
       ],
-      "imported_by_scripts": [
-        "test_workflow_state.py"
+      "total_dependents": 17
+    },
+    {
+      "name": "skill_completion_check.py",
+      "path": "scripts/skill_completion_check.py",
+      "dependents": [
+        "template-anwendung",
+        "hinweis-extraktion",
+        "vorab-kalkulation",
+        "angebots-auswertung",
+        "material-konsolidierung"
       ],
-      "imports": [],
-      "total_dependents": 16
+      "total_dependents": 5
+    },
+    {
+      "name": "gaeb_to_excel.py",
+      "path": "scripts/gaeb_to_excel.py",
+      "dependents": [
+        "projekt-erfassung",
+        "template-anwendung",
+        "projekt-erfassung-light"
+      ],
+      "total_dependents": 3
+    },
+    {
+      "name": "oz_normalizer.py",
+      "path": "scripts/oz_normalizer.py",
+      "dependents": [
+        "angebots-auswertung",
+        "bieterbrief-verarbeitung",
+        "projekt-erfassung-light"
+      ],
+      "total_dependents": 3
+    },
+    {
+      "name": "attach_drafts.py",
+      "path": "scripts/attach_drafts.py",
+      "dependents": [
+        "material-anfragen",
+        "lieferanten-absage"
+      ],
+      "total_dependents": 2
+    },
+    {
+      "name": "drive_file_index.py",
+      "path": "scripts/drive_file_index.py",
+      "dependents": [
+        "projekt-erfassung",
+        "nachreichung"
+      ],
+      "total_dependents": 2
+    },
+    {
+      "name": "vorab_matching.py",
+      "path": "scripts/vorab_matching.py",
+      "dependents": [
+        "vorab-kalkulation",
+        "bieterbrief-verarbeitung"
+      ],
+      "total_dependents": 2
+    },
+    {
+      "name": "angebots_auswertung.py",
+      "path": "scripts/angebots_auswertung.py",
+      "dependents": [
+        "angebots-auswertung"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "bieterbrief_excel_filler.py",
+      "path": "scripts/bieterbrief_excel_filler.py",
+      "dependents": [
+        "bieterbrief-verarbeitung"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "bieterbrief_parser.py",
+      "path": "scripts/bieterbrief_parser.py",
+      "dependents": [
+        "bieterbrief-verarbeitung"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "build_template.py",
+      "path": "scripts/build_template.py",
+      "dependents": [
+        "vorab-kalkulation"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "email_intake.py",
+      "path": "scripts/email_intake.py",
+      "dependents": [
+        "inbox-scan"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "filename_normalizer.py",
+      "path": "scripts/filename_normalizer.py",
+      "dependents": [
+        "nachreichung"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "gaeb_to_pdf.py",
+      "path": "scripts/gaeb_to_pdf.py",
+      "dependents": [
+        "projekt-erfassung"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "gsheet_auth_setup.py",
+      "path": "scripts/gsheet_auth_setup.py",
+      "dependents": [
+        "template-anwendung"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "gsheet_formatting.py",
+      "path": "scripts/gsheet_formatting.py",
+      "dependents": [
+        "material-konsolidierung"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "hinweis_extraktion.py",
+      "path": "scripts/hinweis_extraktion.py",
+      "dependents": [
+        "hinweis-extraktion"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "inbox_scanner.py",
+      "path": "scripts/inbox_scanner.py",
+      "dependents": [
+        "inbox-scan"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "kalk_typ_classifier.py",
+      "path": "scripts/kalk_typ_classifier.py",
+      "dependents": [
+        "vorab-kalkulation"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "kalkulations_analyse.py",
+      "path": "scripts/kalkulations_analyse.py",
+      "dependents": [
+        "kalkulations-analyse"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "l1_mapper.py",
+      "path": "scripts/l1_mapper.py",
+      "dependents": [
+        "projekt-erfassung"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "oz_matcher.py",
+      "path": "scripts/oz_matcher.py",
+      "dependents": [
+        "angebots-auswertung"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "qs_module.py",
+      "path": "scripts/qs_module.py",
+      "dependents": [
+        "angebots-auswertung"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "read_konsolidierung_data.py",
+      "path": "scripts/read_konsolidierung_data.py",
+      "dependents": [
+        "material-konsolidierung"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "template_anwendung.py",
+      "path": "scripts/template_anwendung.py",
+      "dependents": [
+        "template-anwendung"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "vorab_aggregation.py",
+      "path": "scripts/vorab_aggregation.py",
+      "dependents": [
+        "vorab-kalkulation"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "vorab_gsheet_writer.py",
+      "path": "scripts/vorab_gsheet_writer.py",
+      "dependents": [
+        "vorab-kalkulation"
+      ],
+      "total_dependents": 1
+    },
+    {
+      "name": "vorab_kalk_validator.py",
+      "path": "scripts/vorab_kalk_validator.py",
+      "dependents": [
+        "vorab-kalkulation"
+      ],
+      "total_dependents": 1
     },
     {
       "name": "write_gh_vergleich.py",
       "path": "scripts/write_gh_vergleich.py",
-      "role": "main",
-      "used_by_skills": [
+      "dependents": [
         "material-konsolidierung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [
-        "angebots_auswertung.py",
-        "gsheet_formatting.py",
-        "gsheet_retry.py"
       ],
       "total_dependents": 1
     },
     {
       "name": "write_lieferant_tab.py",
       "path": "scripts/write_lieferant_tab.py",
-      "role": "main",
-      "used_by_skills": [
+      "dependents": [
         "angebots-auswertung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [
-        "gsheet_retry.py",
-        "oz_normalizer.py"
       ],
       "total_dependents": 1
     },
     {
       "name": "write_master_tabs.py",
       "path": "scripts/write_master_tabs.py",
-      "role": "main",
-      "used_by_skills": [
+      "dependents": [
         "material-konsolidierung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [
-        "angebots_auswertung.py",
-        "gsheet_formatting.py",
-        "gsheet_quality_gate.py",
-        "gsheet_retry.py",
-        "oz_normalizer.py"
       ],
       "total_dependents": 1
     },
     {
       "name": "write_scope_results.py",
       "path": "scripts/write_scope_results.py",
-      "role": "main",
-      "used_by_skills": [
+      "dependents": [
         "material-konsolidierung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [
-        "angebots_auswertung.py",
-        "gsheet_formatting.py"
       ],
       "total_dependents": 1
     },
     {
       "name": "write_sg_vergleich.py",
       "path": "scripts/write_sg_vergleich.py",
-      "role": "main",
-      "used_by_skills": [
+      "dependents": [
         "material-konsolidierung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [
-        "angebots_auswertung.py",
-        "gsheet_formatting.py",
-        "gsheet_retry.py",
-        "oz_normalizer.py"
       ],
       "total_dependents": 1
     },
     {
       "name": "write_uebergabe_sheet.py",
       "path": "scripts/write_uebergabe_sheet.py",
-      "role": "main",
-      "used_by_skills": [
+      "dependents": [
         "uebergabe-sheet"
       ],
-      "imported_by_scripts": [],
-      "imports": [
-        "angebots_auswertung.py",
-        "gsheet_formatting.py",
-        "gsheet_retry.py"
-      ],
       "total_dependents": 1
+    },
+    {
+      "name": "_skill_lock.py",
+      "path": "scripts/_skill_lock.py",
+      "dependents": [],
+      "total_dependents": 0
+    },
+    {
+      "name": "convert_p83_to_x83.py",
+      "path": "scripts/convert_p83_to_x83.py",
+      "dependents": [],
+      "total_dependents": 0
+    },
+    {
+      "name": "datanorm_update.py",
+      "path": "scripts/datanorm_update.py",
+      "dependents": [],
+      "total_dependents": 0
+    },
+    {
+      "name": "evaluate_gh_scope.py",
+      "path": "scripts/evaluate_gh_scope.py",
+      "dependents": [],
+      "total_dependents": 0
+    },
+    {
+      "name": "evaluate_sg_scope.py",
+      "path": "scripts/evaluate_sg_scope.py",
+      "dependents": [],
+      "total_dependents": 0
+    },
+    {
+      "name": "gaeb2000_convert.py",
+      "path": "scripts/gaeb2000_convert.py",
+      "dependents": [],
+      "total_dependents": 0
+    },
+    {
+      "name": "gsheet_quality_gate.py",
+      "path": "scripts/gsheet_quality_gate.py",
+      "dependents": [],
+      "total_dependents": 0
+    },
+    {
+      "name": "gsheet_retry.py",
+      "path": "scripts/gsheet_retry.py",
+      "dependents": [],
+      "total_dependents": 0
+    },
+    {
+      "name": "hinweis_bewertung_aggregator.py",
+      "path": "scripts/hinweis_bewertung_aggregator.py",
+      "dependents": [],
+      "total_dependents": 0
+    },
+    {
+      "name": "lv_schema_validator.py",
+      "path": "scripts/lv_schema_validator.py",
+      "dependents": [],
+      "total_dependents": 0
+    },
+    {
+      "name": "setup_check.py",
+      "path": "scripts/setup_check.py",
+      "dependents": [],
+      "total_dependents": 0
+    },
+    {
+      "name": "sheets_batch.py",
+      "path": "scripts/sheets_batch.py",
+      "dependents": [],
+      "total_dependents": 0
+    },
+    {
+      "name": "sync_notion_db.py",
+      "path": "scripts/sync_notion_db.py",
+      "dependents": [],
+      "total_dependents": 0
+    },
+    {
+      "name": "test_workflow_state.py",
+      "path": "scripts/test_workflow_state.py",
+      "dependents": [],
+      "total_dependents": 0
+    },
+    {
+      "name": "update_matrix.py",
+      "path": "scripts/update_matrix.py",
+      "dependents": [],
+      "total_dependents": 0
     }
   ],
-  "orphaned_scripts": [],
+  "orphaned_scripts": [
+    "_skill_lock.py",
+    "convert_p83_to_x83.py",
+    "datanorm_update.py",
+    "evaluate_gh_scope.py",
+    "evaluate_sg_scope.py",
+    "gaeb2000_convert.py",
+    "gsheet_quality_gate.py",
+    "gsheet_retry.py",
+    "hinweis_bewertung_aggregator.py",
+    "lv_schema_validator.py",
+    "setup_check.py",
+    "sheets_batch.py",
+    "sync_notion_db.py",
+    "test_workflow_state.py",
+    "update_matrix.py"
+  ],
   "claude_md_drift": {
     "status": "drift",
     "checks": [
@@ -3263,7 +3199,7 @@ window.WORKFLOW_DATA = {
         "detail": "Alle 4 Fach-Referenzen existieren"
       },
       {
-        "check": "skills_folder_vs_notion",
+        "check": "skills_folder_vs_repo_state",
         "result": "drift",
         "detail": "Ordner existiert, aber nicht in repo_state: notion-sync"
       },
