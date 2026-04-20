@@ -93,13 +93,31 @@
 
 <script>
 window.WORKFLOW_DATA = {
-  "generated_at": "2026-04-19T19:32:19Z",
-  "generated_by": "workflow-validation",
-  "validation_status": "drift",
-  "issues_count": 115,
+  "generated_at": "2026-04-20T13:07:12Z",
+  "generated_by": "workflow-validation (Phase 2-4 via Subagent)",
+  "validation_status": "has_issues",
+  "issues_count": 75,
+  "issues_by_severity": {
+    "critical": 3,
+    "high": 16,
+    "medium": 56,
+    "low": 0
+  },
   "scan_mode": "full",
-  "skills_scanned": 19,
+  "skills_scanned": 14,
   "skills_cached": 0,
+  "skills_total_in_repo_state": 22,
+  "skills_not_scanned": [
+    "lieferanten-absage",
+    "projekt-erfassung-light",
+    "projekt-zusammenfassung",
+    "sg-vergleich",
+    "uebergabe",
+    "uebergabe-sheet",
+    "workflow-analyse",
+    "workflow-validation"
+  ],
+  "notion_relations_source": "Proxy: docs/workflow-data.json (2026-04-19). Notion MCP nicht live gefetched (Kostenoptimierung).",
   "blocks": [
     {
       "id": "A",
@@ -111,10 +129,8 @@ window.WORKFLOW_DATA = {
       ],
       "skills": [
         "A-01",
-        "A-02",
-        "G-01"
-      ],
-      "notion_page_id": "3259da66-ff7a-815e-a50b-fa32856808f9"
+        "A-02"
+      ]
     },
     {
       "id": "B",
@@ -129,9 +145,8 @@ window.WORKFLOW_DATA = {
         "B-02",
         "B-03",
         "B-01->03",
-        "G-01"
-      ],
-      "notion_page_id": "3259da66-ff7a-81cf-a314-cb2608b5e0b9"
+        ""
+      ]
     },
     {
       "id": "C",
@@ -146,8 +161,7 @@ window.WORKFLOW_DATA = {
         "C-03",
         "C-05",
         "C-06"
-      ],
-      "notion_page_id": "3259da66-ff7a-814f-8718-eb3ada6b5771"
+      ]
     },
     {
       "id": "D",
@@ -160,8 +174,7 @@ window.WORKFLOW_DATA = {
       "skills": [
         "D-01",
         "D-02"
-      ],
-      "notion_page_id": "3259da66-ff7a-8185-8ddd-c49f906f0dd9"
+      ]
     },
     {
       "id": "E",
@@ -172,10 +185,8 @@ window.WORKFLOW_DATA = {
       ],
       "skills": [
         "E-01",
-        "E-02",
-        "G-01"
-      ],
-      "notion_page_id": "3259da66-ff7a-815e-ab79-d48e52b7e3fb"
+        "E-02"
+      ]
     },
     {
       "id": "F",
@@ -184,8 +195,7 @@ window.WORKFLOW_DATA = {
       "spuren": [],
       "skills": [
         "F-01"
-      ],
-      "notion_page_id": "33d9da66-ff7a-8040-8fa0-f14fcdb6b04a"
+      ]
     },
     {
       "id": "G",
@@ -199,8 +209,17 @@ window.WORKFLOW_DATA = {
         "G-01",
         "G-02",
         "G-03"
-      ],
-      "notion_page_id": "33e9da66-ff7a-810e-8c09-d824a21a9ec3"
+      ]
+    },
+    {
+      "id": "INFRA",
+      "name": "Infra: Workflow-Tooling",
+      "order": 99,
+      "spuren": [],
+      "skills": [
+        "INFRA-01",
+        "INFRA-02"
+      ]
     }
   ],
   "skills": [
@@ -210,11 +229,7 @@ window.WORKFLOW_DATA = {
       "slash_command": "/projekt-erfassung",
       "skill_path": ".claude/skills/projekt-erfassung/",
       "key_files": [
-        "SKILL.md",
-        "dokumenten-db.md",
-        "notion-felder.md",
-        "projekt-ordner.md",
-        "referenz-matching.md"
+        "SKILL.md"
       ],
       "block": "A",
       "status": "live",
@@ -223,13 +238,49 @@ window.WORKFLOW_DATA = {
         "B"
       ],
       "reads": [
+        "GAEB-Quelldateien (X83/D83)",
+        "GDrive Projektordner",
+        "MaterialAnfragen DB",
+        "Notion DB Snapshots",
+        "Notion Dokumenten-DB (Inline)",
+        "Projekt-DB",
+        "Referenz-LV",
+        "hinweise.json",
+        "matching.json",
+        "workflow_state.md"
+      ],
+      "writes": [
+        "Angebots-Abgabe (X84/PDF)",
+        "GDrive Projektordner",
+        "Notion Dokumenten-DB (Inline)",
+        "Projekt-DB",
+        "workflow_state.md"
+      ],
+      "code_reads": [
+        "workflow_state.md",
+        "hinweise.json",
+        "matching.json",
+        "Projekt-DB",
+        "MaterialAnfragen DB",
+        "Notion Dokumenten-DB (Inline)",
+        "GDrive Projektordner",
+        "GAEB-Quelldateien (X83/D83)",
+        "Referenz-LV",
+        "Notion DB Snapshots"
+      ],
+      "code_writes": [
+        "Projekt-DB",
+        "GDrive Projektordner",
+        "Angebots-Abgabe (X84/PDF)"
+      ],
+      "notion_reads": [
         "GDrive Projektordner",
         "GAEB-Quelldateien (X83/D83)",
         "Notion DB Snapshots",
         "Projekt-DB",
         "Referenz-LV"
       ],
-      "writes": [
+      "notion_writes": [
         "workflow_state.md",
         "Projekt-DB",
         "Notion Dokumenten-DB (Inline)",
@@ -237,27 +288,20 @@ window.WORKFLOW_DATA = {
       ],
       "predecessors": [],
       "successors": [
-        "B-01",
-        "B-01->03"
+        "B-01"
       ],
       "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Neues Projekt vom unsortiertem Projektordner bis zum fertigen Notion-Eintrag, Dokumenten-DB und bereinigter Ordnerstruktur.",
-      "notion_page_id": "3259da66-ff7a-81cd-b212-ddf05086ab48",
+      "summary": "Neues Projekt vom unsortiertem Projektordner bis zum fertigen Notion-Eintrag und bereinigter Ordnerstruktur.",
+      "description": "Neues Projekt erfassen und aufbereiten. Dateien sichten, Dokument-Klassifizierung, LV-Schnellanalyse, Quick-Scan, Steckbrief, Empfehlung, Notion-Eintrag, Dokumenten-DB (Notion Inline), Ordnerstruktur. Trigger bei neuem Projektordner.",
       "scripts": [
-        "workflow_state.py",
+        "drive_file_index.py",
         "gaeb_to_excel.py",
         "gaeb_to_pdf.py",
-        "drive_file_index.py"
+        "l1_mapper.py",
+        "workflow_state.py"
       ],
-      "data_files": [
-        {
-          "name": "l1_result.json",
-          "path": "l1_result.json",
-          "written_by": "skill",
-          "read_by": []
-        }
-      ]
+      "data_files": [],
+      "scanned": true
     },
     {
       "id": "A-02",
@@ -268,27 +312,49 @@ window.WORKFLOW_DATA = {
         "SKILL.md"
       ],
       "block": "A",
-      "status": "live",
+      "status": "beta",
       "spuren": [],
       "reads": [
         "GDrive Projektordner",
+        "Notion Dokumenten-DB (Inline)",
+        "Projekt-DB",
+        "hinweise.json",
         "workflow_state.md"
       ],
       "writes": [
         "Notion Dokumenten-DB (Inline)",
         "workflow_state.md"
       ],
+      "code_reads": [
+        "workflow_state.md",
+        "hinweise.json",
+        "Projekt-DB",
+        "Notion Dokumenten-DB (Inline)",
+        "GDrive Projektordner"
+      ],
+      "code_writes": [
+        "Notion Dokumenten-DB (Inline)"
+      ],
+      "notion_reads": [
+        "GDrive Projektordner",
+        "workflow_state.md"
+      ],
+      "notion_writes": [
+        "Notion Dokumenten-DB (Inline)",
+        "workflow_state.md"
+      ],
       "predecessors": [],
       "successors": [],
       "validation_status": "drift",
-      "validation": "drift",
       "summary": "Neue Dokumente im Projektordner erkennen und in der Notion Dokumenten-DB erfassen.",
-      "notion_page_id": "3369da66-ff7a-815f-ad9e-e4c756ef218e",
+      "description": "Neue oder aktualisierte Dokumente im Projektordner erkennen, klassifizieren und in die Notion Dokumenten-DB eintragen. Trigger bei AG-Nachreichungen oder neuen Unterlagen.",
       "scripts": [
         "drive_file_index.py",
+        "filename_normalizer.py",
         "workflow_state.py"
       ],
-      "data_files": []
+      "data_files": [],
+      "scanned": true
     },
     {
       "id": "B-01",
@@ -306,10 +372,33 @@ window.WORKFLOW_DATA = {
       ],
       "reads": [
         "GAEB-Quelldateien (X83/D83)",
+        "GDrive Projektordner",
+        "GSheet Kalkulation",
+        "hinweise.json",
+        "workflow_state.md"
+      ],
+      "writes": [
+        "GSheet Kalkulation",
+        "hinweise.json",
+        "workflow_state.md"
+      ],
+      "code_reads": [
+        "workflow_state.md",
+        "hinweise.json",
+        "GSheet Kalkulation",
+        "GDrive Projektordner",
+        "GAEB-Quelldateien (X83/D83)"
+      ],
+      "code_writes": [
+        "hinweise.json",
+        "GSheet Kalkulation"
+      ],
+      "notion_reads": [
+        "GAEB-Quelldateien (X83/D83)",
         "workflow_state.md",
         "GSheet Kalkulation"
       ],
-      "writes": [
+      "notion_writes": [
         "GSheet Kalkulation",
         "workflow_state.md"
       ],
@@ -320,16 +409,17 @@ window.WORKFLOW_DATA = {
         "B-02"
       ],
       "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Liest die GAEB-Excel und erstellt eine Kopie des GSheet-Templates mit allen LV-Daten.",
-      "notion_page_id": "3259da66-ff7a-81bd-9a0c-f6dfaa983a12",
+      "summary": "Liest die GAEB-Excel aus dem Projektordner und erstellt eine Kopie des GSheet-Templates mit allen LV-Daten. Ergebnis: Ein Google Sheet bereit fuer /hinweis-extraktion.",
+      "description": "LV-Import: GAEB-Excel lesen, GSheet-Template kopieren, LV-Daten importieren. Erstellt die Kalkulationsdatei als Google Sheet. Trigger nach /projekt-erfassung.",
       "scripts": [
-        "workflow_state.py",
         "gaeb_to_excel.py",
+        "gsheet_auth_setup.py",
+        "skill_completion_check.py",
         "template_anwendung.py",
-        "gsheet_auth_setup.py"
+        "workflow_state.py"
       ],
-      "data_files": []
+      "data_files": [],
+      "scanned": true
     },
     {
       "id": "B-02",
@@ -346,10 +436,30 @@ window.WORKFLOW_DATA = {
         "B"
       ],
       "reads": [
+        "GDrive Projektordner",
         "GSheet Kalkulation",
+        "hinweise.json",
         "workflow_state.md"
       ],
       "writes": [
+        "GSheet Kalkulation",
+        "hinweise.json",
+        "workflow_state.md"
+      ],
+      "code_reads": [
+        "workflow_state.md",
+        "hinweise.json",
+        "GSheet Kalkulation",
+        "GDrive Projektordner"
+      ],
+      "code_writes": [
+        "GSheet Kalkulation"
+      ],
+      "notion_reads": [
+        "GSheet Kalkulation",
+        "workflow_state.md"
+      ],
+      "notion_writes": [
         "GSheet Kalkulation",
         "hinweise.json",
         "workflow_state.md"
@@ -361,14 +471,15 @@ window.WORKFLOW_DATA = {
         "B-03"
       ],
       "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Mechanische Fakten-Extraktion per Python-Script. Regex auf GSheet, Ergebnis in Tabs + JSON.",
-      "notion_page_id": "3259da66-ff7a-8128-8ee3-e5b0b8265f84",
+      "summary": "Mechanische Fakten-Extraktion per Python-Script. Liest das GSheet aus B-01, extrahiert per Regex und schreibt in 3 Tabs + JSON. Reine Fakten - keine Klassifikation (L3, Kalk-Typ ausser Demontage).",
+      "description": "Fakten-Extraktion: Demontage, Herstellerbindung, Kontakte, Artikelnummern, Kabel, Risiken per Regex aus LV extrahieren. Trigger nach /template-anwendung.",
       "scripts": [
-        "workflow_state.py",
-        "hinweis_extraktion.py"
+        "hinweis_extraktion.py",
+        "skill_completion_check.py",
+        "workflow_state.py"
       ],
-      "data_files": []
+      "data_files": [],
+      "scanned": true
     },
     {
       "id": "B-03",
@@ -385,6 +496,44 @@ window.WORKFLOW_DATA = {
         "B"
       ],
       "reads": [
+        "Datanorm-Preise",
+        "GDrive Projektordner",
+        "GSheet Kalkulation",
+        "KFE-Katalog",
+        "MaterialAnfragen DB",
+        "Notion DB Snapshots",
+        "Projekt-DB",
+        "Referenz-LV",
+        "TAWO-Stundensaetze",
+        "hinweise.json",
+        "matching.json",
+        "workflow_state.md"
+      ],
+      "writes": [
+        "GSheet Kalkulation",
+        "hinweise.json",
+        "matching.json",
+        "workflow_state.md"
+      ],
+      "code_reads": [
+        "workflow_state.md",
+        "hinweise.json",
+        "matching.json",
+        "GSheet Kalkulation",
+        "Projekt-DB",
+        "MaterialAnfragen DB",
+        "GDrive Projektordner",
+        "KFE-Katalog",
+        "Datanorm-Preise",
+        "TAWO-Stundensaetze",
+        "Notion DB Snapshots"
+      ],
+      "code_writes": [
+        "workflow_state.md",
+        "hinweise.json",
+        "matching.json"
+      ],
+      "notion_reads": [
         "GSheet Kalkulation",
         "hinweise.json",
         "Referenz-LV",
@@ -392,52 +541,34 @@ window.WORKFLOW_DATA = {
         "Datanorm-Preise",
         "TAWO-Stundensaetze"
       ],
-      "writes": [
+      "notion_writes": [
         "GSheet Kalkulation",
         "matching.json",
         "workflow_state.md"
       ],
       "predecessors": [
+        "B-01",
         "B-02"
       ],
       "successors": [
         "C-01",
-        "C-03",
         "D-01"
       ],
       "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Vorab-Schaetzung aller LV-Positionen: L3, Kalk-Typ, Lohn, Material, Sub. Subagent-Architektur.",
-      "notion_page_id": "3259da66-ff7a-8122-94c0-d624bc69a0cb",
+      "summary": "Komplette Vorab-Schaetzung aller LV-Positionen: L3-Zuordnung, Kalk-Typ (Lohn/IBN/Material), Lohn-Minuten, Material-EK, Sub-EK. Ergebnis in GSheet Tabs 1.0, 1.1, 1.2, 3.0, 3.1.",
+      "description": "Vorab-Kalkulation: L3-Zuordnung, Kalk-Typ, Lohn, Material, Sub für alle LV-Positionen. Python-Script matched vor, Claude evaluiert batchweise per Subagent. (Block B: B-02)",
       "scripts": [
-        "workflow_state.py",
-        "vorab_matching.py",
+        "build_template.py",
         "kalk_typ_classifier.py",
-        "vorab_kalk_validator.py",
+        "skill_completion_check.py",
         "vorab_aggregation.py",
         "vorab_gsheet_writer.py",
-        "build_template.py"
+        "vorab_kalk_validator.py",
+        "vorab_matching.py",
+        "workflow_state.py"
       ],
-      "data_files": [
-        {
-          "name": "kosten_kategorien.json",
-          "path": "kosten_kategorien.json",
-          "written_by": "skill",
-          "read_by": []
-        },
-        {
-          "name": "kosten_hinweise_projekt.json",
-          "path": "3_Kalkulation/_workflow/kosten_hinweise_projekt.json",
-          "written_by": "skill",
-          "read_by": []
-        },
-        {
-          "name": "vorab_baseline.json",
-          "path": "3_Kalkulation/_workflow/vorab_baseline.json",
-          "written_by": "skill",
-          "read_by": []
-        }
-      ]
+      "data_files": [],
+      "scanned": true
     },
     {
       "id": "B-01->03",
@@ -454,6 +585,27 @@ window.WORKFLOW_DATA = {
         "B"
       ],
       "reads": [
+        "Datanorm-Preise",
+        "GAEB-Quelldateien (X83/D83)",
+        "GSheet Kalkulation",
+        "KFE-Katalog",
+        "Referenz-LV",
+        "TAWO-Stundensaetze",
+        "hinweise.json",
+        "workflow_state.md"
+      ],
+      "writes": [
+        "GSheet Kalkulation",
+        "hinweise.json",
+        "matching.json",
+        "workflow_state.md"
+      ],
+      "code_reads": [
+        "workflow_state.md",
+        "hinweise.json"
+      ],
+      "code_writes": [],
+      "notion_reads": [
         "GAEB-Quelldateien (X83/D83)",
         "workflow_state.md",
         "GSheet Kalkulation",
@@ -463,27 +615,28 @@ window.WORKFLOW_DATA = {
         "TAWO-Stundensaetze",
         "hinweise.json"
       ],
-      "writes": [
+      "notion_writes": [
         "GSheet Kalkulation",
         "workflow_state.md",
         "hinweise.json",
         "matching.json"
       ],
       "predecessors": [
-        "A-01"
+        "A-01",
+        "projekt-erfassung-light"
       ],
       "successors": [
         "C-01",
         "D-01"
       ],
-      "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Block B komplett: B-01, B-02, B-03 ohne Unterbrechung. Composite-Skill â€” Ressourcen sind Union aus B-01+B-02+B-03.",
-      "notion_page_id": "3269da66-ff7a-8061-ad4a-f3acf87d9076",
+      "validation_status": "warn",
+      "summary": "Fuehrt Block B komplett durch: B-01 -> B-02 -> B-03 ohne Unterbrechung.",
+      "description": "Block B komplett: Template-Anwendung, Hinweis-Extraktion und Vorab-Kalkulation in einem Durchlauf.",
       "scripts": [
         "workflow_state.py"
       ],
-      "data_files": []
+      "data_files": [],
+      "scanned": true
     },
     {
       "id": "C-01",
@@ -491,9 +644,7 @@ window.WORKFLOW_DATA = {
       "slash_command": "/material-anfragen",
       "skill_path": ".claude/skills/material-anfragen/",
       "key_files": [
-        "SKILL.md",
-        "anfragen-spalten.md",
-        "anfragen-mail-guidelines.md"
+        "SKILL.md"
       ],
       "block": "C",
       "status": "live",
@@ -501,6 +652,46 @@ window.WORKFLOW_DATA = {
         "A"
       ],
       "reads": [
+        "Anfragen-GSheet (Material)",
+        "GAEB-Quelldateien (X83/D83)",
+        "GDrive Projektordner",
+        "GSheet Kalkulation",
+        "Gmail (Inbox/Drafts)",
+        "MaterialAnfragen DB",
+        "MaterialAnfragen-DB",
+        "Notion DB Snapshots",
+        "Notion Dokumenten-DB (Inline)",
+        "Projekt-DB",
+        "hinweise.json",
+        "matching.json",
+        "workflow_state.md"
+      ],
+      "writes": [
+        "Anfragen-GSheet (Material)",
+        "GSheet Kalkulation",
+        "Gmail (Inbox/Drafts)",
+        "MaterialAnfragen-DB",
+        "workflow_state.md"
+      ],
+      "code_reads": [
+        "workflow_state.md",
+        "hinweise.json",
+        "GSheet Kalkulation",
+        "Anfragen-GSheet (Material)",
+        "Projekt-DB",
+        "MaterialAnfragen DB",
+        "Notion Dokumenten-DB (Inline)",
+        "Gmail (Inbox/Drafts)",
+        "GDrive Projektordner",
+        "GAEB-Quelldateien (X83/D83)",
+        "Notion DB Snapshots"
+      ],
+      "code_writes": [
+        "GSheet Kalkulation",
+        "Anfragen-GSheet (Material)",
+        "Gmail (Inbox/Drafts)"
+      ],
+      "notion_reads": [
         "workflow_state.md",
         "matching.json",
         "Notion DB Snapshots",
@@ -508,37 +699,35 @@ window.WORKFLOW_DATA = {
         "hinweise.json",
         "GSheet Kalkulation"
       ],
-      "writes": [
+      "notion_writes": [
         "Gmail (Inbox/Drafts)",
         "Anfragen-GSheet (Material)",
         "MaterialAnfragen-DB",
         "workflow_state.md"
       ],
       "predecessors": [
-        "B-03",
-        "B-01->03"
+        "B-03"
       ],
       "successors": [
-        "C-02"
+        "C-03"
       ],
       "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Lieferanten-Zuordnung + Gmail-Drafts. 2 Phasen: Kanal-Bestimmung, Kontakte + Briefings.",
-      "notion_page_id": "3259da66-ff7a-8191-813b-d83aacf9404b",
+      "summary": "Kompletter Anfragen-Workflow: Wer liefert was, ueber welchen Kanal? Ergebnis: Anfragen-GSheet (aus Template kopiert), Gmail-Drafts, Notion MaterialAnfragen.",
+      "description": "Lieferanten-Zuordnung + Anfragen-Versand: L3->Kanal->Lieferant->Kontakt->Briefing->Gmail-Drafts->Notion-Tracking. (Block C: C-01 + C-02)",
       "scripts": [
-        "workflow_state.py",
-        "attach_drafts.py"
+        "attach_drafts.py",
+        "gsheet_config.json",
+        "workflow_state.py"
       ],
       "data_files": [
         {
-          "name": "draft_manifest.json",
-          "path": "draft_manifest.json",
-          "written_by": "skill",
-          "read_by": [
-            "attach_drafts.py"
-          ]
+          "name": "draft_manifest.json"
+        },
+        {
+          "name": "inbox_registry.json"
         }
-      ]
+      ],
+      "scanned": true
     },
     {
       "id": "C-02",
@@ -554,11 +743,41 @@ window.WORKFLOW_DATA = {
         "A"
       ],
       "reads": [
+        "GAEB-Quelldateien (X83/D83)",
+        "GDrive Projektordner",
+        "Gmail (Inbox/Drafts)",
+        "MaterialAnfragen DB",
+        "MaterialAnfragen-DB",
+        "Notion DB Snapshots",
+        "Projekt-DB",
+        "matching.json",
+        "workflow_state.md"
+      ],
+      "writes": [
+        "GDrive Projektordner",
+        "Gmail (Inbox/Drafts)",
+        "MaterialAnfragen-DB",
+        "workflow_state.md"
+      ],
+      "code_reads": [
+        "workflow_state.md",
+        "matching.json",
+        "Projekt-DB",
+        "MaterialAnfragen DB",
+        "Gmail (Inbox/Drafts)",
+        "GDrive Projektordner",
+        "GAEB-Quelldateien (X83/D83)",
+        "Notion DB Snapshots"
+      ],
+      "code_writes": [
+        "workflow_state.md"
+      ],
+      "notion_reads": [
         "Gmail (Inbox/Drafts)",
         "MaterialAnfragen-DB",
         "Notion DB Snapshots"
       ],
-      "writes": [
+      "notion_writes": [
         "GDrive Projektordner",
         "MaterialAnfragen-DB",
         "Gmail (Inbox/Drafts)",
@@ -571,28 +790,31 @@ window.WORKFLOW_DATA = {
         "C-03"
       ],
       "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Scannt Gmail nach Materialangeboten, legt in Drive ab, updated Notion.",
-      "notion_page_id": "3339da66-ff7a-8177-acbf-d87c68d1245d",
+      "summary": "Scannt Gmail-Postfach nach eingegangenen Materialangeboten. Erkennt Lieferant + Projekt, legt Anhaenge im richtigen Drive-Ordner ab, setzt Gmail-Label, updated Notion. Scope: Nur Erkennung + Ablage. Kein Parsen der Angebote (das macht /angebots-auswertung).",
+      "description": "Gmail Inbox Scanner: Materialangebote erkennen, in Drive ablegen, Label setzen, Notion updaten. Zwei Modi: Alle Projekte (Batch) oder Einzelprojekt (gezielt).",
       "scripts": [
-        "workflow_state.py",
         "email_intake.py",
-        "inbox_scanner.py"
+        "inbox_scanner.py",
+        "workflow_state.py"
       ],
       "data_files": [
         {
-          "name": "draft_manifest_replies.json",
-          "path": "draft_manifest_replies.json",
-          "written_by": "skill",
-          "read_by": []
+          "name": "inbox_registry.json"
         },
         {
-          "name": "inbox_scan.json",
-          "path": "3_Kalkulation/_workflow/inbox_scan.json",
-          "written_by": "skill",
-          "read_by": []
+          "name": "kontakte_zuordnung.json"
+        },
+        {
+          "name": "draft_manifest_replies.json"
+        },
+        {
+          "name": "processed_messages.json"
+        },
+        {
+          "name": "rename_log.json"
         }
-      ]
+      ],
+      "scanned": true
     },
     {
       "id": "C-03",
@@ -608,13 +830,46 @@ window.WORKFLOW_DATA = {
         "A"
       ],
       "reads": [
+        "Anfragen-GSheet (Material)",
+        "GAEB-Quelldateien (X83/D83)",
+        "GDrive Projektordner",
+        "GSheet Kalkulation",
+        "MaterialAnfragen-DB",
+        "hinweise.json",
+        "matching.json",
+        "workflow_state.md"
+      ],
+      "writes": [
+        "Anfragen-GSheet (Material)",
+        "Angebots-Abgabe (X84/PDF)",
+        "GSheet Kalkulation",
+        "MaterialAnfragen-DB",
+        "matching.json",
+        "workflow_state.md"
+      ],
+      "code_reads": [
+        "workflow_state.md",
+        "hinweise.json",
+        "matching.json",
+        "GSheet Kalkulation",
+        "Anfragen-GSheet (Material)",
+        "GDrive Projektordner",
+        "GAEB-Quelldateien (X83/D83)"
+      ],
+      "code_writes": [
+        "matching.json",
+        "GSheet Kalkulation",
+        "Anfragen-GSheet (Material)",
+        "Angebots-Abgabe (X84/PDF)"
+      ],
+      "notion_reads": [
         "GDrive Projektordner",
         "GSheet Kalkulation",
         "MaterialAnfragen-DB",
         "Anfragen-GSheet (Material)",
         "hinweise.json"
       ],
-      "writes": [
+      "notion_writes": [
         "GSheet Kalkulation",
         "Anfragen-GSheet (Material)",
         "MaterialAnfragen-DB",
@@ -626,28 +881,26 @@ window.WORKFLOW_DATA = {
         "C-02"
       ],
       "successors": [
-        "C-05",
-        "E-02"
+        "C-06",
+        "D-02"
       ],
       "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Eingehendes Angebot aufbereiten: Parse, Match, QS als Einkaeufer, Lieferanten-Tab schreiben.",
-      "notion_page_id": "3259da66-ff7a-81d7-b0f6-e49ca8777b72",
+      "summary": "Eingehendes Angebot aufbereiten: Datei parsen, OZ normalisieren, mit LV matchen, als Einkaufsexperte pruefen, in Lieferanten-Tab schreiben, Notion updaten. Iterativ: Pro eingehendem Angebot einmal aufrufen. Scope: Aufbereitung + Erstbewertung.",
+      "description": "Eingehende Lieferanten-Angebote auswerten: Parse (GAEB>Excel>PDF), LV-Matching, QS als Einkaufsexperte, GSheet Lieferanten-Tab + Notion. Iterativ pro Angebot.",
       "scripts": [
-        "oz_matcher.py",
-        "workflow_state.py",
-        "write_lieferant_tab.py",
         "angebots_auswertung.py",
-        "oz_normalizer.py"
+        "oz_matcher.py",
+        "oz_normalizer.py",
+        "qs_module.py",
+        "skill_completion_check.py",
+        "write_lieferant_tab.py"
       ],
       "data_files": [
         {
-          "name": "angebote_verarbeitet.json",
-          "path": "3_Kalkulation/_workflow/angebote_verarbeitet.json",
-          "written_by": "skill",
-          "read_by": []
+          "name": "lv_positionen.json"
         }
-      ]
+      ],
+      "scanned": true
     },
     {
       "id": "C-05",
@@ -669,25 +922,27 @@ window.WORKFLOW_DATA = {
       "writes": [
         "Anfragen-GSheet (Material)"
       ],
+      "code_reads": [],
+      "code_writes": [],
+      "notion_reads": [
+        "Anfragen-GSheet (Material)",
+        "GSheet Kalkulation"
+      ],
+      "notion_writes": [
+        "Anfragen-GSheet (Material)"
+      ],
       "predecessors": [
         "C-03"
       ],
       "successors": [
-        "C-06"
+        "E-02"
       ],
-      "validation_status": "drift",
-      "validation": "drift",
-      "summary": "SG-Scope-Vergleich: Mehrere Sub/Hersteller-Angebote positionsweise vergleichen.",
-      "notion_page_id": "33d9da66-ff7a-810f-9131-fce54c2a3a99",
+      "validation_status": "not_scanned",
+      "summary": "Erstellt einen positionsweisen Scope-Vergleich fuer eine Summengruppe (z.B. NEA, BMA, USV, Sprinkler) im Kalkulations-GSheet. Vergleicht N Anbieter nicht nur nach Preis, sondern nach Scope-Vollstaendigkeit, Fabrikat-Konformitaet und LV-Abweichungen.",
+      "description": "SG-Scope-Vergleich: Mehrere Sub/Hersteller-Angebote einer Summengruppe positionsweise vergleichen mit Scope-Bewertung, Fabrikat-Prüfung, EP-Ausreißer und Nachverhandlungspunkten.",
       "scripts": [],
-      "data_files": [
-        {
-          "name": "angebot_tna.json",
-          "path": "angebot_tna.json",
-          "written_by": "skill",
-          "read_by": []
-        }
-      ]
+      "data_files": [],
+      "scanned": false
     },
     {
       "id": "C-06",
@@ -704,48 +959,64 @@ window.WORKFLOW_DATA = {
       ],
       "reads": [
         "Anfragen-GSheet (Material)",
+        "GSheet Kalkulation",
+        "MaterialAnfragen-DB",
+        "hinweise.json",
+        "workflow_state.md"
+      ],
+      "writes": [
+        "Anfragen-GSheet (Material)",
+        "GSheet Kalkulation",
+        "workflow_state.md"
+      ],
+      "code_reads": [
+        "workflow_state.md",
+        "Anfragen-GSheet (Material)"
+      ],
+      "code_writes": [],
+      "notion_reads": [
+        "Anfragen-GSheet (Material)",
         "workflow_state.md",
         "hinweise.json",
         "MaterialAnfragen-DB",
         "GSheet Kalkulation"
       ],
-      "writes": [
+      "notion_writes": [
         "GSheet Kalkulation",
         "Anfragen-GSheet (Material)",
         "workflow_state.md"
       ],
       "predecessors": [
-        "C-05"
+        "C-03"
       ],
       "successors": [
         "D-01",
-        "G-03"
+        "D-02"
       ],
-      "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Alle Angebote konsolidieren, Scope pruefen, besten Preis pro Position bestimmen.",
-      "notion_page_id": "32e9da66-ff7a-8166-bd26-ce854d131cb1",
+      "validation_status": "warn",
+      "summary": "Alle Angebote konsolidieren: GH-Vergleich + SG-spezifische Vergleiche erstellen, Scope bewerten, 3 Master-Tabs erzeugen (LV, BOM, SG-Uebersicht). Scope: Angebotsvergleich + Scope-Bewertung + Lieferantenwahl + Einkaufs-Bewertung.",
+      "description": "Alle Lieferanten-Angebote zusammenfuehren: GH-Vergleich + SG-Vergleiche (sg-vergleich Style), 3 Master-Tabs (LV, BOM, SG-Uebersicht), Scope-Bewertung, EK-Entscheidung.",
       "scripts": [
+        "gsheet_formatting.py",
         "read_konsolidierung_data.py",
+        "skill_completion_check.py",
         "write_gh_vergleich.py",
-        "write_sg_vergleich.py",
-        "workflow_state.py",
         "write_master_tabs.py",
         "write_scope_results.py",
-        "gsheet_formatting.py",
-        "angebots_auswertung.py"
+        "write_sg_vergleich.py"
       ],
       "data_files": [
         {
-          "name": "konsolidierung_data.json",
-          "path": "3_Kalkulation/_workflow/konsolidierung_data.json",
-          "written_by": "read_konsolidierung_data.py",
-          "read_by": [
-            "write_gh_vergleich.py",
-            "write_sg_vergleich.py"
-          ]
+          "name": "lv_positionen.json"
+        },
+        {
+          "name": "scope_gh.json"
+        },
+        {
+          "name": "scope_bma.json"
         }
-      ]
+      ],
+      "scanned": true
     },
     {
       "id": "D-01",
@@ -762,6 +1033,30 @@ window.WORKFLOW_DATA = {
         "B"
       ],
       "reads": [
+        "Datanorm-Preise",
+        "GSheet Kalkulation",
+        "KFE-Katalog",
+        "Referenz-LV",
+        "TAWO-Stundensaetze",
+        "hinweise.json",
+        "workflow_state.md"
+      ],
+      "writes": [
+        "GSheet Kalkulation",
+        "workflow_state.md"
+      ],
+      "code_reads": [
+        "workflow_state.md",
+        "hinweise.json",
+        "GSheet Kalkulation",
+        "KFE-Katalog",
+        "Datanorm-Preise",
+        "TAWO-Stundensaetze"
+      ],
+      "code_writes": [
+        "GSheet Kalkulation"
+      ],
+      "notion_reads": [
         "GSheet Kalkulation",
         "workflow_state.md",
         "Referenz-LV",
@@ -769,34 +1064,26 @@ window.WORKFLOW_DATA = {
         "KFE-Katalog",
         "Datanorm-Preise"
       ],
-      "writes": [
+      "notion_writes": [
         "GSheet Kalkulation",
         "workflow_state.md"
       ],
       "predecessors": [
         "B-03",
-        "B-01->03",
         "C-06"
       ],
       "successors": [
         "D-02"
       ],
-      "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Analyse des fertig kalkulierten LVs. Script rechnet, Claude bewertet als Oberbauleiter.",
-      "notion_page_id": "32e9da66-ff7a-81eb-aa75-ecfe10e6a067",
+      "validation_status": "warn",
+      "summary": "Analyse des fertig kalkulierten LVs. Nicht: Positionen nochmal einzeln durchrechnen. Sondern: Gesamtbild bewerten - wie ein Oberbauleiter der die Kalkulation unterschreiben soll.",
+      "description": "Fertiges LV analysieren: Fehler finden, SG-Übersicht erzeugen, Risiken bewerten, Margen prüfen. Script rechnet, Claude denkt als Oberbauleiter.",
       "scripts": [
-        "workflow_state.py",
-        "kalkulations_analyse.py"
+        "kalkulations_analyse.py",
+        "workflow_state.py"
       ],
-      "data_files": [
-        {
-          "name": "kalkulations_analyse.json",
-          "path": "3_Kalkulation/_workflow/kalkulations_analyse.json",
-          "written_by": "skill",
-          "read_by": []
-        }
-      ]
+      "data_files": [],
+      "scanned": true
     },
     {
       "id": "D-02",
@@ -807,18 +1094,43 @@ window.WORKFLOW_DATA = {
         "SKILL.md"
       ],
       "block": "D",
-      "status": "live",
+      "status": "beta",
       "spuren": [
         "A",
         "B"
       ],
       "reads": [
+        "GAEB-Quelldateien (X83/D83)",
+        "GDrive Projektordner",
+        "GSheet Kalkulation",
+        "Projekt-DB",
+        "Referenz-LV",
+        "matching.json",
+        "workflow_state.md"
+      ],
+      "writes": [
+        "Angebots-Abgabe (X84/PDF)",
+        "Projekt-DB",
+        "workflow_state.md"
+      ],
+      "code_reads": [
+        "workflow_state.md",
+        "matching.json",
+        "GSheet Kalkulation",
+        "GDrive Projektordner",
+        "GAEB-Quelldateien (X83/D83)",
+        "Referenz-LV"
+      ],
+      "code_writes": [
+        "Angebots-Abgabe (X84/PDF)"
+      ],
+      "notion_reads": [
         "GSheet Kalkulation",
         "GAEB-Quelldateien (X83/D83)",
         "Projekt-DB",
         "workflow_state.md"
       ],
-      "writes": [
+      "notion_writes": [
         "Angebots-Abgabe (X84/PDF)",
         "workflow_state.md",
         "Projekt-DB"
@@ -827,18 +1139,17 @@ window.WORKFLOW_DATA = {
         "D-01"
       ],
       "successors": [
-        "E-01",
         "F-01"
       ],
-      "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Erzeugt GAEB X84 + PDF-Angebot aus kalkuliertem GSheet und Original-X83.",
-      "notion_page_id": "3279da66-ff7a-81d8-9872-e0789613225d",
+      "validation_status": "warn",
+      "summary": "Erzeugt GAEB X84 + PDF-Angebot aus dem fertig kalkulierten GSheet und der Original-X83. Generiert ein projektspezifisches Python-Script das im Abgabe-Ordner verbleibt.",
+      "description": "GAEB-Abgabe: Aus kalkuliertem GSheet + Original-X83 die Abgabedateien erzeugen (X84 + PDF). Trigger nach abgeschlossener Kalkulation.",
       "scripts": [
-        "workflow_state.py",
-        "gaeb_to_pdf.py"
+        "gsheet_config.json",
+        "workflow_state.py"
       ],
-      "data_files": []
+      "data_files": [],
+      "scanned": true
     },
     {
       "id": "E-01",
@@ -854,6 +1165,28 @@ window.WORKFLOW_DATA = {
         "A"
       ],
       "reads": [
+        "Datanorm-Preise",
+        "GDrive Projektordner",
+        "GSheet Kalkulation",
+        "KFE-Katalog",
+        "Referenz-LV",
+        "hinweise.json",
+        "matching.json",
+        "workflow_state.md"
+      ],
+      "writes": [
+        "GDrive Projektordner",
+        "GSheet Kalkulation",
+        "workflow_state.md"
+      ],
+      "code_reads": [
+        "workflow_state.md",
+        "matching.json",
+        "GSheet Kalkulation",
+        "KFE-Katalog"
+      ],
+      "code_writes": [],
+      "notion_reads": [
         "GDrive Projektordner",
         "GSheet Kalkulation",
         "hinweise.json",
@@ -861,7 +1194,7 @@ window.WORKFLOW_DATA = {
         "KFE-Katalog",
         "Datanorm-Preise"
       ],
-      "writes": [
+      "notion_writes": [
         "GSheet Kalkulation",
         "GDrive Projektordner",
         "workflow_state.md"
@@ -871,36 +1204,28 @@ window.WORKFLOW_DATA = {
       ],
       "successors": [],
       "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Bieterbrief-Excel vom AG verarbeiten: Parsen, Matching, EK-Untergrenzen, neues Kalkulations-GSheet.",
-      "notion_page_id": "3339da66-ff7a-81e3-8cb2-d087424af3af",
+      "summary": "Bieterbrief-Excel vom AG verarbeiten: Parsen, OZ-Normalisierung, Matching gegen Kalk-GSheet, EK-Untergrenzen berechnen, User-Review, ausgefuellten Bieterbrief + neues Kalkulations-GSheet erzeugen.",
+      "description": "Bieterbrief vom AG parsen, gegen Kalkulation matchen, EK-Untergrenzen berechnen, ausgefuellten Bieterbrief + Bieterbrief-Kalkulations-GSheet erzeugen.",
       "scripts": [
+        "bieterbrief_excel_filler.py",
+        "bieterbrief_gsheet_writer.py",
         "bieterbrief_parser.py",
         "oz_normalizer.py",
         "vorab_matching.py",
-        "bieterbrief_excel_filler.py",
         "workflow_state.py"
       ],
       "data_files": [
         {
-          "name": "bieterbrief_aenderungen.json",
-          "path": "bieterbrief_aenderungen.json",
-          "written_by": "skill",
-          "read_by": []
+          "name": "bieterbrief_aenderungen.json"
         },
         {
-          "name": "bieterbrief_raw.json",
-          "path": "_workflow/bieterbrief_raw.json",
-          "written_by": "bieterbrief_parser.py",
-          "read_by": []
+          "name": "bieterbrief_raw.json"
         },
         {
-          "name": "neue_positionen_kalkulation.json",
-          "path": "neue_positionen_kalkulation.json",
-          "written_by": "skill",
-          "read_by": []
+          "name": "neue_positionen_kalkulation.json"
         }
-      ]
+      ],
+      "scanned": true
     },
     {
       "id": "E-02",
@@ -917,25 +1242,44 @@ window.WORKFLOW_DATA = {
       ],
       "reads": [
         "Anfragen-GSheet (Material)",
-        "GSheet Kalkulation"
+        "GSheet Kalkulation",
+        "workflow_state.md"
       ],
       "writes": [
         "Anfragen-GSheet (Material)",
         "Gmail (Inbox/Drafts)",
         "workflow_state.md"
       ],
+      "code_reads": [
+        "workflow_state.md",
+        "Anfragen-GSheet (Material)"
+      ],
+      "code_writes": [
+        "Anfragen-GSheet (Material)",
+        "Gmail (Inbox/Drafts)"
+      ],
+      "notion_reads": [
+        "Anfragen-GSheet (Material)",
+        "GSheet Kalkulation"
+      ],
+      "notion_writes": [
+        "Anfragen-GSheet (Material)",
+        "Gmail (Inbox/Drafts)",
+        "workflow_state.md"
+      ],
       "predecessors": [
-        "C-03"
+        "C-03",
+        "C-06"
       ],
       "successors": [],
       "validation_status": "drift",
-      "validation": "drift",
-      "summary": "GH-Preisverhandlung vorbereiten: Potenzial-Positionen + Bauzeitenplan + Gespraechsleitfaden.",
-      "notion_page_id": "3359da66-ff7a-819c-a0a8-d998b06fc72d",
+      "summary": "GH-Preisverhandlung vorbereiten. Analysiert den Angebotsvergleich, erstellt zwei Tabs fuer den GH (Potenzial-Positionen + Bauzeitenplan) und einen internen Gespraechsleitfaden.",
+      "description": "GH-Preisverhandlung vorbereiten: Angebotsvergleich analysieren, Potenzial-Positionen + Bauzeitenplan erstellen, Gespraechsleitfaden generieren.",
       "scripts": [
         "workflow_state.py"
       ],
-      "data_files": []
+      "data_files": [],
+      "scanned": true
     },
     {
       "id": "F-01",
@@ -949,9 +1293,9 @@ window.WORKFLOW_DATA = {
       "status": "beta",
       "spuren": [],
       "reads": [
+        "Gmail (Inbox/Drafts)",
         "MaterialAnfragen-DB",
         "Projekt-DB",
-        "Gmail (Inbox/Drafts)",
         "workflow_state.md"
       ],
       "writes": [
@@ -960,28 +1304,31 @@ window.WORKFLOW_DATA = {
         "Projekt-DB",
         "workflow_state.md"
       ],
-      "predecessors": [
-        "D-02"
+      "code_reads": [],
+      "code_writes": [],
+      "notion_reads": [
+        "MaterialAnfragen-DB",
+        "Projekt-DB",
+        "Gmail (Inbox/Drafts)",
+        "workflow_state.md"
       ],
+      "notion_writes": [
+        "Gmail (Inbox/Drafts)",
+        "MaterialAnfragen-DB",
+        "Projekt-DB",
+        "workflow_state.md"
+      ],
+      "predecessors": [],
       "successors": [],
-      "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Lieferanten per Gmail-Reply-Draft ueber Projektverlust informieren, Notion-Status updaten.",
-      "notion_page_id": "33d9da66-ff7a-81e4-8dd5-c30de0ee28a4",
+      "validation_status": "not_scanned",
+      "summary": "Bei Projekt-Absage alle angefragten Lieferanten per Gmail-Reply informieren. Notion MaterialAnfragen-Status + Projekt-Status aktualisieren. Eigenstaendig ausloesbar - keine Vorgaenger-Skills noetig.",
+      "description": "Lieferanten-Absage bei Projektverlust oder Storno: Gmail-Reply-Drafts + Notion-Status-Update. Optional, eigenstaendig ausloesbar.",
       "scripts": [
-        "workflow_state.py",
-        "attach_drafts.py"
+        "attach_drafts.py",
+        "workflow_state.py"
       ],
-      "data_files": [
-        {
-          "name": "draft_manifest.json",
-          "path": "draft_manifest.json",
-          "written_by": "skill",
-          "read_by": [
-            "attach_drafts.py"
-          ]
-        }
-      ]
+      "data_files": [],
+      "scanned": false
     },
     {
       "id": "G-01",
@@ -992,18 +1339,29 @@ window.WORKFLOW_DATA = {
         "SKILL.md"
       ],
       "block": "G",
-      "status": "beta",
+      "status": "live",
       "spuren": [
         "A",
         "B"
       ],
       "reads": [
+        "GDrive Projektordner",
+        "Notion Dokumenten-DB (Inline)",
+        "hinweise.json",
+        "workflow_state.md"
+      ],
+      "writes": [
+        "Notion Dokumenten-DB (Inline)"
+      ],
+      "code_reads": [],
+      "code_writes": [],
+      "notion_reads": [
         "workflow_state.md",
         "GDrive Projektordner",
         "hinweise.json",
         "Notion Dokumenten-DB (Inline)"
       ],
-      "writes": [
+      "notion_writes": [
         "Notion Dokumenten-DB (Inline)"
       ],
       "predecessors": [
@@ -1012,12 +1370,14 @@ window.WORKFLOW_DATA = {
       "successors": [
         "G-02"
       ],
-      "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Projekt-Zusammenfassung als Notion-Seite in Projektdokumente-DB. Alle Dokumente auslesen, Toggle-Headings, keine Vermutungen.",
-      "notion_page_id": "33e9da66-ff7a-8125-84af-cf6c7bbc11c6",
-      "scripts": [],
-      "data_files": []
+      "validation_status": "not_scanned",
+      "summary": "Erstellt eine kompakte Projekt-Zusammenfassung (~3 Seiten) als Notion-Seite in der Projektdokumente-DB. Zielgruppe: Bauleiter, Projektleiter, Technischer Leiter - schneller Ueberblick ueber alle projektrelevanten Fakten fuer die Ausfuehrung.",
+      "description": "Projekt-Zusammenfassung erstellen/aktualisieren: Alle Dokumente auslesen, Notion-Seite in Projektdokumente-DB. Idempotent — aktualisiert bei erneutem Aufruf.",
+      "scripts": [
+        "workflow_state.py"
+      ],
+      "data_files": [],
+      "scanned": false
     },
     {
       "id": "G-02",
@@ -1034,24 +1394,37 @@ window.WORKFLOW_DATA = {
         "B"
       ],
       "reads": [
-        "workflow_state.md",
+        "GDrive Projektordner",
         "Notion Dokumenten-DB (Inline)",
-        "GDrive Projektordner"
+        "workflow_state.md"
       ],
       "writes": [
         "GDrive Projektordner"
       ],
+      "code_reads": [],
+      "code_writes": [],
+      "notion_reads": [
+        "workflow_state.md",
+        "Notion Dokumenten-DB (Inline)",
+        "GDrive Projektordner"
+      ],
+      "notion_writes": [
+        "GDrive Projektordner"
+      ],
       "predecessors": [
-        "G-01",
+        "G-01"
+      ],
+      "successors": [
         "G-03"
       ],
-      "successors": [],
-      "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Kopiert Dokumente mit Uebergabe-Checkbox in den Ops-Ordner, sortiert nach Kategorie. GSheets als Links.",
-      "notion_page_id": "33d9da66-ff7a-81da-8ae7-d1aeadea4446",
-      "scripts": [],
-      "data_files": []
+      "validation_status": "not_scanned",
+      "summary": "Kopiert alle Dokumente mit gesetzter Uebergabe-Checkbox aus dem Sales-Projektordner in den Ops-Projektordner. GSheets werden als Links angelegt, nicht verschoben.",
+      "description": "Dokumente mit Übergabe-Checkbox aus Projektdokumente-DB in den Ops-Ordner (N_03_Projekte) kopieren. GSheets verlinken. Staging in Übergabe Sales/.",
+      "scripts": [
+        "workflow_state.py"
+      ],
+      "data_files": [],
+      "scanned": false
     },
     {
       "id": "G-03",
@@ -1062,33 +1435,44 @@ window.WORKFLOW_DATA = {
         "SKILL.md"
       ],
       "block": "G",
-      "status": "draft",
+      "status": "live",
       "spuren": [
         "A"
       ],
       "reads": [
-        "workflow_state.md",
+        "Anfragen-GSheet (Material)",
         "GSheet Kalkulation",
-        "Anfragen-GSheet (Material)"
+        "workflow_state.md"
       ],
       "writes": [
         "GDrive Projektordner",
         "workflow_state.md"
       ],
+      "code_reads": [],
+      "code_writes": [],
+      "notion_reads": [
+        "workflow_state.md",
+        "GSheet Kalkulation",
+        "Anfragen-GSheet (Material)"
+      ],
+      "notion_writes": [
+        "GDrive Projektordner",
+        "workflow_state.md"
+      ],
       "predecessors": [
+        "G-02",
         "C-06"
       ],
-      "successors": [
-        "G-02"
-      ],
-      "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Konsolidiertes Uebergabe-GSheet mit 8 Tabs (Kalk + Anfragen + Default/Working BOM) fuer Ops.",
-      "notion_page_id": "",
+      "successors": [],
+      "validation_status": "not_scanned",
+      "summary": "Erstellt ein neues Google Sheet fuer die Uebergabe an das Operations-Team. Konsolidiert Kalk-Daten und Beschaffungsergebnisse in einem einzigen Sheet mit 8 Tabs. Alle Werte flach (keine Formeln). Formatierung per Script.",
+      "description": "Uebergabe-GSheet erstellen: Konsolidiertes Google Sheet fuer Projekt-Uebergabe von Sales an Operations. 8 Tabs aus Kalk-GSheet + Anfragen-GSheet + neue BOM-Tabs.",
       "scripts": [
+        "workflow_state.py",
         "write_uebergabe_sheet.py"
       ],
-      "data_files": []
+      "data_files": [],
+      "scanned": false
     },
     {
       "id": "INFRA-01",
@@ -1099,7 +1483,7 @@ window.WORKFLOW_DATA = {
         "SKILL.md"
       ],
       "block": "INFRA",
-      "status": "live",
+      "status": "beta",
       "spuren": [],
       "reads": [
         "workflow-data.json"
@@ -1107,14 +1491,24 @@ window.WORKFLOW_DATA = {
       "writes": [
         "workflow-analyse.html"
       ],
-      "predecessors": [],
+      "code_reads": [],
+      "code_writes": [],
+      "notion_reads": [
+        "workflow-data.json"
+      ],
+      "notion_writes": [
+        "workflow-analyse.html"
+      ],
+      "predecessors": [
+        "INFRA-02"
+      ],
       "successors": [],
-      "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Generiert interaktive Workflow-Visualisierung (standalone HTML) aus workflow-data.json. Ressource-Matrix, State-Dependencies, Dependency-Flow.",
-      "notion_page_id": "",
+      "validation_status": "not_scanned",
+      "summary": "Liest workflow-data.json und generiert eine interaktive standalone HTML-Visualisierung die Datenfluss, Abhaengigkeiten und Entry-Points sichtbar macht.",
+      "description": "Generiert eine interaktive Workflow-Visualisierung (standalone HTML) aus workflow-data.json. Ressource-Matrix, State-Dependencies, Entry-Point-Simulation, Reuse-Analyse und Dependency-Flow.",
       "scripts": [],
-      "data_files": []
+      "data_files": [],
+      "scanned": false
     },
     {
       "id": "INFRA-02",
@@ -1125,14 +1519,25 @@ window.WORKFLOW_DATA = {
         "SKILL.md"
       ],
       "block": "INFRA",
-      "status": "live",
+      "status": "beta",
       "spuren": [],
       "reads": [
+        ".claude/skills/**",
+        "Notion Skills-DB",
+        "scripts/**"
+      ],
+      "writes": [
+        ".claude/skills/workflow-validation/scripts/last_scan.json",
+        "docs/workflow-data.json"
+      ],
+      "code_reads": [],
+      "code_writes": [],
+      "notion_reads": [
         ".claude/skills/**",
         "scripts/**",
         "Notion Skills-DB"
       ],
-      "writes": [
+      "notion_writes": [
         "docs/workflow-data.json",
         ".claude/skills/workflow-validation/scripts/last_scan.json"
       ],
@@ -1140,29 +1545,80 @@ window.WORKFLOW_DATA = {
       "successors": [
         "INFRA-01"
       ],
-      "validation_status": "drift",
-      "validation": "drift",
-      "summary": "Gleicht Code-Realitaet (SKILL.md + Scripts) mit Notion Skills-DB ab. Findet undokumentierte Zugriffe, Phantom-Relations und Richtungs-Mismatches.",
-      "notion_page_id": "",
+      "validation_status": "not_scanned",
+      "summary": "Vergleicht was der Code tatsaechlich liest/schreibt mit dem was Notion dokumentiert. Findet Drifts, fehlende Relations und Phantom-Eintraege. Schreibt workflow-data.json als zentrale Datendatei fuer die gesamte Pipeline.",
+      "description": "Gleicht Code-Realitaet (SKILL.md + Scripts) mit Notion-Dokumentation (Skills-DB Relations) ab. Findet undokumentierte Zugriffe, Phantom-Relations und Richtungs-Mismatches.",
       "scripts": [],
-      "data_files": [
-        {
-          "name": "last_scan.json",
-          "path": ".claude/skills/workflow-validation/scripts/last_scan.json",
-          "written_by": "skill",
-          "read_by": [
-            "skill"
-          ]
-        }
-      ]
+      "data_files": [],
+      "scanned": false
+    },
+    {
+      "id": "",
+      "name": "projekt-erfassung-light",
+      "slash_command": "/projekt-erfassung-light",
+      "skill_path": ".claude/skills/projekt-erfassung-light/",
+      "key_files": [
+        "SKILL.md"
+      ],
+      "block": "B",
+      "status": "in Arbeit",
+      "spuren": [
+        "A",
+        "B"
+      ],
+      "reads": [],
+      "writes": [],
+      "code_reads": [],
+      "code_writes": [],
+      "notion_reads": [],
+      "notion_writes": [],
+      "predecessors": [],
+      "successors": [
+        "B-01->03",
+        "B-01"
+      ],
+      "validation_status": "not_scanned",
+      "summary": "Setzt NUR die Minimal-Felder in workflow_state.md, die /template-anwendung als Preflight benoetigt. Fuer Projekte, die bereits durch die Sales-Phase gelaufen sind (Notion existiert, Steckbrief vorhanden) und wo nur auf Basis eines neuen LVs (z.B. Vertrags-LV nach Auftrag) eine neue Kalkulation entstehen soll.",
+      "description": "Minimal-State-Setup bei existierendem Projekt fuer Vorab-Kalk-Neulauf. Nur workflow_state.md-Felder setzen (projekt_id, name, spur, positionen, oz_structure, lv_excel), kein Notion/Steckbrief/Analyse. Trigger wenn /vorab-kalkulation-komplett neu auf neuer LV-Basis laufen soll und Sales-Phase bereits durch ist.",
+      "scripts": [
+        "gaeb_to_excel.py",
+        "oz_normalizer.py",
+        "workflow_state.py"
+      ],
+      "data_files": [],
+      "scanned": false
     }
   ],
   "resources": [
     {
-      "name": "Anfragen-GSheet (Material)",
-      "type": "Google Sheet",
-      "notion_page_id": "3399da66-ff7a-8199-8ef0-cb95dca785c0",
+      "name": ".claude/skills/**",
+      "type": "Unknown",
+      "notion_page_id": null,
+      "code_patterns": [],
       "read_by": [
+        "INFRA-02"
+      ],
+      "written_by": []
+    },
+    {
+      "name": ".claude/skills/workflow-validation/scripts/last_scan.json",
+      "type": "Unknown",
+      "notion_page_id": null,
+      "code_patterns": [],
+      "read_by": [],
+      "written_by": [
+        "INFRA-02"
+      ]
+    },
+    {
+      "name": "Anfragen-GSheet (Material)",
+      "type": "Template",
+      "notion_page_id": "3399da66-ff7a-8199-8ef0-cb95dca785c0",
+      "code_patterns": [
+        "Anfragen-GSheet"
+      ],
+      "read_by": [
+        "C-01",
         "C-03",
         "C-05",
         "C-06",
@@ -1179,10 +1635,15 @@ window.WORKFLOW_DATA = {
     },
     {
       "name": "Angebots-Abgabe (X84/PDF)",
-      "type": "Datei",
+      "type": "Doc",
       "notion_page_id": "3399da66-ff7a-81de-ac12-c1c5014d4c15",
+      "code_patterns": [
+        "Angebots-Abgabe"
+      ],
       "read_by": [],
       "written_by": [
+        "A-01",
+        "C-03",
         "D-02"
       ]
     },
@@ -1190,6 +1651,9 @@ window.WORKFLOW_DATA = {
       "name": "Datanorm-Preise",
       "type": "Referenz-Daten",
       "notion_page_id": "3359da66-ff7a-8172-9cb1-c73e0873afe1",
+      "code_patterns": [
+        "datanorm"
+      ],
       "read_by": [
         "B-03",
         "B-01->03",
@@ -1200,24 +1664,39 @@ window.WORKFLOW_DATA = {
     },
     {
       "name": "GAEB-Quelldateien (X83/D83)",
-      "type": "Datei",
+      "type": "Referenz-Daten",
       "notion_page_id": "3399da66-ff7a-81fe-b49f-d615f04248fb",
+      "code_patterns": [
+        "GAEB-Quelldateien"
+      ],
       "read_by": [
         "A-01",
         "B-01",
         "B-01->03",
+        "C-01",
+        "C-02",
+        "C-03",
         "D-02"
       ],
       "written_by": []
     },
     {
       "name": "GDrive Projektordner",
-      "type": "Dateisystem",
+      "type": "Datenbank Prozess",
       "notion_page_id": "3399da66-ff7a-814b-9892-db0a07382a46",
+      "code_patterns": [
+        "GDrive Projektordner"
+      ],
       "read_by": [
         "A-01",
         "A-02",
+        "B-01",
+        "B-02",
+        "B-03",
+        "C-01",
+        "C-02",
         "C-03",
+        "D-02",
         "E-01",
         "G-01",
         "G-02"
@@ -1232,8 +1711,11 @@ window.WORKFLOW_DATA = {
     },
     {
       "name": "GSheet Kalkulation",
-      "type": "Google Sheet",
+      "type": "Template",
       "notion_page_id": "3359da66-ff7a-81b6-b995-e2cbd1fc1a16",
+      "code_patterns": [
+        "GSheet Kalkulation"
+      ],
       "read_by": [
         "B-01",
         "B-02",
@@ -1254,6 +1736,7 @@ window.WORKFLOW_DATA = {
         "B-02",
         "B-03",
         "B-01->03",
+        "C-01",
         "C-03",
         "C-06",
         "D-01",
@@ -1262,9 +1745,13 @@ window.WORKFLOW_DATA = {
     },
     {
       "name": "Gmail (Inbox/Drafts)",
-      "type": "Externer Service",
+      "type": "Datenbank Prozess",
       "notion_page_id": "3399da66-ff7a-817d-ad71-d1dcec4b34d7",
+      "code_patterns": [
+        "Gmail"
+      ],
       "read_by": [
+        "C-01",
         "C-02",
         "F-01"
       ],
@@ -1279,6 +1766,9 @@ window.WORKFLOW_DATA = {
       "name": "KFE-Katalog",
       "type": "Referenz-Daten",
       "notion_page_id": "3359da66-ff7a-81bf-bc45-ddc0b5d12bb6",
+      "code_patterns": [
+        "kfe"
+      ],
       "read_by": [
         "B-03",
         "B-01->03",
@@ -1288,9 +1778,25 @@ window.WORKFLOW_DATA = {
       "written_by": []
     },
     {
-      "name": "MaterialAnfragen-DB",
+      "name": "MaterialAnfragen DB",
       "type": "Datenbank Prozess",
       "notion_page_id": "3359da66-ff7a-80e9-9c32-e2264b952b8b",
+      "code_patterns": [
+        "MaterialAnfragen DB"
+      ],
+      "read_by": [
+        "A-01",
+        "B-03",
+        "C-01",
+        "C-02"
+      ],
+      "written_by": []
+    },
+    {
+      "name": "MaterialAnfragen-DB",
+      "type": "Unknown",
+      "notion_page_id": null,
+      "code_patterns": [],
       "read_by": [
         "C-01",
         "C-02",
@@ -1309,8 +1815,12 @@ window.WORKFLOW_DATA = {
       "name": "Notion DB Snapshots",
       "type": "Referenz-Daten",
       "notion_page_id": "3359da66-ff7a-8147-b1d2-ee1e5388929b",
+      "code_patterns": [
+        "notion_db"
+      ],
       "read_by": [
         "A-01",
+        "B-03",
         "C-01",
         "C-02"
       ],
@@ -1320,7 +1830,13 @@ window.WORKFLOW_DATA = {
       "name": "Notion Dokumenten-DB (Inline)",
       "type": "Datenbank Prozess",
       "notion_page_id": "3399da66-ff7a-8197-82cc-cb28966f709e",
+      "code_patterns": [
+        "Notion Dokumenten-DB"
+      ],
       "read_by": [
+        "A-01",
+        "A-02",
+        "C-01",
         "G-01",
         "G-02"
       ],
@@ -1331,11 +1847,28 @@ window.WORKFLOW_DATA = {
       ]
     },
     {
+      "name": "Notion Skills-DB",
+      "type": "Unknown",
+      "notion_page_id": null,
+      "code_patterns": [],
+      "read_by": [
+        "INFRA-02"
+      ],
+      "written_by": []
+    },
+    {
       "name": "Projekt-DB",
       "type": "Datenbank Prozess",
       "notion_page_id": "3359da66-ff7a-8120-b477-f781b7d3dd4e",
+      "code_patterns": [
+        "collection://e84a0481"
+      ],
       "read_by": [
         "A-01",
+        "A-02",
+        "B-03",
+        "C-01",
+        "C-02",
         "D-02",
         "F-01"
       ],
@@ -1349,11 +1882,15 @@ window.WORKFLOW_DATA = {
       "name": "Referenz-LV",
       "type": "Referenz-Daten",
       "notion_page_id": "3359da66-ff7a-8160-a083-f422c9d44bb4",
+      "code_patterns": [
+        "referenz_lv"
+      ],
       "read_by": [
         "A-01",
         "B-03",
         "B-01->03",
         "D-01",
+        "D-02",
         "E-01"
       ],
       "written_by": []
@@ -1362,6 +1899,9 @@ window.WORKFLOW_DATA = {
       "name": "TAWO-Stundensaetze",
       "type": "Referenz-Daten",
       "notion_page_id": "3359da66-ff7a-8163-b4e4-fdd310871365",
+      "code_patterns": [
+        "tawo_stundensaetze"
+      ],
       "read_by": [
         "B-03",
         "B-01->03",
@@ -1370,29 +1910,58 @@ window.WORKFLOW_DATA = {
       "written_by": []
     },
     {
+      "name": "docs/workflow-data.json",
+      "type": "Unknown",
+      "notion_page_id": null,
+      "code_patterns": [],
+      "read_by": [],
+      "written_by": [
+        "INFRA-02"
+      ]
+    },
+    {
       "name": "hinweise.json",
-      "type": "Datei",
+      "type": "Doc",
       "notion_page_id": "3399da66-ff7a-818c-8617-c887f3229ee6",
+      "code_patterns": [
+        "hinweise.json"
+      ],
       "read_by": [
+        "A-01",
+        "A-02",
+        "B-01",
+        "B-02",
         "B-03",
         "B-01->03",
         "C-01",
         "C-03",
         "C-06",
+        "D-01",
         "E-01",
         "G-01"
       ],
       "written_by": [
+        "B-01",
         "B-02",
+        "B-03",
         "B-01->03"
       ]
     },
     {
       "name": "matching.json",
-      "type": "Datei",
+      "type": "Doc",
       "notion_page_id": "3399da66-ff7a-81be-a3d6-c8a14f9af814",
+      "code_patterns": [
+        "matching.json"
+      ],
       "read_by": [
-        "C-01"
+        "A-01",
+        "B-03",
+        "C-01",
+        "C-02",
+        "C-03",
+        "D-02",
+        "E-01"
       ],
       "written_by": [
         "B-03",
@@ -1401,18 +1970,57 @@ window.WORKFLOW_DATA = {
       ]
     },
     {
-      "name": "workflow_state.md",
-      "type": "Datei",
-      "notion_page_id": "3399da66-ff7a-8155-b006-d63353dc4456",
+      "name": "scripts/**",
+      "type": "Unknown",
+      "notion_page_id": null,
+      "code_patterns": [],
       "read_by": [
+        "INFRA-02"
+      ],
+      "written_by": []
+    },
+    {
+      "name": "workflow-analyse.html",
+      "type": "Unknown",
+      "notion_page_id": null,
+      "code_patterns": [],
+      "read_by": [],
+      "written_by": [
+        "INFRA-01"
+      ]
+    },
+    {
+      "name": "workflow-data.json",
+      "type": "Unknown",
+      "notion_page_id": null,
+      "code_patterns": [],
+      "read_by": [
+        "INFRA-01"
+      ],
+      "written_by": []
+    },
+    {
+      "name": "workflow_state.md",
+      "type": "Doc",
+      "notion_page_id": "3399da66-ff7a-8155-b006-d63353dc4456",
+      "code_patterns": [
+        "workflow_state.md"
+      ],
+      "read_by": [
+        "A-01",
         "A-02",
         "B-01",
         "B-02",
+        "B-03",
         "B-01->03",
         "C-01",
+        "C-02",
+        "C-03",
         "C-06",
         "D-01",
         "D-02",
+        "E-01",
+        "E-02",
         "F-01",
         "G-01",
         "G-02",
@@ -1438,70 +2046,662 @@ window.WORKFLOW_DATA = {
       ]
     }
   ],
+  "validation_issues": [
+    {
+      "skill": "projekt-erfassung",
+      "skill_id": "A-01",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "hinweise.json",
+      "detail": "Code liest 'hinweise.json', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "projekt-erfassung",
+      "skill_id": "A-01",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "matching.json",
+      "detail": "Code liest 'matching.json', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "projekt-erfassung",
+      "skill_id": "A-01",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "MaterialAnfragen DB",
+      "detail": "Code liest 'MaterialAnfragen DB', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "projekt-erfassung",
+      "skill_id": "A-01",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "Notion Dokumenten-DB (Inline)",
+      "detail": "Code liest 'Notion Dokumenten-DB (Inline)', Notion dokumentiert als Write"
+    },
+    {
+      "skill": "projekt-erfassung",
+      "skill_id": "A-01",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "workflow_state.md",
+      "detail": "Code liest 'workflow_state.md', Notion dokumentiert als Write"
+    },
+    {
+      "skill": "projekt-erfassung",
+      "skill_id": "A-01",
+      "type": "undocumented_write",
+      "severity": "critical",
+      "resource": "Angebots-Abgabe (X84/PDF)",
+      "detail": "Code schreibt 'Angebots-Abgabe (X84/PDF)', Notion hat keine Schreibt-in-Relation"
+    },
+    {
+      "skill": "nachreichung",
+      "skill_id": "A-02",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "hinweise.json",
+      "detail": "Code liest 'hinweise.json', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "nachreichung",
+      "skill_id": "A-02",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "Notion Dokumenten-DB (Inline)",
+      "detail": "Code liest 'Notion Dokumenten-DB (Inline)', Notion dokumentiert als Write"
+    },
+    {
+      "skill": "nachreichung",
+      "skill_id": "A-02",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "Projekt-DB",
+      "detail": "Code liest 'Projekt-DB', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "template-anwendung",
+      "skill_id": "B-01",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "hinweise.json",
+      "detail": "Code liest 'hinweise.json', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "template-anwendung",
+      "skill_id": "B-01",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "GDrive Projektordner",
+      "detail": "Code liest 'GDrive Projektordner', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "template-anwendung",
+      "skill_id": "B-01",
+      "type": "undocumented_write",
+      "severity": "critical",
+      "resource": "hinweise.json",
+      "detail": "Code schreibt 'hinweise.json', Notion hat keine Schreibt-in-Relation"
+    },
+    {
+      "skill": "hinweis-extraktion",
+      "skill_id": "B-02",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "hinweise.json",
+      "detail": "Code liest 'hinweise.json', Notion dokumentiert als Write"
+    },
+    {
+      "skill": "hinweis-extraktion",
+      "skill_id": "B-02",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "GDrive Projektordner",
+      "detail": "Code liest 'GDrive Projektordner', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "vorab-kalkulation",
+      "skill_id": "B-03",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "Projekt-DB",
+      "detail": "Code liest 'Projekt-DB', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "vorab-kalkulation",
+      "skill_id": "B-03",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "matching.json",
+      "detail": "Code liest 'matching.json', Notion dokumentiert als Write"
+    },
+    {
+      "skill": "vorab-kalkulation",
+      "skill_id": "B-03",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "GDrive Projektordner",
+      "detail": "Code liest 'GDrive Projektordner', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "vorab-kalkulation",
+      "skill_id": "B-03",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "MaterialAnfragen DB",
+      "detail": "Code liest 'MaterialAnfragen DB', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "vorab-kalkulation",
+      "skill_id": "B-03",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "workflow_state.md",
+      "detail": "Code liest 'workflow_state.md', Notion dokumentiert als Write"
+    },
+    {
+      "skill": "vorab-kalkulation",
+      "skill_id": "B-03",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "Notion DB Snapshots",
+      "detail": "Code liest 'Notion DB Snapshots', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "vorab-kalkulation",
+      "skill_id": "B-03",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "hinweise.json",
+      "detail": "Code schreibt 'hinweise.json', Notion dokumentiert als Read"
+    },
+    {
+      "skill": "vorab-kalkulation",
+      "skill_id": "B-03",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "Referenz-LV",
+      "detail": "Notion listet Read auf 'Referenz-LV', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "vorab-kalkulation-komplett",
+      "skill_id": "B-01->03",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "Referenz-LV",
+      "detail": "Notion listet Read auf 'Referenz-LV', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "vorab-kalkulation-komplett",
+      "skill_id": "B-01->03",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "Datanorm-Preise",
+      "detail": "Notion listet Read auf 'Datanorm-Preise', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "vorab-kalkulation-komplett",
+      "skill_id": "B-01->03",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "KFE-Katalog",
+      "detail": "Notion listet Read auf 'KFE-Katalog', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "vorab-kalkulation-komplett",
+      "skill_id": "B-01->03",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "GSheet Kalkulation",
+      "detail": "Notion listet Read auf 'GSheet Kalkulation', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "vorab-kalkulation-komplett",
+      "skill_id": "B-01->03",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "GAEB-Quelldateien (X83/D83)",
+      "detail": "Notion listet Read auf 'GAEB-Quelldateien (X83/D83)', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "vorab-kalkulation-komplett",
+      "skill_id": "B-01->03",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "TAWO-Stundensaetze",
+      "detail": "Notion listet Read auf 'TAWO-Stundensaetze', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "vorab-kalkulation-komplett",
+      "skill_id": "B-01->03",
+      "type": "phantom_write",
+      "severity": "medium",
+      "resource": "matching.json",
+      "detail": "Notion listet Write auf 'matching.json', Scanner keine Evidence"
+    },
+    {
+      "skill": "vorab-kalkulation-komplett",
+      "skill_id": "B-01->03",
+      "type": "phantom_write",
+      "severity": "medium",
+      "resource": "GSheet Kalkulation",
+      "detail": "Notion listet Write auf 'GSheet Kalkulation', Scanner keine Evidence"
+    },
+    {
+      "skill": "material-anfragen",
+      "skill_id": "C-01",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "Projekt-DB",
+      "detail": "Code liest 'Projekt-DB', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "material-anfragen",
+      "skill_id": "C-01",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "GAEB-Quelldateien (X83/D83)",
+      "detail": "Code liest 'GAEB-Quelldateien (X83/D83)', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "material-anfragen",
+      "skill_id": "C-01",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "MaterialAnfragen DB",
+      "detail": "Code liest 'MaterialAnfragen DB', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "material-anfragen",
+      "skill_id": "C-01",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "Notion Dokumenten-DB (Inline)",
+      "detail": "Code liest 'Notion Dokumenten-DB (Inline)', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "material-anfragen",
+      "skill_id": "C-01",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "Anfragen-GSheet (Material)",
+      "detail": "Code liest 'Anfragen-GSheet (Material)', Notion dokumentiert als Write"
+    },
+    {
+      "skill": "material-anfragen",
+      "skill_id": "C-01",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "GDrive Projektordner",
+      "detail": "Code liest 'GDrive Projektordner', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "material-anfragen",
+      "skill_id": "C-01",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "Gmail (Inbox/Drafts)",
+      "detail": "Code liest 'Gmail (Inbox/Drafts)', Notion dokumentiert als Write"
+    },
+    {
+      "skill": "material-anfragen",
+      "skill_id": "C-01",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "GSheet Kalkulation",
+      "detail": "Code schreibt 'GSheet Kalkulation', Notion dokumentiert als Read"
+    },
+    {
+      "skill": "material-anfragen",
+      "skill_id": "C-01",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "MaterialAnfragen-DB",
+      "detail": "Notion listet Read auf 'MaterialAnfragen-DB', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "material-anfragen",
+      "skill_id": "C-01",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "matching.json",
+      "detail": "Notion listet Read auf 'matching.json', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "material-anfragen",
+      "skill_id": "C-01",
+      "type": "phantom_write",
+      "severity": "medium",
+      "resource": "MaterialAnfragen-DB",
+      "detail": "Notion listet Write auf 'MaterialAnfragen-DB', Scanner keine Evidence"
+    },
+    {
+      "skill": "inbox-scan",
+      "skill_id": "C-02",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "Projekt-DB",
+      "detail": "Code liest 'Projekt-DB', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "inbox-scan",
+      "skill_id": "C-02",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "matching.json",
+      "detail": "Code liest 'matching.json', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "inbox-scan",
+      "skill_id": "C-02",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "GAEB-Quelldateien (X83/D83)",
+      "detail": "Code liest 'GAEB-Quelldateien (X83/D83)', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "inbox-scan",
+      "skill_id": "C-02",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "MaterialAnfragen DB",
+      "detail": "Code liest 'MaterialAnfragen DB', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "inbox-scan",
+      "skill_id": "C-02",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "workflow_state.md",
+      "detail": "Code liest 'workflow_state.md', Notion dokumentiert als Write"
+    },
+    {
+      "skill": "inbox-scan",
+      "skill_id": "C-02",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "GDrive Projektordner",
+      "detail": "Code liest 'GDrive Projektordner', Notion dokumentiert als Write"
+    },
+    {
+      "skill": "inbox-scan",
+      "skill_id": "C-02",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "MaterialAnfragen-DB",
+      "detail": "Notion listet Read auf 'MaterialAnfragen-DB', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "inbox-scan",
+      "skill_id": "C-02",
+      "type": "phantom_write",
+      "severity": "medium",
+      "resource": "MaterialAnfragen-DB",
+      "detail": "Notion listet Write auf 'MaterialAnfragen-DB', Scanner keine Evidence"
+    },
+    {
+      "skill": "angebots-auswertung",
+      "skill_id": "C-03",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "matching.json",
+      "detail": "Code liest 'matching.json', Notion dokumentiert als Write"
+    },
+    {
+      "skill": "angebots-auswertung",
+      "skill_id": "C-03",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "workflow_state.md",
+      "detail": "Code liest 'workflow_state.md', Notion dokumentiert als Write"
+    },
+    {
+      "skill": "angebots-auswertung",
+      "skill_id": "C-03",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "GAEB-Quelldateien (X83/D83)",
+      "detail": "Code liest 'GAEB-Quelldateien (X83/D83)', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "angebots-auswertung",
+      "skill_id": "C-03",
+      "type": "undocumented_write",
+      "severity": "critical",
+      "resource": "Angebots-Abgabe (X84/PDF)",
+      "detail": "Code schreibt 'Angebots-Abgabe (X84/PDF)', Notion hat keine Schreibt-in-Relation"
+    },
+    {
+      "skill": "angebots-auswertung",
+      "skill_id": "C-03",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "MaterialAnfragen-DB",
+      "detail": "Notion listet Read auf 'MaterialAnfragen-DB', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "angebots-auswertung",
+      "skill_id": "C-03",
+      "type": "phantom_write",
+      "severity": "medium",
+      "resource": "MaterialAnfragen-DB",
+      "detail": "Notion listet Write auf 'MaterialAnfragen-DB', Scanner keine Evidence"
+    },
+    {
+      "skill": "material-konsolidierung",
+      "skill_id": "C-06",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "hinweise.json",
+      "detail": "Notion listet Read auf 'hinweise.json', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "material-konsolidierung",
+      "skill_id": "C-06",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "GSheet Kalkulation",
+      "detail": "Notion listet Read auf 'GSheet Kalkulation', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "material-konsolidierung",
+      "skill_id": "C-06",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "MaterialAnfragen-DB",
+      "detail": "Notion listet Read auf 'MaterialAnfragen-DB', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "material-konsolidierung",
+      "skill_id": "C-06",
+      "type": "phantom_write",
+      "severity": "medium",
+      "resource": "GSheet Kalkulation",
+      "detail": "Notion listet Write auf 'GSheet Kalkulation', Scanner keine Evidence"
+    },
+    {
+      "skill": "kalkulations-analyse",
+      "skill_id": "D-01",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "hinweise.json",
+      "detail": "Code liest 'hinweise.json', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "kalkulations-analyse",
+      "skill_id": "D-01",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "Referenz-LV",
+      "detail": "Notion listet Read auf 'Referenz-LV', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "angebotserstellung",
+      "skill_id": "D-02",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "matching.json",
+      "detail": "Code liest 'matching.json', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "angebotserstellung",
+      "skill_id": "D-02",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "Referenz-LV",
+      "detail": "Code liest 'Referenz-LV', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "angebotserstellung",
+      "skill_id": "D-02",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "GDrive Projektordner",
+      "detail": "Code liest 'GDrive Projektordner', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "angebotserstellung",
+      "skill_id": "D-02",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "Projekt-DB",
+      "detail": "Notion listet Read auf 'Projekt-DB', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "angebotserstellung",
+      "skill_id": "D-02",
+      "type": "phantom_write",
+      "severity": "medium",
+      "resource": "Projekt-DB",
+      "detail": "Notion listet Write auf 'Projekt-DB', Scanner keine Evidence"
+    },
+    {
+      "skill": "bieterbrief-verarbeitung",
+      "skill_id": "E-01",
+      "type": "undocumented_read",
+      "severity": "medium",
+      "resource": "matching.json",
+      "detail": "Code liest 'matching.json', Notion hat keine Liest-aus-Relation"
+    },
+    {
+      "skill": "bieterbrief-verarbeitung",
+      "skill_id": "E-01",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "workflow_state.md",
+      "detail": "Code liest 'workflow_state.md', Notion dokumentiert als Write"
+    },
+    {
+      "skill": "bieterbrief-verarbeitung",
+      "skill_id": "E-01",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "hinweise.json",
+      "detail": "Notion listet Read auf 'hinweise.json', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "bieterbrief-verarbeitung",
+      "skill_id": "E-01",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "Referenz-LV",
+      "detail": "Notion listet Read auf 'Referenz-LV', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "bieterbrief-verarbeitung",
+      "skill_id": "E-01",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "GDrive Projektordner",
+      "detail": "Notion listet Read auf 'GDrive Projektordner', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "bieterbrief-verarbeitung",
+      "skill_id": "E-01",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "Datanorm-Preise",
+      "detail": "Notion listet Read auf 'Datanorm-Preise', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    },
+    {
+      "skill": "bieterbrief-verarbeitung",
+      "skill_id": "E-01",
+      "type": "phantom_write",
+      "severity": "medium",
+      "resource": "GDrive Projektordner",
+      "detail": "Notion listet Write auf 'GDrive Projektordner', Scanner keine Evidence"
+    },
+    {
+      "skill": "gh-verhandlung",
+      "skill_id": "E-02",
+      "type": "direction_mismatch",
+      "severity": "high",
+      "resource": "workflow_state.md",
+      "detail": "Code liest 'workflow_state.md', Notion dokumentiert als Write"
+    },
+    {
+      "skill": "gh-verhandlung",
+      "skill_id": "E-02",
+      "type": "phantom_read",
+      "severity": "medium",
+      "resource": "GSheet Kalkulation",
+      "detail": "Notion listet Read auf 'GSheet Kalkulation', Scanner keine Evidence (ggf. Scanner-Miss oder veraltet)"
+    }
+  ],
+  "composite_skill_check": {
+    "skill": "vorab-kalkulation-komplett",
+    "expected_reads_union": [
+      "Datanorm-Preise",
+      "GAEB-Quelldateien (X83/D83)",
+      "GDrive Projektordner",
+      "GSheet Kalkulation",
+      "KFE-Katalog",
+      "MaterialAnfragen DB",
+      "Notion DB Snapshots",
+      "Projekt-DB",
+      "TAWO-Stundensaetze",
+      "hinweise.json",
+      "matching.json",
+      "workflow_state.md"
+    ],
+    "expected_writes_union": [
+      "GSheet Kalkulation",
+      "hinweise.json",
+      "matching.json",
+      "workflow_state.md"
+    ],
+    "code_reads_composite": [
+      "hinweise.json",
+      "workflow_state.md"
+    ],
+    "code_writes_composite": [],
+    "missing_reads_in_composite": [
+      "Datanorm-Preise",
+      "GAEB-Quelldateien (X83/D83)",
+      "GDrive Projektordner",
+      "GSheet Kalkulation",
+      "KFE-Katalog",
+      "MaterialAnfragen DB",
+      "Notion DB Snapshots",
+      "Projekt-DB",
+      "TAWO-Stundensaetze",
+      "matching.json"
+    ],
+    "missing_writes_in_composite": [
+      "GSheet Kalkulation",
+      "hinweise.json",
+      "matching.json",
+      "workflow_state.md"
+    ],
+    "note": "Composite Skill ruft Sub-Skills ueber Sub-Agent auf, scannt selbst nur SKILL.md. Erwartete Union ist informativ."
+  },
   "script_index": [
-    {
-      "name": "oz_normalizer.py",
-      "path": "scripts/oz_normalizer.py",
-      "role": "shared",
-      "used_by_skills": [
-        "angebots-auswertung",
-        "bieterbrief-verarbeitung"
-      ],
-      "imported_by_scripts": [
-        "angebots_auswertung.py",
-        "bieterbrief_excel_filler.py",
-        "bieterbrief_parser.py",
-        "evaluate_gh_scope.py",
-        "evaluate_sg_scope.py",
-        "final_kalkulation.py",
-        "final_to_gsheet.py",
-        "lv_schema_validator.py",
-        "oz_matcher.py",
-        "read_from_gsheet.py",
-        "read_konsolidierung_data.py",
-        "update_matrix.py",
-        "vorab_gsheet_writer.py",
-        "write_lieferant_tab.py",
-        "write_master_tabs.py",
-        "write_sg_vergleich.py"
-      ],
-      "imports": [],
-      "total_dependents": 18
-    },
-    {
-      "name": "workflow_state.py",
-      "path": "scripts/workflow_state.py",
-      "role": "shared",
-      "used_by_skills": [
-        "angebots-auswertung",
-        "angebotserstellung",
-        "bieterbrief-verarbeitung",
-        "gh-verhandlung",
-        "hinweis-extraktion",
-        "inbox-scan",
-        "kalkulations-analyse",
-        "lieferanten-absage",
-        "material-anfragen",
-        "material-konsolidierung",
-        "nachreichung",
-        "projekt-erfassung",
-        "template-anwendung",
-        "vorab-kalkulation",
-        "vorab-kalkulation-komplett"
-      ],
-      "imported_by_scripts": [
-        "test_workflow_state.py"
-      ],
-      "imports": [],
-      "total_dependents": 16
-    },
     {
       "name": "angebots_auswertung.py",
       "path": "scripts/angebots_auswertung.py",
       "role": "shared",
       "used_by_skills": [
-        "angebots-auswertung",
-        "material-konsolidierung"
+        "angebots-auswertung"
       ],
       "imported_by_scripts": [
         "evaluate_gh_scope.py",
@@ -1521,134 +2721,15 @@ window.WORKFLOW_DATA = {
       "total_dependents": 11
     },
     {
-      "name": "gsheet_formatting.py",
-      "path": "scripts/gsheet_formatting.py",
-      "role": "shared",
-      "used_by_skills": [
-        "material-konsolidierung"
-      ],
-      "imported_by_scripts": [
-        "evaluate_gh_scope.py",
-        "write_gh_vergleich.py",
-        "write_master_tabs.py",
-        "write_scope_results.py",
-        "write_sg_vergleich.py",
-        "write_uebergabe_sheet.py"
-      ],
-      "imports": [],
-      "total_dependents": 7
-    },
-    {
-      "name": "gsheet_retry.py",
-      "path": "scripts/gsheet_retry.py",
-      "role": "infra",
-      "used_by_skills": [],
-      "imported_by_scripts": [
-        "angebots_auswertung.py",
-        "read_konsolidierung_data.py",
-        "write_gh_vergleich.py",
-        "write_lieferant_tab.py",
-        "write_master_tabs.py",
-        "write_sg_vergleich.py",
-        "write_uebergabe_sheet.py"
-      ],
-      "imports": [],
-      "total_dependents": 7
-    },
-    {
-      "name": "gaeb_to_excel.py",
-      "path": "scripts/gaeb_to_excel.py",
-      "role": "shared",
-      "used_by_skills": [
-        "projekt-erfassung",
-        "template-anwendung"
-      ],
-      "imported_by_scripts": [
-        "final_kalkulation.py",
-        "gaeb_to_pdf.py"
-      ],
-      "imports": [],
-      "total_dependents": 4
-    },
-    {
-      "name": "kalk_typ_classifier.py",
-      "path": "scripts/kalk_typ_classifier.py",
-      "role": "shared",
-      "used_by_skills": [
-        "vorab-kalkulation"
-      ],
-      "imported_by_scripts": [
-        "vorab_kalk_validator.py",
-        "vorab_matching.py"
-      ],
-      "imports": [
-        "hinweis_extraktion.py"
-      ],
-      "total_dependents": 3
-    },
-    {
       "name": "attach_drafts.py",
       "path": "scripts/attach_drafts.py",
-      "role": "main",
-      "used_by_skills": [
-        "lieferanten-absage",
-        "material-anfragen"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 2
-    },
-    {
-      "name": "drive_file_index.py",
-      "path": "scripts/drive_file_index.py",
-      "role": "main",
-      "used_by_skills": [
-        "nachreichung",
-        "projekt-erfassung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [],
-      "total_dependents": 2
-    },
-    {
-      "name": "gaeb_to_pdf.py",
-      "path": "scripts/gaeb_to_pdf.py",
-      "role": "main",
-      "used_by_skills": [
-        "angebotserstellung",
-        "projekt-erfassung"
-      ],
-      "imported_by_scripts": [],
-      "imports": [
-        "gaeb_to_excel.py"
-      ],
-      "total_dependents": 2
-    },
-    {
-      "name": "hinweis_extraktion.py",
-      "path": "scripts/hinweis_extraktion.py",
       "role": "shared",
       "used_by_skills": [
-        "hinweis-extraktion"
-      ],
-      "imported_by_scripts": [
-        "kalk_typ_classifier.py"
-      ],
-      "imports": [],
-      "total_dependents": 2
-    },
-    {
-      "name": "vorab_matching.py",
-      "path": "scripts/vorab_matching.py",
-      "role": "main",
-      "used_by_skills": [
-        "bieterbrief-verarbeitung",
-        "vorab-kalkulation"
+        "material-anfragen",
+        "lieferanten-absage"
       ],
       "imported_by_scripts": [],
-      "imports": [
-        "kalk_typ_classifier.py"
-      ],
+      "imports": [],
       "total_dependents": 2
     },
     {
@@ -1663,6 +2744,17 @@ window.WORKFLOW_DATA = {
         "oz_normalizer.py"
       ],
       "total_dependents": 1
+    },
+    {
+      "name": "bieterbrief_gsheet_writer.py",
+      "path": "scripts/bieterbrief_gsheet_writer.py",
+      "role": "main",
+      "used_by_skills": [
+        "bieterbrief-verarbeitung"
+      ],
+      "imported_by_scripts": [],
+      "imports": [],
+      "total_dependents": 0
     },
     {
       "name": "bieterbrief_parser.py",
@@ -1689,6 +2781,18 @@ window.WORKFLOW_DATA = {
       "total_dependents": 1
     },
     {
+      "name": "drive_file_index.py",
+      "path": "scripts/drive_file_index.py",
+      "role": "shared",
+      "used_by_skills": [
+        "projekt-erfassung",
+        "nachreichung"
+      ],
+      "imported_by_scripts": [],
+      "imports": [],
+      "total_dependents": 2
+    },
+    {
       "name": "email_intake.py",
       "path": "scripts/email_intake.py",
       "role": "main",
@@ -1698,6 +2802,46 @@ window.WORKFLOW_DATA = {
       "imported_by_scripts": [],
       "imports": [],
       "total_dependents": 1
+    },
+    {
+      "name": "filename_normalizer.py",
+      "path": "scripts/filename_normalizer.py",
+      "role": "main",
+      "used_by_skills": [
+        "nachreichung"
+      ],
+      "imported_by_scripts": [],
+      "imports": [],
+      "total_dependents": 0
+    },
+    {
+      "name": "gaeb_to_excel.py",
+      "path": "scripts/gaeb_to_excel.py",
+      "role": "shared",
+      "used_by_skills": [
+        "projekt-erfassung",
+        "template-anwendung",
+        "projekt-erfassung-light"
+      ],
+      "imported_by_scripts": [
+        "final_kalkulation.py",
+        "gaeb_to_pdf.py"
+      ],
+      "imports": [],
+      "total_dependents": 4
+    },
+    {
+      "name": "gaeb_to_pdf.py",
+      "path": "scripts/gaeb_to_pdf.py",
+      "role": "main",
+      "used_by_skills": [
+        "projekt-erfassung"
+      ],
+      "imported_by_scripts": [],
+      "imports": [
+        "gaeb_to_excel.py"
+      ],
+      "total_dependents": 2
     },
     {
       "name": "gsheet_auth_setup.py",
@@ -1711,9 +2855,39 @@ window.WORKFLOW_DATA = {
       "total_dependents": 1
     },
     {
+      "name": "gsheet_config.json",
+      "path": "scripts/gsheet_config.json",
+      "role": "shared",
+      "used_by_skills": [
+        "material-anfragen",
+        "angebotserstellung"
+      ],
+      "imported_by_scripts": [],
+      "imports": [],
+      "total_dependents": 0
+    },
+    {
+      "name": "gsheet_formatting.py",
+      "path": "scripts/gsheet_formatting.py",
+      "role": "shared",
+      "used_by_skills": [
+        "material-konsolidierung"
+      ],
+      "imported_by_scripts": [
+        "evaluate_gh_scope.py",
+        "write_gh_vergleich.py",
+        "write_master_tabs.py",
+        "write_scope_results.py",
+        "write_sg_vergleich.py",
+        "write_uebergabe_sheet.py"
+      ],
+      "imports": [],
+      "total_dependents": 7
+    },
+    {
       "name": "gsheet_quality_gate.py",
       "path": "scripts/gsheet_quality_gate.py",
-      "role": "infra",
+      "role": "main",
       "used_by_skills": [],
       "imported_by_scripts": [
         "write_master_tabs.py"
@@ -1722,6 +2896,36 @@ window.WORKFLOW_DATA = {
         "angebots_auswertung.py"
       ],
       "total_dependents": 1
+    },
+    {
+      "name": "gsheet_retry.py",
+      "path": "scripts/gsheet_retry.py",
+      "role": "shared",
+      "used_by_skills": [],
+      "imported_by_scripts": [
+        "angebots_auswertung.py",
+        "read_konsolidierung_data.py",
+        "write_gh_vergleich.py",
+        "write_lieferant_tab.py",
+        "write_master_tabs.py",
+        "write_sg_vergleich.py",
+        "write_uebergabe_sheet.py"
+      ],
+      "imports": [],
+      "total_dependents": 7
+    },
+    {
+      "name": "hinweis_extraktion.py",
+      "path": "scripts/hinweis_extraktion.py",
+      "role": "main",
+      "used_by_skills": [
+        "hinweis-extraktion"
+      ],
+      "imported_by_scripts": [
+        "kalk_typ_classifier.py"
+      ],
+      "imports": [],
+      "total_dependents": 2
     },
     {
       "name": "inbox_scanner.py",
@@ -1735,6 +2939,22 @@ window.WORKFLOW_DATA = {
       "total_dependents": 1
     },
     {
+      "name": "kalk_typ_classifier.py",
+      "path": "scripts/kalk_typ_classifier.py",
+      "role": "shared",
+      "used_by_skills": [
+        "vorab-kalkulation"
+      ],
+      "imported_by_scripts": [
+        "vorab_kalk_validator.py",
+        "vorab_matching.py"
+      ],
+      "imports": [
+        "hinweis_extraktion.py"
+      ],
+      "total_dependents": 3
+    },
+    {
       "name": "kalkulations_analyse.py",
       "path": "scripts/kalkulations_analyse.py",
       "role": "main",
@@ -1744,6 +2964,17 @@ window.WORKFLOW_DATA = {
       "imported_by_scripts": [],
       "imports": [],
       "total_dependents": 1
+    },
+    {
+      "name": "l1_mapper.py",
+      "path": "scripts/l1_mapper.py",
+      "role": "main",
+      "used_by_skills": [
+        "projekt-erfassung"
+      ],
+      "imported_by_scripts": [],
+      "imports": [],
+      "total_dependents": 0
     },
     {
       "name": "oz_matcher.py",
@@ -1759,6 +2990,47 @@ window.WORKFLOW_DATA = {
       "total_dependents": 1
     },
     {
+      "name": "oz_normalizer.py",
+      "path": "scripts/oz_normalizer.py",
+      "role": "shared",
+      "used_by_skills": [
+        "angebots-auswertung",
+        "bieterbrief-verarbeitung",
+        "projekt-erfassung-light"
+      ],
+      "imported_by_scripts": [
+        "angebots_auswertung.py",
+        "bieterbrief_excel_filler.py",
+        "bieterbrief_parser.py",
+        "evaluate_gh_scope.py",
+        "evaluate_sg_scope.py",
+        "final_kalkulation.py",
+        "final_to_gsheet.py",
+        "lv_schema_validator.py",
+        "oz_matcher.py",
+        "read_from_gsheet.py",
+        "read_konsolidierung_data.py",
+        "update_matrix.py",
+        "vorab_gsheet_writer.py",
+        "write_lieferant_tab.py",
+        "write_master_tabs.py",
+        "write_sg_vergleich.py"
+      ],
+      "imports": [],
+      "total_dependents": 18
+    },
+    {
+      "name": "qs_module.py",
+      "path": "scripts/qs_module.py",
+      "role": "main",
+      "used_by_skills": [
+        "angebots-auswertung"
+      ],
+      "imported_by_scripts": [],
+      "imports": [],
+      "total_dependents": 0
+    },
+    {
       "name": "read_konsolidierung_data.py",
       "path": "scripts/read_konsolidierung_data.py",
       "role": "main",
@@ -1772,6 +3044,21 @@ window.WORKFLOW_DATA = {
         "oz_normalizer.py"
       ],
       "total_dependents": 1
+    },
+    {
+      "name": "skill_completion_check.py",
+      "path": "scripts/skill_completion_check.py",
+      "role": "shared",
+      "used_by_skills": [
+        "template-anwendung",
+        "hinweis-extraktion",
+        "vorab-kalkulation",
+        "angebots-auswertung",
+        "material-konsolidierung"
+      ],
+      "imported_by_scripts": [],
+      "imports": [],
+      "total_dependents": 0
     },
     {
       "name": "template_anwendung.py",
@@ -1820,6 +3107,49 @@ window.WORKFLOW_DATA = {
         "kalk_typ_classifier.py"
       ],
       "total_dependents": 1
+    },
+    {
+      "name": "vorab_matching.py",
+      "path": "scripts/vorab_matching.py",
+      "role": "shared",
+      "used_by_skills": [
+        "vorab-kalkulation",
+        "bieterbrief-verarbeitung"
+      ],
+      "imported_by_scripts": [],
+      "imports": [
+        "kalk_typ_classifier.py"
+      ],
+      "total_dependents": 2
+    },
+    {
+      "name": "workflow_state.py",
+      "path": "scripts/workflow_state.py",
+      "role": "shared",
+      "used_by_skills": [
+        "projekt-erfassung",
+        "nachreichung",
+        "template-anwendung",
+        "hinweis-extraktion",
+        "vorab-kalkulation",
+        "vorab-kalkulation-komplett",
+        "material-anfragen",
+        "inbox-scan",
+        "kalkulations-analyse",
+        "angebotserstellung",
+        "bieterbrief-verarbeitung",
+        "gh-verhandlung",
+        "lieferanten-absage",
+        "projekt-zusammenfassung",
+        "uebergabe",
+        "uebergabe-sheet",
+        "projekt-erfassung-light"
+      ],
+      "imported_by_scripts": [
+        "test_workflow_state.py"
+      ],
+      "imports": [],
+      "total_dependents": 16
     },
     {
       "name": "write_gh_vergleich.py",
@@ -1913,849 +3243,29 @@ window.WORKFLOW_DATA = {
       "total_dependents": 1
     }
   ],
-  "orphaned_scripts": [
-    "_skill_lock.py",
-    "convert_p83_to_x83.py",
-    "datanorm_update.py",
-    "evaluate_gh_scope.py",
-    "evaluate_sg_scope.py",
-    "filename_normalizer.py",
-    "final_kalkulation.py",
-    "final_to_gsheet.py",
-    "gaeb2000_convert.py",
-    "l1_mapper.py",
-    "lv_schema_validator.py",
-    "qs_module.py",
-    "read_from_gsheet.py",
-    "setup_check.py",
-    "sync_notion_db.py",
-    "test_workflow_state.py",
-    "update_matrix.py"
-  ],
-  "validation_issues": [
-    {
-      "skill": "projekt-erfassung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Scanner findet Read auf matching.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "projekt-erfassung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "GSheet Kalkulation",
-      "detail": "Scanner findet Read auf GSheet Kalkulation, Notion hat Relation nicht"
-    },
-    {
-      "skill": "projekt-erfassung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Scanner findet Read auf workflow_state.md, Notion hat Relation nicht"
-    },
-    {
-      "skill": "projekt-erfassung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "hinweise.json",
-      "detail": "Scanner findet Read auf hinweise.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "projekt-erfassung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Notion Dokumenten-DB (Inline)",
-      "detail": "Scanner findet Read auf Notion Dokumenten-DB (Inline), Notion hat Relation nicht"
-    },
-    {
-      "skill": "projekt-erfassung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "MaterialAnfragen-DB",
-      "detail": "Scanner findet Read auf MaterialAnfragen-DB, Notion hat Relation nicht"
-    },
-    {
-      "skill": "projekt-erfassung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Anfragen-GSheet (Material)",
-      "detail": "Scanner findet Read auf Anfragen-GSheet (Material), Notion hat Relation nicht"
-    },
-    {
-      "skill": "projekt-erfassung",
-      "type": "undocumented_write",
-      "severity": "high",
-      "resource": "Angebots-Abgabe (X84/PDF)",
-      "detail": "Scanner findet Write auf Angebots-Abgabe (X84/PDF), Notion hat Relation nicht"
-    },
-    {
-      "skill": "projekt-erfassung",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "Notion Dokumenten-DB (Inline)",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "projekt-erfassung",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "nachreichung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Projekt-DB",
-      "detail": "Scanner findet Read auf Projekt-DB, Notion hat Relation nicht"
-    },
-    {
-      "skill": "nachreichung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Scanner findet Read auf matching.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "nachreichung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "hinweise.json",
-      "detail": "Scanner findet Read auf hinweise.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "nachreichung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Notion Dokumenten-DB (Inline)",
-      "detail": "Scanner findet Read auf Notion Dokumenten-DB (Inline), Notion hat Relation nicht"
-    },
-    {
-      "skill": "template-anwendung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Scanner findet Read auf matching.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "template-anwendung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "hinweise.json",
-      "detail": "Scanner findet Read auf hinweise.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "template-anwendung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "GDrive Projektordner",
-      "detail": "Scanner findet Read auf GDrive Projektordner, Notion hat Relation nicht"
-    },
-    {
-      "skill": "template-anwendung",
-      "type": "undocumented_write",
-      "severity": "high",
-      "resource": "Projekt-DB",
-      "detail": "Scanner findet Write auf Projekt-DB, Notion hat Relation nicht"
-    },
-    {
-      "skill": "template-anwendung",
-      "type": "undocumented_write",
-      "severity": "high",
-      "resource": "hinweise.json",
-      "detail": "Scanner findet Write auf hinweise.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "template-anwendung",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "hinweis-extraktion",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Scanner findet Read auf matching.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "hinweis-extraktion",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "hinweise.json",
-      "detail": "Scanner findet Read auf hinweise.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "hinweis-extraktion",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "GDrive Projektordner",
-      "detail": "Scanner findet Read auf GDrive Projektordner, Notion hat Relation nicht"
-    },
-    {
-      "skill": "hinweis-extraktion",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Notion DB Snapshots",
-      "detail": "Scanner findet Read auf Notion DB Snapshots, Notion hat Relation nicht"
-    },
-    {
-      "skill": "hinweis-extraktion",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "hinweise.json",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "hinweis-extraktion",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "vorab-kalkulation",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Projekt-DB",
-      "detail": "Scanner findet Read auf Projekt-DB, Notion hat Relation nicht"
-    },
-    {
-      "skill": "vorab-kalkulation",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Scanner findet Read auf matching.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "vorab-kalkulation",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Scanner findet Read auf workflow_state.md, Notion hat Relation nicht"
-    },
-    {
-      "skill": "vorab-kalkulation",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Notion DB Snapshots",
-      "detail": "Scanner findet Read auf Notion DB Snapshots, Notion hat Relation nicht"
-    },
-    {
-      "skill": "vorab-kalkulation",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "MaterialAnfragen-DB",
-      "detail": "Scanner findet Read auf MaterialAnfragen-DB, Notion hat Relation nicht"
-    },
-    {
-      "skill": "vorab-kalkulation",
-      "type": "undocumented_write",
-      "severity": "high",
-      "resource": "hinweise.json",
-      "detail": "Scanner findet Write auf hinweise.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "vorab-kalkulation",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "GSheet Kalkulation",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "vorab-kalkulation-komplett",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Scanner findet Read auf matching.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "vorab-kalkulation-komplett",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "Referenz-LV",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "vorab-kalkulation-komplett",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "GSheet Kalkulation",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "vorab-kalkulation-komplett",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "KFE-Katalog",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "vorab-kalkulation-komplett",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "GAEB-Quelldateien (X83/D83)",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "vorab-kalkulation-komplett",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "TAWO-Stundensaetze",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "vorab-kalkulation-komplett",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "Datanorm-Preise",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "vorab-kalkulation-komplett",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "vorab-kalkulation-komplett",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "hinweise.json",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "vorab-kalkulation-komplett",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "GSheet Kalkulation",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "vorab-kalkulation-komplett",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "material-anfragen",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Projekt-DB",
-      "detail": "Scanner findet Read auf Projekt-DB, Notion hat Relation nicht"
-    },
-    {
-      "skill": "material-anfragen",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Gmail (Inbox/Drafts)",
-      "detail": "Scanner findet Read auf Gmail (Inbox/Drafts), Notion hat Relation nicht"
-    },
-    {
-      "skill": "material-anfragen",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Notion Dokumenten-DB (Inline)",
-      "detail": "Scanner findet Read auf Notion Dokumenten-DB (Inline), Notion hat Relation nicht"
-    },
-    {
-      "skill": "material-anfragen",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "GAEB-Quelldateien (X83/D83)",
-      "detail": "Scanner findet Read auf GAEB-Quelldateien (X83/D83), Notion hat Relation nicht"
-    },
-    {
-      "skill": "material-anfragen",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "GDrive Projektordner",
-      "detail": "Scanner findet Read auf GDrive Projektordner, Notion hat Relation nicht"
-    },
-    {
-      "skill": "material-anfragen",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Anfragen-GSheet (Material)",
-      "detail": "Scanner findet Read auf Anfragen-GSheet (Material), Notion hat Relation nicht"
-    },
-    {
-      "skill": "material-anfragen",
-      "type": "undocumented_write",
-      "severity": "high",
-      "resource": "GSheet Kalkulation",
-      "detail": "Scanner findet Write auf GSheet Kalkulation, Notion hat Relation nicht"
-    },
-    {
-      "skill": "material-anfragen",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "MaterialAnfragen-DB",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "material-anfragen",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "inbox-scan",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Projekt-DB",
-      "detail": "Scanner findet Read auf Projekt-DB, Notion hat Relation nicht"
-    },
-    {
-      "skill": "inbox-scan",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Scanner findet Read auf matching.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "inbox-scan",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Scanner findet Read auf workflow_state.md, Notion hat Relation nicht"
-    },
-    {
-      "skill": "inbox-scan",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "GAEB-Quelldateien (X83/D83)",
-      "detail": "Scanner findet Read auf GAEB-Quelldateien (X83/D83), Notion hat Relation nicht"
-    },
-    {
-      "skill": "inbox-scan",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "GDrive Projektordner",
-      "detail": "Scanner findet Read auf GDrive Projektordner, Notion hat Relation nicht"
-    },
-    {
-      "skill": "inbox-scan",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "Gmail (Inbox/Drafts)",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "inbox-scan",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "GDrive Projektordner",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "inbox-scan",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "MaterialAnfragen-DB",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "angebots-auswertung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Scanner findet Read auf matching.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "angebots-auswertung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "GAEB-Quelldateien (X83/D83)",
-      "detail": "Scanner findet Read auf GAEB-Quelldateien (X83/D83), Notion hat Relation nicht"
-    },
-    {
-      "skill": "angebots-auswertung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Scanner findet Read auf workflow_state.md, Notion hat Relation nicht"
-    },
-    {
-      "skill": "angebots-auswertung",
-      "type": "undocumented_write",
-      "severity": "high",
-      "resource": "Angebots-Abgabe (X84/PDF)",
-      "detail": "Scanner findet Write auf Angebots-Abgabe (X84/PDF), Notion hat Relation nicht"
-    },
-    {
-      "skill": "angebots-auswertung",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "MaterialAnfragen-DB",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "sg-vergleich",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "GDrive Projektordner",
-      "detail": "Scanner findet Read auf GDrive Projektordner, Notion hat Relation nicht"
-    },
-    {
-      "skill": "sg-vergleich",
-      "type": "undocumented_write",
-      "severity": "high",
-      "resource": "Angebots-Abgabe (X84/PDF)",
-      "detail": "Scanner findet Write auf Angebots-Abgabe (X84/PDF), Notion hat Relation nicht"
-    },
-    {
-      "skill": "sg-vergleich",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "GSheet Kalkulation",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "sg-vergleich",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "Anfragen-GSheet (Material)",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "sg-vergleich",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "Anfragen-GSheet (Material)",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "material-konsolidierung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Scanner findet Read auf matching.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "material-konsolidierung",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "MaterialAnfragen-DB",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "material-konsolidierung",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "Anfragen-GSheet (Material)",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "material-konsolidierung",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "GSheet Kalkulation",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "material-konsolidierung",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "kalkulations-analyse",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Scanner findet Read auf matching.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "kalkulations-analyse",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "hinweise.json",
-      "detail": "Scanner findet Read auf hinweise.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "kalkulations-analyse",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "Referenz-LV",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "kalkulations-analyse",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "angebotserstellung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Scanner findet Read auf matching.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "angebotserstellung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Referenz-LV",
-      "detail": "Scanner findet Read auf Referenz-LV, Notion hat Relation nicht"
-    },
-    {
-      "skill": "angebotserstellung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "GDrive Projektordner",
-      "detail": "Scanner findet Read auf GDrive Projektordner, Notion hat Relation nicht"
-    },
-    {
-      "skill": "angebotserstellung",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "Projekt-DB",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "angebotserstellung",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "Projekt-DB",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "angebotserstellung",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "bieterbrief-verarbeitung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Scanner findet Read auf matching.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "bieterbrief-verarbeitung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Notion DB Snapshots",
-      "detail": "Scanner findet Read auf Notion DB Snapshots, Notion hat Relation nicht"
-    },
-    {
-      "skill": "bieterbrief-verarbeitung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Anfragen-GSheet (Material)",
-      "detail": "Scanner findet Read auf Anfragen-GSheet (Material), Notion hat Relation nicht"
-    },
-    {
-      "skill": "bieterbrief-verarbeitung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Scanner findet Read auf workflow_state.md, Notion hat Relation nicht"
-    },
-    {
-      "skill": "bieterbrief-verarbeitung",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "GDrive Projektordner",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "bieterbrief-verarbeitung",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "GSheet Kalkulation",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "bieterbrief-verarbeitung",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "gh-verhandlung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Scanner findet Read auf matching.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "gh-verhandlung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Scanner findet Read auf workflow_state.md, Notion hat Relation nicht"
-    },
-    {
-      "skill": "gh-verhandlung",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "GSheet Kalkulation",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "gh-verhandlung",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "lieferanten-absage",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "matching.json",
-      "detail": "Scanner findet Read auf matching.json, Notion hat Relation nicht"
-    },
-    {
-      "skill": "lieferanten-absage",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "GDrive Projektordner",
-      "detail": "Scanner findet Read auf GDrive Projektordner, Notion hat Relation nicht"
-    },
-    {
-      "skill": "lieferanten-absage",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "MaterialAnfragen-DB",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "projekt-zusammenfassung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Projekt-DB",
-      "detail": "Scanner findet Read auf Projekt-DB, Notion hat Relation nicht"
-    },
-    {
-      "skill": "projekt-zusammenfassung",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "GAEB-Quelldateien (X83/D83)",
-      "detail": "Scanner findet Read auf GAEB-Quelldateien (X83/D83), Notion hat Relation nicht"
-    },
-    {
-      "skill": "projekt-zusammenfassung",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "Notion Dokumenten-DB (Inline)",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "uebergabe",
-      "type": "undocumented_read",
-      "severity": "medium",
-      "resource": "Anfragen-GSheet (Material)",
-      "detail": "Scanner findet Read auf Anfragen-GSheet (Material), Notion hat Relation nicht"
-    },
-    {
-      "skill": "uebergabe",
-      "type": "undocumented_write",
-      "severity": "high",
-      "resource": "Projekt-DB",
-      "detail": "Scanner findet Write auf Projekt-DB, Notion hat Relation nicht"
-    },
-    {
-      "skill": "uebergabe",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "Notion Dokumenten-DB (Inline)",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "uebergabe-sheet",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "GDrive Projektordner",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "uebergabe-sheet",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "workflow_state.md",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "workflow-analyse",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "workflow-data.json",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "workflow-analyse",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "workflow-analyse.html",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "workflow-validation",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": ".claude/skills/**",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "workflow-validation",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "scripts/**",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "workflow-validation",
-      "type": "phantom_read",
-      "severity": "medium",
-      "resource": "Notion Skills-DB",
-      "detail": "Notion listet Read aber Scanner keine Evidence (ggf. Scanner-Miss)"
-    },
-    {
-      "skill": "workflow-validation",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": "docs/workflow-data.json",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    },
-    {
-      "skill": "workflow-validation",
-      "type": "phantom_write",
-      "severity": "medium",
-      "resource": ".claude/skills/workflow-validation/scripts/last_scan.json",
-      "detail": "Notion listet Write aber Scanner keine Evidence"
-    }
-  ],
+  "orphaned_scripts": [],
   "claude_md_drift": {
-    "status": "ok",
+    "status": "drift",
     "checks": [
       {
         "check": "workflow_ablauf",
         "result": "ok",
-        "detail": "CLAUDE.md verweist auf docs/workflow-data.json, keine harte Skills-Liste"
+        "detail": "CLAUDE.md verweist auf docs/workflow-data.json, keine harte Skills-Liste."
       },
       {
         "check": "referenz_daten",
         "result": "ok",
-        "detail": "7/7 Pfade gelistet (datanorm, kfe, kosten_kategorien.json, notion_db, referenz_lv, tawo_stundensaetze.json, team_signaturen.json)"
+        "detail": "7/7 Pfade gelistet und vorhanden"
       },
       {
         "check": "fach_referenzen",
         "result": "ok",
-        "detail": "PROZESS_FINALES_LV.md + anfragen-mail-guidelines.md existieren"
+        "detail": "Alle 4 Fach-Referenzen existieren"
+      },
+      {
+        "check": "skills_folder_vs_notion",
+        "result": "drift",
+        "detail": "Ordner existiert, aber nicht in repo_state: notion-sync"
       },
       {
         "check": "kalk_typen",
@@ -2766,16 +3276,6 @@ window.WORKFLOW_DATA = {
         "check": "rules_liste",
         "result": "ok",
         "detail": "Dynamisch per .claude/rules/ Verweis"
-      },
-      {
-        "check": "uebergabe_sheet_script",
-        "result": "ok",
-        "detail": "scan_skills.py KALK_SKILLS um uebergabe-sheet erweitert - write_uebergabe_sheet.py nicht mehr orphaned"
-      },
-      {
-        "check": "l1_mapper",
-        "result": "warn",
-        "detail": "l1_mapper.py bleibt orphaned (subprocess-Call aus projekt-erfassung, kein Python-Import)"
       }
     ]
   }
