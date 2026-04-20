@@ -93,25 +93,25 @@
 
 <script>
 window.WORKFLOW_DATA = {
-  "generated_at": "2026-04-20T14:05:09Z",
-  "generated_by": "workflow-validation (Phase 2-4, Final-Run nach Scanner-Fixes)",
+  "generated_at": "2026-04-20T15:45:22Z",
+  "generated_by": "workflow-validation (Phase 5, Live-Notion-Fetch + Auto-Fix Relations)",
   "validation_status": "has_issues",
-  "issues_count": 69,
+  "issues_count": 47,
   "issues_by_severity": {
-    "critical": 3,
-    "high": 10,
-    "medium": 56,
+    "critical": 0,
+    "high": 0,
+    "medium": 47,
     "low": 0
   },
   "previous_run": {
-    "issues_count": 162,
+    "issues_count": 67,
     "issues_by_severity": {
-      "critical": 20,
-      "high": 13,
-      "medium": 129,
+      "critical": 0,
+      "high": 0,
+      "medium": 67,
       "low": 0
     },
-    "generated_at": "2026-04-20T13:58:51Z"
+    "generated_at": "2026-04-20T15:45:04Z"
   },
   "baseline_run": {
     "issues_count": 75,
@@ -131,7 +131,7 @@ window.WORKFLOW_DATA = {
     "workflow-analyse",
     "workflow-validation"
   ],
-  "notion_relations_source": "Proxy: vorige docs/workflow-data.json + Auto-Fix (workflow_state.md Read fuer 6 Skills). Notion MCP nicht live gefetched.",
+  "notion_relations_source": "Live Notion Ressourcen-DB query (5963b0c9-3211-4b88-9e71-3ace59aaeca0) + Auto-Fix der 11 Skills mit missing relations",
   "blocks": [
     {
       "id": "A",
@@ -288,18 +288,23 @@ window.WORKFLOW_DATA = {
         "Angebots-Abgabe (X84/PDF)"
       ],
       "notion_reads": [
-        "GDrive Projektordner",
         "GAEB-Quelldateien (X83/D83)",
+        "GDrive Projektordner",
+        "MaterialAnfragen DB",
         "Notion DB Snapshots",
+        "Notion Dokumenten-DB (Inline)",
         "Projekt-DB",
         "Referenz-LV",
+        "hinweise.json",
+        "matching.json",
         "workflow_state.md"
       ],
       "notion_writes": [
-        "workflow_state.md",
-        "Projekt-DB",
+        "Angebots-Abgabe (X84/PDF)",
+        "GDrive Projektordner",
         "Notion Dokumenten-DB (Inline)",
-        "GDrive Projektordner"
+        "Projekt-DB",
+        "workflow_state.md"
       ],
       "predecessors": [],
       "successors": [
@@ -323,7 +328,16 @@ window.WORKFLOW_DATA = {
           "name": "output.xlsx"
         }
       ],
-      "scanned": true
+      "scanned": true,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [],
+        "phantom_writes": [
+          "Notion Dokumenten-DB (Inline)",
+          "workflow_state.md"
+        ]
+      }
     },
     {
       "id": "A-02",
@@ -359,6 +373,9 @@ window.WORKFLOW_DATA = {
       ],
       "notion_reads": [
         "GDrive Projektordner",
+        "Notion Dokumenten-DB (Inline)",
+        "Projekt-DB",
+        "hinweise.json",
         "workflow_state.md"
       ],
       "notion_writes": [
@@ -376,7 +393,15 @@ window.WORKFLOW_DATA = {
         "workflow_state.py"
       ],
       "data_files": [],
-      "scanned": true
+      "scanned": true,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [],
+        "phantom_writes": [
+          "workflow_state.md"
+        ]
+      }
     },
     {
       "id": "B-01",
@@ -418,11 +443,14 @@ window.WORKFLOW_DATA = {
       ],
       "notion_reads": [
         "GAEB-Quelldateien (X83/D83)",
-        "workflow_state.md",
-        "GSheet Kalkulation"
+        "GDrive Projektordner",
+        "GSheet Kalkulation",
+        "hinweise.json",
+        "workflow_state.md"
       ],
       "notion_writes": [
         "GSheet Kalkulation",
+        "hinweise.json",
         "workflow_state.md"
       ],
       "predecessors": [
@@ -442,7 +470,15 @@ window.WORKFLOW_DATA = {
         "workflow_state.py"
       ],
       "data_files": [],
-      "scanned": true
+      "scanned": true,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [],
+        "phantom_writes": [
+          "workflow_state.md"
+        ]
+      }
     },
     {
       "id": "B-02",
@@ -480,7 +516,9 @@ window.WORKFLOW_DATA = {
         "GSheet Kalkulation"
       ],
       "notion_reads": [
+        "GDrive Projektordner",
         "GSheet Kalkulation",
+        "hinweise.json",
         "workflow_state.md"
       ],
       "notion_writes": [
@@ -507,7 +545,16 @@ window.WORKFLOW_DATA = {
           "name": "args.json"
         }
       ],
-      "scanned": true
+      "scanned": true,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [],
+        "phantom_writes": [
+          "hinweise.json",
+          "workflow_state.md"
+        ]
+      }
     },
     {
       "id": "B-03",
@@ -562,16 +609,22 @@ window.WORKFLOW_DATA = {
         "matching.json"
       ],
       "notion_reads": [
-        "GSheet Kalkulation",
-        "hinweise.json",
-        "Referenz-LV",
-        "KFE-Katalog",
         "Datanorm-Preise",
+        "GDrive Projektordner",
+        "GSheet Kalkulation",
+        "KFE-Katalog",
+        "MaterialAnfragen DB",
+        "Notion DB Snapshots",
+        "Projekt-DB",
+        "Referenz-LV",
         "TAWO-Stundensaetze",
+        "hinweise.json",
+        "matching.json",
         "workflow_state.md"
       ],
       "notion_writes": [
         "GSheet Kalkulation",
+        "hinweise.json",
         "matching.json",
         "workflow_state.md"
       ],
@@ -601,7 +654,17 @@ window.WORKFLOW_DATA = {
           "name": "leistungsgruppen.json"
         }
       ],
-      "scanned": true
+      "scanned": true,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [
+          "Referenz-LV"
+        ],
+        "phantom_writes": [
+          "GSheet Kalkulation"
+        ]
+      }
     },
     {
       "id": "B-01->03",
@@ -639,20 +702,20 @@ window.WORKFLOW_DATA = {
       ],
       "code_writes": [],
       "notion_reads": [
-        "GAEB-Quelldateien (X83/D83)",
-        "workflow_state.md",
-        "GSheet Kalkulation",
-        "Referenz-LV",
-        "KFE-Katalog",
         "Datanorm-Preise",
+        "GAEB-Quelldateien (X83/D83)",
+        "GSheet Kalkulation",
+        "KFE-Katalog",
+        "Referenz-LV",
         "TAWO-Stundensaetze",
-        "hinweise.json"
+        "hinweise.json",
+        "workflow_state.md"
       ],
       "notion_writes": [
         "GSheet Kalkulation",
-        "workflow_state.md",
         "hinweise.json",
-        "matching.json"
+        "matching.json",
+        "workflow_state.md"
       ],
       "predecessors": [
         "A-01",
@@ -662,14 +725,32 @@ window.WORKFLOW_DATA = {
         "C-01",
         "D-01"
       ],
-      "validation_status": "warn",
+      "validation_status": "drift",
       "summary": "Fuehrt Block B komplett durch: B-01 -> B-02 -> B-03 ohne Unterbrechung.",
       "description": "Block B komplett: Template-Anwendung, Hinweis-Extraktion und Vorab-Kalkulation in einem Durchlauf.",
       "scripts": [
         "workflow_state.py"
       ],
       "data_files": [],
-      "scanned": true
+      "scanned": true,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [
+          "Datanorm-Preise",
+          "GAEB-Quelldateien (X83/D83)",
+          "GSheet Kalkulation",
+          "KFE-Katalog",
+          "Referenz-LV",
+          "TAWO-Stundensaetze"
+        ],
+        "phantom_writes": [
+          "GSheet Kalkulation",
+          "hinweise.json",
+          "matching.json",
+          "workflow_state.md"
+        ]
+      }
     },
     {
       "id": "C-01",
@@ -691,7 +772,6 @@ window.WORKFLOW_DATA = {
         "GSheet Kalkulation",
         "Gmail (Inbox/Drafts)",
         "MaterialAnfragen DB",
-        "MaterialAnfragen-DB",
         "Notion DB Snapshots",
         "Notion Dokumenten-DB (Inline)",
         "Projekt-DB",
@@ -703,7 +783,7 @@ window.WORKFLOW_DATA = {
         "Anfragen-GSheet (Material)",
         "GSheet Kalkulation",
         "Gmail (Inbox/Drafts)",
-        "MaterialAnfragen-DB",
+        "MaterialAnfragen DB",
         "workflow_state.md"
       ],
       "code_reads": [
@@ -725,17 +805,24 @@ window.WORKFLOW_DATA = {
         "Gmail (Inbox/Drafts)"
       ],
       "notion_reads": [
-        "workflow_state.md",
-        "matching.json",
+        "Anfragen-GSheet (Material)",
+        "GAEB-Quelldateien (X83/D83)",
+        "GDrive Projektordner",
+        "GSheet Kalkulation",
+        "Gmail (Inbox/Drafts)",
+        "MaterialAnfragen DB",
         "Notion DB Snapshots",
-        "MaterialAnfragen-DB",
+        "Notion Dokumenten-DB (Inline)",
+        "Projekt-DB",
         "hinweise.json",
-        "GSheet Kalkulation"
+        "matching.json",
+        "workflow_state.md"
       ],
       "notion_writes": [
-        "Gmail (Inbox/Drafts)",
         "Anfragen-GSheet (Material)",
-        "MaterialAnfragen-DB",
+        "GSheet Kalkulation",
+        "Gmail (Inbox/Drafts)",
+        "MaterialAnfragen DB",
         "workflow_state.md"
       ],
       "predecessors": [
@@ -781,7 +868,18 @@ window.WORKFLOW_DATA = {
           "name": "inbox_registry.json"
         }
       ],
-      "scanned": true
+      "scanned": true,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [
+          "matching.json"
+        ],
+        "phantom_writes": [
+          "MaterialAnfragen DB",
+          "workflow_state.md"
+        ]
+      }
     },
     {
       "id": "C-02",
@@ -802,7 +900,6 @@ window.WORKFLOW_DATA = {
         "GDrive Projektordner",
         "Gmail (Inbox/Drafts)",
         "MaterialAnfragen DB",
-        "MaterialAnfragen-DB",
         "Notion DB Snapshots",
         "Projekt-DB",
         "matching.json",
@@ -811,7 +908,7 @@ window.WORKFLOW_DATA = {
       "writes": [
         "GDrive Projektordner",
         "Gmail (Inbox/Drafts)",
-        "MaterialAnfragen-DB",
+        "MaterialAnfragen DB",
         "workflow_state.md"
       ],
       "code_reads": [
@@ -828,15 +925,19 @@ window.WORKFLOW_DATA = {
         "workflow_state.md"
       ],
       "notion_reads": [
+        "GAEB-Quelldateien (X83/D83)",
+        "GDrive Projektordner",
         "Gmail (Inbox/Drafts)",
-        "MaterialAnfragen-DB",
+        "MaterialAnfragen DB",
         "Notion DB Snapshots",
+        "Projekt-DB",
+        "matching.json",
         "workflow_state.md"
       ],
       "notion_writes": [
         "GDrive Projektordner",
-        "MaterialAnfragen-DB",
         "Gmail (Inbox/Drafts)",
+        "MaterialAnfragen DB",
         "workflow_state.md"
       ],
       "predecessors": [
@@ -879,7 +980,17 @@ window.WORKFLOW_DATA = {
           "name": "gsheet_credentials.json"
         }
       ],
-      "scanned": true
+      "scanned": true,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [],
+        "phantom_writes": [
+          "GDrive Projektordner",
+          "Gmail (Inbox/Drafts)",
+          "MaterialAnfragen DB"
+        ]
+      }
     },
     {
       "id": "C-03",
@@ -900,7 +1011,7 @@ window.WORKFLOW_DATA = {
         "GAEB-Quelldateien (X83/D83)",
         "GDrive Projektordner",
         "GSheet Kalkulation",
-        "MaterialAnfragen-DB",
+        "MaterialAnfragen DB",
         "hinweise.json",
         "matching.json",
         "workflow_state.md"
@@ -909,7 +1020,7 @@ window.WORKFLOW_DATA = {
         "Anfragen-GSheet (Material)",
         "Angebots-Abgabe (X84/PDF)",
         "GSheet Kalkulation",
-        "MaterialAnfragen-DB",
+        "MaterialAnfragen DB",
         "matching.json",
         "workflow_state.md"
       ],
@@ -929,19 +1040,22 @@ window.WORKFLOW_DATA = {
         "Angebots-Abgabe (X84/PDF)"
       ],
       "notion_reads": [
+        "Anfragen-GSheet (Material)",
+        "GAEB-Quelldateien (X83/D83)",
         "GDrive Projektordner",
         "GSheet Kalkulation",
-        "MaterialAnfragen-DB",
-        "Anfragen-GSheet (Material)",
+        "MaterialAnfragen DB",
         "hinweise.json",
+        "matching.json",
         "workflow_state.md"
       ],
       "notion_writes": [
-        "GSheet Kalkulation",
         "Anfragen-GSheet (Material)",
-        "MaterialAnfragen-DB",
-        "workflow_state.md",
-        "matching.json"
+        "Angebots-Abgabe (X84/PDF)",
+        "GSheet Kalkulation",
+        "MaterialAnfragen DB",
+        "matching.json",
+        "workflow_state.md"
       ],
       "predecessors": [
         "B-03",
@@ -973,7 +1087,18 @@ window.WORKFLOW_DATA = {
           "name": "args.json"
         }
       ],
-      "scanned": true
+      "scanned": true,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [
+          "MaterialAnfragen DB"
+        ],
+        "phantom_writes": [
+          "MaterialAnfragen DB",
+          "workflow_state.md"
+        ]
+      }
     },
     {
       "id": "C-05",
@@ -1010,12 +1135,23 @@ window.WORKFLOW_DATA = {
       "successors": [
         "E-02"
       ],
-      "validation_status": "not_scanned",
+      "validation_status": "unscanned",
       "summary": "Erstellt einen positionsweisen Scope-Vergleich fuer eine Summengruppe (z.B. NEA, BMA, USV, Sprinkler) im Kalkulations-GSheet. Vergleicht N Anbieter nicht nur nach Preis, sondern nach Scope-Vollstaendigkeit, Fabrikat-Konformitaet und LV-Abweichungen.",
       "description": "SG-Scope-Vergleich: Mehrere Sub/Hersteller-Angebote einer Summengruppe positionsweise vergleichen mit Scope-Bewertung, Fabrikat-Prüfung, EP-Ausreißer und Nachverhandlungspunkten.",
       "scripts": [],
       "data_files": [],
-      "scanned": false
+      "scanned": false,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [
+          "Anfragen-GSheet (Material)",
+          "GSheet Kalkulation"
+        ],
+        "phantom_writes": [
+          "Anfragen-GSheet (Material)"
+        ]
+      }
     },
     {
       "id": "C-06",
@@ -1033,7 +1169,7 @@ window.WORKFLOW_DATA = {
       "reads": [
         "Anfragen-GSheet (Material)",
         "GSheet Kalkulation",
-        "MaterialAnfragen-DB",
+        "MaterialAnfragen DB",
         "hinweise.json",
         "workflow_state.md"
       ],
@@ -1049,14 +1185,14 @@ window.WORKFLOW_DATA = {
       "code_writes": [],
       "notion_reads": [
         "Anfragen-GSheet (Material)",
-        "workflow_state.md",
+        "GSheet Kalkulation",
+        "MaterialAnfragen DB",
         "hinweise.json",
-        "MaterialAnfragen-DB",
-        "GSheet Kalkulation"
+        "workflow_state.md"
       ],
       "notion_writes": [
-        "GSheet Kalkulation",
         "Anfragen-GSheet (Material)",
+        "GSheet Kalkulation",
         "workflow_state.md"
       ],
       "predecessors": [
@@ -1066,7 +1202,7 @@ window.WORKFLOW_DATA = {
         "D-01",
         "D-02"
       ],
-      "validation_status": "warn",
+      "validation_status": "drift",
       "summary": "Alle Angebote konsolidieren: GH-Vergleich + SG-spezifische Vergleiche erstellen, Scope bewerten, 3 Master-Tabs erzeugen (LV, BOM, SG-Uebersicht). Scope: Angebotsvergleich + Scope-Bewertung + Lieferantenwahl + Einkaufs-Bewertung.",
       "description": "Alle Lieferanten-Angebote zusammenfuehren: GH-Vergleich + SG-Vergleiche (sg-vergleich Style), 3 Master-Tabs (LV, BOM, SG-Uebersicht), Scope-Bewertung, EK-Entscheidung.",
       "scripts": [
@@ -1089,7 +1225,21 @@ window.WORKFLOW_DATA = {
           "name": "scope_bma.json"
         }
       ],
-      "scanned": true
+      "scanned": true,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [
+          "GSheet Kalkulation",
+          "MaterialAnfragen DB",
+          "hinweise.json"
+        ],
+        "phantom_writes": [
+          "Anfragen-GSheet (Material)",
+          "GSheet Kalkulation",
+          "workflow_state.md"
+        ]
+      }
     },
     {
       "id": "D-01",
@@ -1131,12 +1281,13 @@ window.WORKFLOW_DATA = {
         "GSheet Kalkulation"
       ],
       "notion_reads": [
+        "Datanorm-Preise",
         "GSheet Kalkulation",
-        "workflow_state.md",
+        "KFE-Katalog",
         "Referenz-LV",
         "TAWO-Stundensaetze",
-        "KFE-Katalog",
-        "Datanorm-Preise"
+        "hinweise.json",
+        "workflow_state.md"
       ],
       "notion_writes": [
         "GSheet Kalkulation",
@@ -1149,7 +1300,7 @@ window.WORKFLOW_DATA = {
       "successors": [
         "D-02"
       ],
-      "validation_status": "warn",
+      "validation_status": "drift",
       "summary": "Analyse des fertig kalkulierten LVs. Nicht: Positionen nochmal einzeln durchrechnen. Sondern: Gesamtbild bewerten - wie ein Oberbauleiter der die Kalkulation unterschreiben soll.",
       "description": "Fertiges LV analysieren: Fehler finden, SG-Übersicht erzeugen, Risiken bewerten, Margen prüfen. Script rechnet, Claude denkt als Oberbauleiter.",
       "scripts": [
@@ -1157,7 +1308,17 @@ window.WORKFLOW_DATA = {
         "workflow_state.py"
       ],
       "data_files": [],
-      "scanned": true
+      "scanned": true,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [
+          "Referenz-LV"
+        ],
+        "phantom_writes": [
+          "workflow_state.md"
+        ]
+      }
     },
     {
       "id": "D-02",
@@ -1199,15 +1360,18 @@ window.WORKFLOW_DATA = {
         "Angebots-Abgabe (X84/PDF)"
       ],
       "notion_reads": [
-        "GSheet Kalkulation",
         "GAEB-Quelldateien (X83/D83)",
+        "GDrive Projektordner",
+        "GSheet Kalkulation",
         "Projekt-DB",
+        "Referenz-LV",
+        "matching.json",
         "workflow_state.md"
       ],
       "notion_writes": [
         "Angebots-Abgabe (X84/PDF)",
-        "workflow_state.md",
-        "Projekt-DB"
+        "Projekt-DB",
+        "workflow_state.md"
       ],
       "predecessors": [
         "D-01"
@@ -1215,7 +1379,7 @@ window.WORKFLOW_DATA = {
       "successors": [
         "F-01"
       ],
-      "validation_status": "warn",
+      "validation_status": "drift",
       "summary": "Erzeugt GAEB X84 + PDF-Angebot aus dem fertig kalkulierten GSheet und der Original-X83. Generiert ein projektspezifisches Python-Script das im Abgabe-Ordner verbleibt.",
       "description": "GAEB-Abgabe: Aus kalkuliertem GSheet + Original-X83 die Abgabedateien erzeugen (X84 + PDF). Trigger nach abgeschlossener Kalkulation.",
       "scripts": [
@@ -1223,7 +1387,18 @@ window.WORKFLOW_DATA = {
         "workflow_state.py"
       ],
       "data_files": [],
-      "scanned": true
+      "scanned": true,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [
+          "Projekt-DB"
+        ],
+        "phantom_writes": [
+          "Projekt-DB",
+          "workflow_state.md"
+        ]
+      }
     },
     {
       "id": "E-01",
@@ -1261,24 +1436,25 @@ window.WORKFLOW_DATA = {
       ],
       "code_writes": [],
       "notion_reads": [
+        "Datanorm-Preise",
         "GDrive Projektordner",
         "GSheet Kalkulation",
-        "hinweise.json",
-        "Referenz-LV",
         "KFE-Katalog",
-        "Datanorm-Preise",
+        "Referenz-LV",
+        "hinweise.json",
+        "matching.json",
         "workflow_state.md"
       ],
       "notion_writes": [
-        "GSheet Kalkulation",
         "GDrive Projektordner",
+        "GSheet Kalkulation",
         "workflow_state.md"
       ],
       "predecessors": [
         "D-02"
       ],
       "successors": [],
-      "validation_status": "warn",
+      "validation_status": "drift",
       "summary": "Bieterbrief-Excel vom AG verarbeiten: Parsen, OZ-Normalisierung, Matching gegen Kalk-GSheet, EK-Untergrenzen berechnen, User-Review, ausgefuellten Bieterbrief + neues Kalkulations-GSheet erzeugen.",
       "description": "Bieterbrief vom AG parsen, gegen Kalkulation matchen, EK-Untergrenzen berechnen, ausgefuellten Bieterbrief + Bieterbrief-Kalkulations-GSheet erzeugen.",
       "scripts": [
@@ -1306,7 +1482,22 @@ window.WORKFLOW_DATA = {
           "name": "neue_positionen_kalkulation.json"
         }
       ],
-      "scanned": true
+      "scanned": true,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [
+          "Datanorm-Preise",
+          "GDrive Projektordner",
+          "Referenz-LV",
+          "hinweise.json"
+        ],
+        "phantom_writes": [
+          "GDrive Projektordner",
+          "GSheet Kalkulation",
+          "workflow_state.md"
+        ]
+      }
     },
     {
       "id": "E-02",
@@ -1354,14 +1545,24 @@ window.WORKFLOW_DATA = {
         "C-06"
       ],
       "successors": [],
-      "validation_status": "warn",
+      "validation_status": "drift",
       "summary": "GH-Preisverhandlung vorbereiten. Analysiert den Angebotsvergleich, erstellt zwei Tabs fuer den GH (Potenzial-Positionen + Bauzeitenplan) und einen internen Gespraechsleitfaden.",
       "description": "GH-Preisverhandlung vorbereiten: Angebotsvergleich analysieren, Potenzial-Positionen + Bauzeitenplan erstellen, Gespraechsleitfaden generieren.",
       "scripts": [
         "workflow_state.py"
       ],
       "data_files": [],
-      "scanned": true
+      "scanned": true,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [
+          "GSheet Kalkulation"
+        ],
+        "phantom_writes": [
+          "workflow_state.md"
+        ]
+      }
     },
     {
       "id": "F-01",
@@ -1376,33 +1577,33 @@ window.WORKFLOW_DATA = {
       "spuren": [],
       "reads": [
         "Gmail (Inbox/Drafts)",
-        "MaterialAnfragen-DB",
+        "MaterialAnfragen DB",
         "Projekt-DB",
         "workflow_state.md"
       ],
       "writes": [
         "Gmail (Inbox/Drafts)",
-        "MaterialAnfragen-DB",
+        "MaterialAnfragen DB",
         "Projekt-DB",
         "workflow_state.md"
       ],
       "code_reads": [],
       "code_writes": [],
       "notion_reads": [
-        "MaterialAnfragen-DB",
-        "Projekt-DB",
         "Gmail (Inbox/Drafts)",
+        "MaterialAnfragen DB",
+        "Projekt-DB",
         "workflow_state.md"
       ],
       "notion_writes": [
         "Gmail (Inbox/Drafts)",
-        "MaterialAnfragen-DB",
+        "MaterialAnfragen DB",
         "Projekt-DB",
         "workflow_state.md"
       ],
       "predecessors": [],
       "successors": [],
-      "validation_status": "not_scanned",
+      "validation_status": "unscanned",
       "summary": "Bei Projekt-Absage alle angefragten Lieferanten per Gmail-Reply informieren. Notion MaterialAnfragen-Status + Projekt-Status aktualisieren. Eigenstaendig ausloesbar - keine Vorgaenger-Skills noetig.",
       "description": "Lieferanten-Absage bei Projektverlust oder Storno: Gmail-Reply-Drafts + Notion-Status-Update. Optional, eigenstaendig ausloesbar.",
       "scripts": [
@@ -1410,7 +1611,23 @@ window.WORKFLOW_DATA = {
         "workflow_state.py"
       ],
       "data_files": [],
-      "scanned": false
+      "scanned": false,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [
+          "Gmail (Inbox/Drafts)",
+          "MaterialAnfragen DB",
+          "Projekt-DB",
+          "workflow_state.md"
+        ],
+        "phantom_writes": [
+          "Gmail (Inbox/Drafts)",
+          "MaterialAnfragen DB",
+          "Projekt-DB",
+          "workflow_state.md"
+        ]
+      }
     },
     {
       "id": "G-01",
@@ -1438,10 +1655,10 @@ window.WORKFLOW_DATA = {
       "code_reads": [],
       "code_writes": [],
       "notion_reads": [
-        "workflow_state.md",
         "GDrive Projektordner",
+        "Notion Dokumenten-DB (Inline)",
         "hinweise.json",
-        "Notion Dokumenten-DB (Inline)"
+        "workflow_state.md"
       ],
       "notion_writes": [
         "Notion Dokumenten-DB (Inline)"
@@ -1452,14 +1669,27 @@ window.WORKFLOW_DATA = {
       "successors": [
         "G-02"
       ],
-      "validation_status": "not_scanned",
+      "validation_status": "unscanned",
       "summary": "Erstellt eine kompakte Projekt-Zusammenfassung (~3 Seiten) als Notion-Seite in der Projektdokumente-DB. Zielgruppe: Bauleiter, Projektleiter, Technischer Leiter - schneller Ueberblick ueber alle projektrelevanten Fakten fuer die Ausfuehrung.",
       "description": "Projekt-Zusammenfassung erstellen/aktualisieren: Alle Dokumente auslesen, Notion-Seite in Projektdokumente-DB. Idempotent — aktualisiert bei erneutem Aufruf.",
       "scripts": [
         "workflow_state.py"
       ],
       "data_files": [],
-      "scanned": false
+      "scanned": false,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [
+          "GDrive Projektordner",
+          "Notion Dokumenten-DB (Inline)",
+          "hinweise.json",
+          "workflow_state.md"
+        ],
+        "phantom_writes": [
+          "Notion Dokumenten-DB (Inline)"
+        ]
+      }
     },
     {
       "id": "G-02",
@@ -1486,9 +1716,9 @@ window.WORKFLOW_DATA = {
       "code_reads": [],
       "code_writes": [],
       "notion_reads": [
-        "workflow_state.md",
+        "GDrive Projektordner",
         "Notion Dokumenten-DB (Inline)",
-        "GDrive Projektordner"
+        "workflow_state.md"
       ],
       "notion_writes": [
         "GDrive Projektordner"
@@ -1499,14 +1729,26 @@ window.WORKFLOW_DATA = {
       "successors": [
         "G-03"
       ],
-      "validation_status": "not_scanned",
+      "validation_status": "unscanned",
       "summary": "Kopiert alle Dokumente mit gesetzter Uebergabe-Checkbox aus dem Sales-Projektordner in den Ops-Projektordner. GSheets werden als Links angelegt, nicht verschoben.",
       "description": "Dokumente mit Übergabe-Checkbox aus Projektdokumente-DB in den Ops-Ordner (N_03_Projekte) kopieren. GSheets verlinken. Staging in Übergabe Sales/.",
       "scripts": [
         "workflow_state.py"
       ],
       "data_files": [],
-      "scanned": false
+      "scanned": false,
+      "drift_detail": {
+        "missing_reads": [],
+        "missing_writes": [],
+        "phantom_reads": [
+          "GDrive Projektordner",
+          "Notion Dokumenten-DB (Inline)",
+          "workflow_state.md"
+        ],
+        "phantom_writes": [
+          "GDrive Projektordner"
+        ]
+      }
     },
     {
       "id": "G-03",
@@ -1521,32 +1763,18 @@ window.WORKFLOW_DATA = {
       "spuren": [
         "A"
       ],
-      "reads": [
-        "Anfragen-GSheet (Material)",
-        "GSheet Kalkulation",
-        "workflow_state.md"
-      ],
-      "writes": [
-        "GDrive Projektordner",
-        "workflow_state.md"
-      ],
+      "reads": [],
+      "writes": [],
       "code_reads": [],
       "code_writes": [],
-      "notion_reads": [
-        "workflow_state.md",
-        "GSheet Kalkulation",
-        "Anfragen-GSheet (Material)"
-      ],
-      "notion_writes": [
-        "GDrive Projektordner",
-        "workflow_state.md"
-      ],
+      "notion_reads": [],
+      "notion_writes": [],
       "predecessors": [
         "G-02",
         "C-06"
       ],
       "successors": [],
-      "validation_status": "not_scanned",
+      "validation_status": "unscanned",
       "summary": "Erstellt ein neues Google Sheet fuer die Uebergabe an das Operations-Team. Konsolidiert Kalk-Daten und Beschaffungsergebnisse in einem einzigen Sheet mit 8 Tabs. Alle Werte flach (keine Formeln). Formatierung per Script.",
       "description": "Uebergabe-GSheet erstellen: Konsolidiertes Google Sheet fuer Projekt-Uebergabe von Sales an Operations. 8 Tabs aus Kalk-GSheet + Anfragen-GSheet + neue BOM-Tabs.",
       "scripts": [
@@ -1567,25 +1795,17 @@ window.WORKFLOW_DATA = {
       "block": "INFRA",
       "status": "beta",
       "spuren": [],
-      "reads": [
-        "workflow-data.json"
-      ],
-      "writes": [
-        "workflow-analyse.html"
-      ],
+      "reads": [],
+      "writes": [],
       "code_reads": [],
       "code_writes": [],
-      "notion_reads": [
-        "workflow-data.json"
-      ],
-      "notion_writes": [
-        "workflow-analyse.html"
-      ],
+      "notion_reads": [],
+      "notion_writes": [],
       "predecessors": [
         "INFRA-02"
       ],
       "successors": [],
-      "validation_status": "not_scanned",
+      "validation_status": "unscanned",
       "summary": "Liest workflow-data.json und generiert eine interaktive standalone HTML-Visualisierung die Datenfluss, Abhaengigkeiten und Entry-Points sichtbar macht.",
       "description": "Generiert eine interaktive Workflow-Visualisierung (standalone HTML) aus workflow-data.json. Ressource-Matrix, State-Dependencies, Entry-Point-Simulation, Reuse-Analyse und Dependency-Flow.",
       "scripts": [],
@@ -1603,31 +1823,17 @@ window.WORKFLOW_DATA = {
       "block": "INFRA",
       "status": "beta",
       "spuren": [],
-      "reads": [
-        ".claude/skills/**",
-        "Notion Skills-DB",
-        "scripts/**"
-      ],
-      "writes": [
-        ".claude/skills/workflow-validation/scripts/last_scan.json",
-        "docs/workflow-data.json"
-      ],
+      "reads": [],
+      "writes": [],
       "code_reads": [],
       "code_writes": [],
-      "notion_reads": [
-        ".claude/skills/**",
-        "scripts/**",
-        "Notion Skills-DB"
-      ],
-      "notion_writes": [
-        "docs/workflow-data.json",
-        ".claude/skills/workflow-validation/scripts/last_scan.json"
-      ],
+      "notion_reads": [],
+      "notion_writes": [],
       "predecessors": [],
       "successors": [
         "INFRA-01"
       ],
-      "validation_status": "not_scanned",
+      "validation_status": "unscanned",
       "summary": "Vergleicht was der Code tatsaechlich liest/schreibt mit dem was Notion dokumentiert. Findet Drifts, fehlende Relations und Phantom-Eintraege. Schreibt workflow-data.json als zentrale Datendatei fuer die gesamte Pipeline.",
       "description": "Gleicht Code-Realitaet (SKILL.md + Scripts) mit Notion-Dokumentation (Skills-DB Relations) ab. Findet undokumentierte Zugriffe, Phantom-Relations und Richtungs-Mismatches.",
       "scripts": [],
@@ -1648,48 +1854,18 @@ window.WORKFLOW_DATA = {
         "A",
         "B"
       ],
-      "reads": [
-        "Anfragen-GSheet (Material)",
-        "GAEB-Quelldateien (X83/D83)",
-        "GDrive Projektordner",
-        "MaterialAnfragen DB",
-        "Notion DB Snapshots",
-        "Notion Dokumenten-DB (Inline)",
-        "Projekt-DB",
-        "hinweise.json",
-        "matching.json",
-        "workflow_state.md"
-      ],
-      "writes": [
-        "Angebots-Abgabe (X84/PDF)",
-        "Gmail (Inbox/Drafts)",
-        "workflow_state.md"
-      ],
+      "reads": [],
+      "writes": [],
       "code_reads": [],
       "code_writes": [],
-      "notion_reads": [
-        "Anfragen-GSheet (Material)",
-        "GAEB-Quelldateien (X83/D83)",
-        "GDrive Projektordner",
-        "MaterialAnfragen DB",
-        "Notion DB Snapshots",
-        "Notion Dokumenten-DB (Inline)",
-        "Projekt-DB",
-        "hinweise.json",
-        "matching.json",
-        "workflow_state.md"
-      ],
-      "notion_writes": [
-        "Angebots-Abgabe (X84/PDF)",
-        "Gmail (Inbox/Drafts)",
-        "workflow_state.md"
-      ],
+      "notion_reads": [],
+      "notion_writes": [],
       "predecessors": [],
       "successors": [
         "B-01->03",
         "B-01"
       ],
-      "validation_status": "not_scanned",
+      "validation_status": "unscanned",
       "summary": "Setzt NUR die Minimal-Felder in workflow_state.md, die /template-anwendung als Preflight benoetigt. Fuer Projekte, die bereits durch die Sales-Phase gelaufen sind (Notion existiert, Steckbrief vorhanden) und wo nur auf Basis eines neuen LVs (z.B. Vertrags-LV nach Auftrag) eine neue Kalkulation entstehen soll.",
       "description": "Minimal-State-Setup bei existierendem Projekt fuer Vorab-Kalk-Neulauf. Nur workflow_state.md-Felder setzen (projekt_id, name, spur, positionen, oz_structure, lv_excel), kein Notion/Steckbrief/Analyse. Trigger wenn /vorab-kalkulation-komplett neu auf neuer LV-Basis laufen soll und Sales-Phase bereits durch ist.",
       "scripts": [
